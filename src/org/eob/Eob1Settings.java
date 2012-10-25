@@ -21,25 +21,31 @@ public class Eob1Settings {
         // --- Items ---
         //--------------
         ItemType Axe = new ItemType(0x00, "axe", "Axe", "hand_axe");
+        ItemType Longsword = new ItemType(0x01, "long_sword", "Long Sword", "long_sword");
         ItemType Dart = new ItemType(0x04, "dart", "Dart", "shuriken");
+        ItemType Dagger = new ItemType(0x05, "dagger", "Dagger", "dagger");
         ItemType DwarvenPotion = new ItemType(0x06, "dwarven_potion", "Dwarven potion", "potion_healing");
         ItemType Bow = new ItemType(0x07, "bow", "Bow", "short_bow");
+        ItemType Spear = new ItemType(0x09, "spear", "Spear", "legionary_spear");
+        ItemType Mace = new ItemType(0x0B, "mace", "Mace", "knoffer");
         ItemType Sling = new ItemType(0x0E, "sling", "Sling", "sling");
         ItemType Dart2 = new ItemType(0x0F, "dart", "Dart", "shuriken");
         ItemType Arrow = new ItemType(0x10, "arrow", "Arrow", "arrow");
         ItemType Rock = new ItemType(0x12, "rock", "Rock", "rock");
         ItemType Chainmail = new ItemType(0x14, "chainmail", "Chainmail", "ring_mail");
+        ItemType LeatherArmor = new ItemType(0x16, "leather_armor", "Leather Armor", "leather_brigandine");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
         ItemType Rations = new ItemType(0x1F, "rations", "Rations", "pitroot_bread");
         ItemType LeatherBoots = new ItemType(0x20, "leather_boots", "Leather boots", "leather_boots");
         ItemType Bones = new ItemType(0x21, "bones", "Bones", "remains_of_toorum");
-        ItemType MageScroll = new ItemType(0x22, "scroll", "Mage scroll", "scroll");
-        ItemType ClericScroll = new ItemType(0x23, "scroll", "Cleric scroll", "scroll");
+        ItemType MageScroll = new ItemType(0x22, "mage_scroll", "Mage scroll", "scroll");
+        ItemType ClericScroll = new ItemType(0x23, "cleric_scroll", "Cleric scroll", "scroll");
         ItemType TextScroll = new ItemType(0x24, "scroll", "Text scroll", "scroll");
         ItemType Stone = new ItemType(0x25, "stone", "Stone", "rock");
         ItemType Key = new ItemType(0x26, "key", "Key", "brass_key");
         ItemType Potion = new ItemType(0x27, "potion", "Potion", "potion_healing");
+        ItemType Gem = new ItemType(0x28, "gem", "Gem", "blue_gem");
         ItemType Wand = new ItemType(0x30, "wand", "Wand", "whitewood_wand");
 
 
@@ -138,8 +144,10 @@ public class Eob1Settings {
 
         // Rations
         SubItemType RationsBasic = new SubItemType(25, Rations, "", "Rations", "");
+        SubItemType RationsIron = new SubItemType(50, Rations, "iron", "Iron Rations", "");
 
         // Bones
+        SubItemType HumanBones = new SubItemType(1, Bones, "human", "", "");
         SubItemType HalflingBones = new SubItemType(6, Bones, "halfling", "", "");
 
         // Dart
@@ -162,6 +170,14 @@ public class Eob1Settings {
         SubItemType StoneMedallion = new SubItemType(5, Stone, "medallion", "", "");
         SubItemType StoneScepter = new SubItemType(6, Stone, "scepter", "", "");
 
+        // Dagger
+        SubItemType DaggerNormal = new SubItemType(0, Dagger, "dagger", "", "");
+        SubItemType DaggerBackstabber = new SubItemType(3, Dagger, "backstabber", "+3", "");
+        SubItemType DaggerFlica  = new SubItemType(5, Dagger, "flicka", "'Flicka'", "");
+
+        // Gem
+        SubItemType GemRed = new SubItemType(1, Gem, "red", "Red Gem", "");
+        SubItemType GemBlue = new SubItemType(2, Gem, "blue", "Blue Gem", "");
 
         //-------------
         // --- Wall ---
