@@ -23,12 +23,16 @@ public class Eob1Settings {
         ItemType Axe = new ItemType(0x00, "axe", "Axe", "hand_axe");
         ItemType Dart = new ItemType(0x04, "dart", "Dart", "shuriken");
         ItemType DwarvenPotion = new ItemType(0x06, "dwarven_potion", "Dwarven potion", "potion_healing");
+        ItemType Bow = new ItemType(0x07, "bow", "Bow", "short_bow");
+        ItemType Sling = new ItemType(0x0E, "sling", "Sling", "sling");
         ItemType Dart2 = new ItemType(0x0F, "dart", "Dart", "shuriken");
         ItemType Arrow = new ItemType(0x10, "arrow", "Arrow", "arrow");
         ItemType Rock = new ItemType(0x12, "rock", "Rock", "rock");
+        ItemType Chainmail = new ItemType(0x14, "chainmail", "Chainmail", "ring_mail");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
         ItemType Rations = new ItemType(0x1F, "rations", "Rations", "pitroot_bread");
+        ItemType LeatherBoots = new ItemType(0x20, "leather_boots", "Leather boots", "leather_boots");
         ItemType Bones = new ItemType(0x21, "bones", "Bones", "remains_of_toorum");
         ItemType MageScroll = new ItemType(0x22, "scroll", "Mage scroll", "scroll");
         ItemType ClericScroll = new ItemType(0x23, "scroll", "Cleric scroll", "scroll");
