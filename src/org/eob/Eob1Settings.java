@@ -1,5 +1,6 @@
 package org.eob;
 
+import org.eob.enums.DescriptionMergeType;
 import org.eob.enums.GameSupportType;
 import org.eob.enums.WallType;
 import org.eob.model.ItemType;
@@ -156,16 +157,16 @@ public class Eob1Settings {
         SubItemType HalflingBones = new SubItemType(6, Bones, "halfling", "", "");
 
         // Dart
-        SubItemType DartPlus1 = new SubItemType(1, Dart, "plus1", "+1", "", "");
-        SubItemType DartPlus2 = new SubItemType(2, Dart, "plus2", "+2", "", "");
-        SubItemType DartPlus3 = new SubItemType(3, Dart, "plus3", "+3", "", "");
-        SubItemType DartPlus4 = new SubItemType(4, Dart, "plus4", "+4", "", "");
-        SubItemType DartPlus5 = new SubItemType(5, Dart, "plus5", "+5", "", "");
-        SubItemType Dart2Plus1 = new SubItemType(1, Dart2, "plus1", "+1", "", "");
-        SubItemType Dart2Plus2 = new SubItemType(2, Dart2, "plus2", "+2", "", "");
-        SubItemType Dart2Plus3 = new SubItemType(3, Dart2, "plus3", "+3", "", "");
-        SubItemType Dart2Plus4 = new SubItemType(4, Dart2, "plus4", "+4", "", "");
-        SubItemType Dart2Plus5 = new SubItemType(5, Dart2, "plus5", "+5", "", "");
+        SubItemType DartPlus1 = new SubItemType(1, Dart, "plus1", "+1", DescriptionMergeType.Suffix,  "");
+        SubItemType DartPlus2 = new SubItemType(2, Dart, "plus2", "+2", DescriptionMergeType.Suffix, "");
+        SubItemType DartPlus3 = new SubItemType(3, Dart, "plus3", "+3", DescriptionMergeType.Suffix, "");
+        SubItemType DartPlus4 = new SubItemType(4, Dart, "plus4", "+4", DescriptionMergeType.Suffix, "");
+        SubItemType DartPlus5 = new SubItemType(5, Dart, "plus5", "+5", DescriptionMergeType.Suffix, "");
+        SubItemType Dart2Plus1 = new SubItemType(1, Dart2, "plus1", "+1", DescriptionMergeType.Suffix, "");
+        SubItemType Dart2Plus2 = new SubItemType(2, Dart2, "plus2", "+2", DescriptionMergeType.Suffix, "");
+        SubItemType Dart2Plus3 = new SubItemType(3, Dart2, "plus3", "+3", DescriptionMergeType.Suffix, "");
+        SubItemType Dart2Plus4 = new SubItemType(4, Dart2, "plus4", "+4", DescriptionMergeType.Suffix, "");
+        SubItemType Dart2Plus5 = new SubItemType(5, Dart2, "plus5", "+5", DescriptionMergeType.Suffix, "");
 
         // Stone
         SubItemType StoneHolySymbol = new SubItemType(1, Stone, "holy_symbol", "", "");
@@ -188,7 +189,7 @@ public class Eob1Settings {
         SubItemType RingProtection3 = new SubItemType(3, Ring, "protection3", "Ring of Protection +3", ""); // level 4, (x=6, y=24)
 
         // Axe
-        SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", "", "");
+        SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", DescriptionMergeType.Replace, "");
 
         //-------------
         // --- Wall ---

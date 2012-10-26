@@ -48,13 +48,21 @@ public class Item {
             if (identifiedName.equals(notIdentifiedName)) {
                 String result = notIdentifiedName;
                 if (itemSubType.description.length() != 0) {
-                    if (itemSubType.preposition.length() == 0) {
-                        result += " ";
-                    } else {
-                        result += " " + itemSubType.preposition + " ";
+                    switch (itemSubType.descriptionMergeType) {
+                        case Prefix:
+                            result = itemSubType.description + " " + result;
+                            break;
+                        case Suffix:
+                            result += " " + itemSubType.description;
+                            break;
+                        case SuffixWithOf:
+                            result += " " + itemSubType.descriptionMergeType.preposition + " " + itemSubType.description;
+                            break;
+                        case Replace:
+                            result = itemSubType.description;
+                            break;
                     }
                 }
-                result += itemSubType.description;
                 return result.trim();
             } else {
                 return identifiedName;

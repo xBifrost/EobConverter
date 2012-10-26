@@ -1,5 +1,7 @@
 package org.eob.model;
 
+import org.eob.enums.DescriptionMergeType;
+
 import java.util.*;
 
 /**
@@ -8,24 +10,23 @@ import java.util.*;
  * Time: 10:47 PM
  */
 public class SubItemType {
-    private static final String defaultPreposition = "of";
     public final long id;
     public final ItemType itemType;
     public final String elementType;
     public final String description;
     public final String info;
-    public final String preposition;
+    public final DescriptionMergeType descriptionMergeType;
 
     private static Map<ItemType, Map<Long, SubItemType>> subItems = new HashMap<ItemType, Map<Long, SubItemType>>();
 
     static final SubItemType NotSubtype = new SubItemType(0, null, "", "", "");
 
-    public SubItemType(int id, ItemType itemType, String elementType, String description, String preposition, String info) {
+    public SubItemType(int id, ItemType itemType, String elementType, String description, DescriptionMergeType descriptionMergeType, String info) {
         this.id = id;
         this.itemType = itemType;
         this.elementType = elementType;
         this.description = description;
-        this.preposition = preposition;
+        this.descriptionMergeType = descriptionMergeType;
         this.info = info;
 
         if (itemType == null) {
@@ -41,7 +42,7 @@ public class SubItemType {
     }
 
     public SubItemType(int id, ItemType itemType, String elementType, String description, String info) {
-        this(id, itemType, elementType, description, defaultPreposition, info);
+        this(id, itemType, elementType, description, DescriptionMergeType.SuffixWithOf, info);
     }
 
     public static SubItemType getSubItemById(ItemType itemType, int id) {
