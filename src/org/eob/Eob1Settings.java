@@ -185,8 +185,8 @@ public class Eob1Settings {
         SubItemType GemBlue = new SubItemType(2, Gem, "blue", "Blue Gem", "");
 
         // Rings
-        SubItemType RingProtection2 = new SubItemType(2, Ring, "protection2", "Ring of Protection +2", ""); // level 11, (x=27,y=16)
-        SubItemType RingProtection3 = new SubItemType(3, Ring, "protection3", "Ring of Protection +3", ""); // level 4, (x=6, y=24)
+        SubItemType RingProtection2 = new SubItemType(2, Ring, "protection2", "Protection +2", ""); // level 11, (x=27,y=16)
+        SubItemType RingProtection3 = new SubItemType(3, Ring, "protection3", "Protection +3", ""); // level 4, (x=6, y=24)
 
         // Axe
         SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", DescriptionMergeType.Replace, "");
