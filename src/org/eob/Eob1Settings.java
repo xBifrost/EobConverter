@@ -33,6 +33,7 @@ public class Eob1Settings {
         ItemType Arrow = new ItemType(0x10, "arrow", "Arrow", "arrow");
         ItemType Rock = new ItemType(0x12, "rock", "Rock", "rock");
         ItemType Chainmail = new ItemType(0x14, "chainmail", "Chainmail", "ring_mail");
+        ItemType DwarvenHelmet = new ItemType(0x15, "dwarven_helmet", "Dwarven Helmet", "full_helmet");
         ItemType LeatherArmor = new ItemType(0x16, "leather_armor", "Leather Armor", "leather_brigandine");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
@@ -43,9 +44,13 @@ public class Eob1Settings {
         ItemType ClericScroll = new ItemType(0x23, "cleric_scroll", "Cleric scroll", "scroll");
         ItemType TextScroll = new ItemType(0x24, "scroll", "Text scroll", "scroll");
         ItemType Stone = new ItemType(0x25, "stone", "Stone", "rock");
-        ItemType Key = new ItemType(0x26, "key", "Key", "brass_key");
+        ItemType Key = new ItemType(0x26, "key", "Key", "brass_key"); // Different keys
         ItemType Potion = new ItemType(0x27, "potion", "Potion", "potion_healing");
-        ItemType Gem = new ItemType(0x28, "gem", "Gem", "blue_gem");
+        ItemType Gem = new ItemType(0x28, "gem", "Gem", "blue_gem"); // Gems of different colors (red and blue)
+        ItemType Robe = new ItemType(0x29, "robe", "Robe", "peasant_tunic");
+        ItemType MedallionOfAdornment = new ItemType(0x2c, "medallion_of_adornment", "Medallion of Adornment", "spirit_mirror_pendant");
+        ItemType Ring = new ItemType(0x2a, "ring", "Ring", "hardstone_bracelet"); // There are no rings in Grimrock, we need to replace them with bracelets
+        ItemType Ring2 = new ItemType(0x2f, "ring2", "Ring", "bracelet_tirin"); // This one has no power (found in lv 4, x=11,y=29)
         ItemType Wand = new ItemType(0x30, "wand", "Wand", "whitewood_wand");
 
 
@@ -171,13 +176,19 @@ public class Eob1Settings {
         SubItemType StoneScepter = new SubItemType(6, Stone, "scepter", "", "");
 
         // Dagger
-        SubItemType DaggerNormal = new SubItemType(0, Dagger, "dagger", "", "");
         SubItemType DaggerBackstabber = new SubItemType(3, Dagger, "backstabber", "+3", "");
         SubItemType DaggerFlica  = new SubItemType(5, Dagger, "flicka", "'Flicka'", "");
 
         // Gem
         SubItemType GemRed = new SubItemType(1, Gem, "red", "Red Gem", "");
         SubItemType GemBlue = new SubItemType(2, Gem, "blue", "Blue Gem", "");
+
+        // Rings
+        SubItemType RingProtection2 = new SubItemType(2, Ring, "protection2", "Ring of Protection +2", ""); // level 11, (x=27,y=16)
+        SubItemType RingProtection3 = new SubItemType(3, Ring, "protection3", "Ring of Protection +3", ""); // level 4, (x=6, y=24)
+
+        // Axe
+        SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", "", "");
 
         //-------------
         // --- Wall ---
