@@ -1,13 +1,9 @@
 package org.eob;
 
-import org.eob.enums.GameSupportType;
-import org.eob.enums.WallType;
 import org.eob.model.ItemType;
-import org.eob.model.Square;
-import org.eob.model.Wall;
 
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: Bifrost
@@ -15,87 +11,89 @@ import java.util.*;
  * Time: 3:16 PM
  */
 public class EobConverter {
+    public final static String CONVERTER_VERSION = "0.3";
     private final static List<String> externalChangesList = new ArrayList<String>();
 
-    {
-        externalChangesList.add("W door_1_2_3");
-        externalChangesList.add("S door_1_16_11");
-        externalChangesList.add("S door_1_19_18");
+    private static void initExternalChanges() {
+        externalChangesList.add("W eob_sewers_door_metal_1_2_3");
+        externalChangesList.add("W eob_sewers_door_metal_1_17_23");
+        externalChangesList.add("S eob_sewers_door_metal_1_16_11");
+        externalChangesList.add("S eob_sewers_door_metal_1_19_18");
 
-        externalChangesList.add("S portcullis_through_2_7_4");
-        externalChangesList.add("S door_2_28_5");
-        externalChangesList.add("W door_2_20_18");
-        externalChangesList.add("S door_2_19_21");
-        externalChangesList.add("W door_2_21_23");
-        externalChangesList.add("W door_2_5_20");
-        externalChangesList.add("W door_2_5_22");
-        externalChangesList.add("W door_2_5_24");
-        externalChangesList.add("W portcullis_through_2_23_16");
+        externalChangesList.add("S eob_portcullis_throwable_2_7_4");
+        externalChangesList.add("S eob_sewers_door_metal_2_28_5");
+        externalChangesList.add("W eob_sewers_door_metal_2_20_18");
+        externalChangesList.add("S eob_sewers_door_metal_2_19_21");
+        externalChangesList.add("W eob_sewers_door_metal_2_21_23");
+        externalChangesList.add("W eob_sewers_door_metal_2_5_20");
+        externalChangesList.add("W eob_sewers_door_metal_2_5_22");
+        externalChangesList.add("W eob_sewers_door_metal_2_5_24");
+        externalChangesList.add("W eob_portcullis_throwable_2_23_16");
 
-        externalChangesList.add("R stairs_up_3_9_18_W");
-        externalChangesList.add("S door_3_30_8");
-        externalChangesList.add("W door_3_23_10");
-        externalChangesList.add("S door_3_17_11");
-        externalChangesList.add("W door_3_26_14");
-        externalChangesList.add("S door_3_9_18");
-        externalChangesList.add("S door_3_11_18");
-        externalChangesList.add("S door_3_18_18");
-        externalChangesList.add("W door_3_4_20");
+        externalChangesList.add("R eob_ladder_up_3_9_18_W");
+        externalChangesList.add("S eob_sewers_door_metal_3_30_8");
+        externalChangesList.add("W eob_sewers_door_metal_3_23_10");
+        externalChangesList.add("S eob_sewers_door_metal_3_17_11");
+        externalChangesList.add("W eob_sewers_door_metal_3_26_14");
+        externalChangesList.add("S eob_sewers_door_metal_3_9_18");
+        externalChangesList.add("S eob_sewers_door_metal_3_11_18");
+        externalChangesList.add("S eob_sewers_door_metal_3_18_18");
+        externalChangesList.add("W eob_sewers_door_metal_3_4_20");
 
-        externalChangesList.add("W door_4_18_1");
-        externalChangesList.add("S net_4_30_4");
-        externalChangesList.add("W door_4_2_7");
-        externalChangesList.add("S door_4_3_8");
-        externalChangesList.add("W door_4_20_6");
-        externalChangesList.add("W door_4_20_8");
-        externalChangesList.add("W door_4_20_10");
-        externalChangesList.add("W door_4_20_12");
-        externalChangesList.add("S net_4_28_18");
-        externalChangesList.add("S door_4_16_22");
-        externalChangesList.add("W net_4_17_28");
-        externalChangesList.add("W net_4_17_30");
-        externalChangesList.add("S door_4_8_25");
-        externalChangesList.add("W net_4_21_24");
-        externalChangesList.add("S net_4_29_27");
-        externalChangesList.add("W door_4_25_19");
+        externalChangesList.add("W eob_ruins_door_stone_4_18_1");
+        externalChangesList.add("S eob_ruins_net_4_30_4");
+        externalChangesList.add("W eob_ruins_door_stone_4_2_7");
+        externalChangesList.add("S eob_ruins_door_stone_4_3_8");
+        externalChangesList.add("W eob_ruins_door_stone_4_20_6");
+        externalChangesList.add("W eob_ruins_door_stone_4_20_8");
+        externalChangesList.add("W eob_ruins_door_stone_4_20_10");
+        externalChangesList.add("W eob_ruins_door_stone_4_20_12");
+        externalChangesList.add("S eob_ruins_net_4_28_18");
+        externalChangesList.add("S eob_ruins_door_stone_4_16_22");
+        externalChangesList.add("W eob_ruins_net_4_17_28");
+        externalChangesList.add("W eob_ruins_net_4_17_30");
+        externalChangesList.add("S eob_ruins_door_stone_4_8_25");
+        externalChangesList.add("W eob_ruins_net_4_21_24");
+        externalChangesList.add("S eob_ruins_net_4_29_27");
+        externalChangesList.add("W eob_ruins_door_stone_4_25_19");
 
-        externalChangesList.add("W door_5_28_2");
-        externalChangesList.add("S door_5_1_9");
-        externalChangesList.add("S door_5_4_9");
-        externalChangesList.add("S door_5_23_19");
-        externalChangesList.add("S door_5_13_18");
-        externalChangesList.add("S door_5_10_18");
-        externalChangesList.add("S door_5_7_18");
-        externalChangesList.add("W door_5_24_27");
-        externalChangesList.add("W door_5_17_29");
+        externalChangesList.add("W eob_ruins_door_stone_5_28_2");
+        externalChangesList.add("S eob_ruins_door_stone_5_1_9");
+        externalChangesList.add("S eob_ruins_door_stone_5_4_9");
+        externalChangesList.add("S eob_ruins_door_stone_5_23_19");
+        externalChangesList.add("S eob_ruins_door_stone_5_13_18");
+        externalChangesList.add("S eob_ruins_door_stone_5_10_18");
+        externalChangesList.add("S eob_ruins_door_stone_5_7_18");
+        externalChangesList.add("W eob_ruins_door_stone_5_24_27");
+        externalChangesList.add("W eob_ruins_door_stone_5_17_29");
 
-        externalChangesList.add("W door_6_10_3");
-        externalChangesList.add("S door_6_5_9");
-        externalChangesList.add("S door_6_29_11");
-        externalChangesList.add("S door_6_19_23");
+        externalChangesList.add("W eob_ruins_door_stone_6_10_3");
+        externalChangesList.add("S eob_ruins_door_stone_6_5_9");
+        externalChangesList.add("S eob_ruins_door_stone_6_29_11");
+        externalChangesList.add("S eob_ruins_door_stone_6_19_23");
 
-        externalChangesList.add("W door_7_24_2");
-        externalChangesList.add("W door_7_28_4");
-        externalChangesList.add("W door_7_29_7");
-        externalChangesList.add("W door_7_29_9");
-        externalChangesList.add("W door_7_13_7");
-        externalChangesList.add("W door_7_29_25");
-        externalChangesList.add("W door_7_14_20");
-        externalChangesList.add("W door_7_13_10");
-        externalChangesList.add("S door_7_20_19");
-        externalChangesList.add("S door_7_27_24");
-        externalChangesList.add("S door_7_25_24");
-        externalChangesList.add("S door_7_19_24");
-        externalChangesList.add("S door_7_17_24");
-        externalChangesList.add("S door_7_10_29");
-        externalChangesList.add("S door_7_4_29");
-        externalChangesList.add("S door_7_25_16");
+        externalChangesList.add("W prison_door_metal_7_24_2");
+        externalChangesList.add("W prison_door_metal_7_28_4");
+        externalChangesList.add("W prison_door_metal_7_29_7");
+        externalChangesList.add("W prison_door_metal_7_29_9");
+        externalChangesList.add("W prison_door_metal_7_13_7");
+        externalChangesList.add("W prison_door_metal_7_29_25");
+        externalChangesList.add("W prison_door_metal_7_14_20");
+        externalChangesList.add("W prison_door_metal_7_13_10");
+        externalChangesList.add("S prison_door_metal_7_20_19");
+        externalChangesList.add("S prison_door_metal_7_27_24");
+        externalChangesList.add("S prison_door_metal_7_25_24");
+        externalChangesList.add("S prison_door_metal_7_19_24");
+        externalChangesList.add("S prison_door_metal_7_17_24");
+        externalChangesList.add("S prison_door_metal_7_10_29");
+        externalChangesList.add("S prison_door_metal_7_4_29");
+        externalChangesList.add("S prison_door_metal_7_25_16");
 
-        externalChangesList.add("S door_8_30_26");
-        externalChangesList.add("S door_8_21_16");
-        externalChangesList.add("S door_8_21_22");
-        externalChangesList.add("W door_8_5_30");
-        externalChangesList.add("W door_8_7_24");
+        externalChangesList.add("S prison_door_metal_8_30_26");
+        externalChangesList.add("S prison_door_metal_8_21_16");
+        externalChangesList.add("S prison_door_metal_8_21_22");
+        externalChangesList.add("W prison_door_metal_8_5_30");
+        externalChangesList.add("W prison_door_metal_8_7_24");
 
         externalChangesList.add("R firing_mechanism_9_7_8_S");
         externalChangesList.add("R firing_mechanism_9_8_8_S");
@@ -131,17 +129,17 @@ public class EobConverter {
         externalChangesList.add("R firing_mechanism_9_13_9_E");
         externalChangesList.add("R firing_mechanism_9_15_9_W");
         externalChangesList.add("R firing_mechanism_9_16_11_W");
-        externalChangesList.add("F 9_16_11_W prison_secret_door");
-        externalChangesList.add("S door_9_25_2");
-        externalChangesList.add("S door_9_22_2");
-        externalChangesList.add("S door_9_22_9");
-        externalChangesList.add("S door_9_18_9");
-        externalChangesList.add("S door_9_16_14");
-        externalChangesList.add("S door_9_16_19");
-        externalChangesList.add("W door_9_28_3");
-        externalChangesList.add("W door_9_28_7");
-        externalChangesList.add("W door_9_28_16");
-        externalChangesList.add("W door_9_28_26");
+        externalChangesList.add("F 9_16_11_W prison_secret_prison_door_metal");
+        externalChangesList.add("S prison_door_metal_9_25_2");
+        externalChangesList.add("S prison_door_metal_9_22_2");
+        externalChangesList.add("S prison_door_metal_9_22_9");
+        externalChangesList.add("S prison_door_metal_9_18_9");
+        externalChangesList.add("S prison_door_metal_9_16_14");
+        externalChangesList.add("S prison_door_metal_9_16_19");
+        externalChangesList.add("W prison_door_metal_9_28_3");
+        externalChangesList.add("W prison_door_metal_9_28_7");
+        externalChangesList.add("W prison_door_metal_9_28_16");
+        externalChangesList.add("W prison_door_metal_9_28_26");
 
         externalChangesList.add("W door_10_20_16");
         externalChangesList.add("S door_10_8_19");
@@ -183,6 +181,7 @@ public class EobConverter {
             return;
         }
 
+        initExternalChanges();
         Eob1Settings.init();
 
         ItemParser itemParser = new ItemParser("ITEM.DAT", DEBUG);

@@ -50,8 +50,8 @@ public class ItemObject {
         inSquarePosition = InSquarePositionType.getItemPositionById(orig[5] & 0xFF);
 
         int coords = (orig[6] & 0xff) + (orig[7] & 0xff) * 256;
-        x = (coords >> 5) & 0x1f;
-        y = (coords) & 0x1f;
+        x = (coords) & 0x1f;
+        y = (coords >> 5) & 0x1f;
 
         if (orig[8] != orig[10] || orig[9] != orig[11]) {
             System.out.println("Different values of objectIds: (" + ((orig[8] & 0xFF) + 0x0100 * (orig[9] & 0xFF)) + "," + ((orig[10] & 0xFF) + 0x0100 * (orig[11] & 0xFF)) + ")");

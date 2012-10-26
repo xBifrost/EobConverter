@@ -16,6 +16,7 @@ public class Wall {
     public final Long wallId;
     public final Set<GameSupportType> gameSupportType;
     public final WallType wallType;
+    public final Boolean containCompartment;
     public final Set<Long> level;
     public final String elementType;
     public final String elementName;
@@ -23,9 +24,10 @@ public class Wall {
 
     private static final Map<Wall, String> registeredWalls = new LinkedHashMap<Wall, String>();
 
-    public Wall(Long wallId, WallType wallType, Set<Long> level, String elementType, String elementName, String properties) {
+    public Wall(Long wallId, WallType wallType, boolean containCompartment, Set<Long> level, String elementType, String elementName, String properties) {
         this.wallId = wallId;
         this.wallType = wallType;
+        this.containCompartment = containCompartment;
         this.gameSupportType = new HashSet<GameSupportType>(Arrays.asList(GameSupportType.Eob1, GameSupportType.Grimrock));
         this.level = level;
         this.elementType = elementType;
@@ -34,13 +36,14 @@ public class Wall {
         registeredWalls.put(this, null);
     }
 
-    public Wall(Long wallId, WallType wallType, Set<Long> level, String elementType, String elementName) {
-        this(wallId, wallType, level, elementType, elementName, "");
+    public Wall(Long wallId, WallType wallType, boolean containCompartment, Set<Long> level, String elementType, String elementName) {
+        this(wallId, wallType, containCompartment, level, elementType, elementName, "");
     }
 
     public Wall(Long wallId, WallType wallType, List<GameSupportType> gameSupportType) {
         this.wallId = wallId;
         this.wallType = wallType;
+        this.containCompartment = false;
         this.gameSupportType = new HashSet<GameSupportType>(gameSupportType);
         this.level = null;
         this.elementType = "";
@@ -58,7 +61,7 @@ public class Wall {
             }
         }
 
-        Wall wall = new Wall(wallId, WallType.Unknown, null, "", "");
+        Wall wall = new Wall(wallId, WallType.Unknown, false, null, "", "");
         registeredWalls.put(wall, "unknown");
         return wall;
     }
