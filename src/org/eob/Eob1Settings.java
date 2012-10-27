@@ -24,6 +24,7 @@ public class Eob1Settings {
         ItemType Axe = new ItemType(0x00, "axe", "Axe", "hand_axe");
         ItemType Longsword = new ItemType(0x01, "long_sword", "Long Sword", "long_sword");
         ItemType Shortsword = new ItemType(0x02, "short_sword", "Short Sword", "short_sword");
+        ItemType OrbOfPower = new ItemType(0x03, "orb_of_power", "Orb of Power", "magic_orb");
         ItemType Dart = new ItemType(0x04, "dart", "Dart", "shuriken");
         ItemType Dagger = new ItemType(0x05, "dagger", "Dagger", "dagger");
         ItemType DwarvenPotion = new ItemType(0x06, "dwarven_potion", "Dwarven potion", "potion_healing");
@@ -31,6 +32,7 @@ public class Eob1Settings {
         ItemType Spear = new ItemType(0x09, "spear", "Spear", "legionary_spear");
         ItemType Halberd = new ItemType(0x0A, "halberd", "Halberd", "legionary_spear"); // there is no other long weapon in Grimrock, so spear will have to do
         ItemType Mace = new ItemType(0x0B, "mace", "Mace", "knoffer");
+        ItemType Flail = new ItemType(0x0C, "flail", "Flail", "flail");
         ItemType Sling = new ItemType(0x0E, "sling", "Sling", "sling");
         ItemType Dart2 = new ItemType(0x0F, "dart", "Dart", "shuriken");
         ItemType Arrow = new ItemType(0x10, "arrow", "Arrow", "arrow");
@@ -206,10 +208,15 @@ public class Eob1Settings {
 
         // Different base type for this ring
         SubItemType BlueRingOfFeatherFall = new SubItemType(3, Ring2, "feather_fall", "Feather Fall", "");
+        SubItemType RingOfSustenance = new SubItemType(2, Ring2, "sustenance", "Sustenance", DescriptionMergeType.SuffixWithOf, "");
         SubItemType RingOfWizardry = new SubItemType(1, Ring2, "wizardry", "Wizardry", DescriptionMergeType.SuffixWithOf, "");
 
         // Medallion
         SubItemType LuckStoneMedallion = new SubItemType(1, Medallion, "luck_stone", "Luck Stone", DescriptionMergeType.Prefix, "");
+
+        // Longsword
+        SubItemType LongSwordNightStalker = new SubItemType(3, Longsword, "nightstalker", "'Night Stalker'", DescriptionMergeType.Replace, "+3");
+        SubItemType LongSwordSeverious = new SubItemType(5, Longsword, "severious", "'Severious'", DescriptionMergeType.Replace, "+5");
 
         // Sword
         SubItemType ShortSwordSlicer = new SubItemType(3, Shortsword, "slicer", "'Slicer'", DescriptionMergeType.Replace, "+3");
@@ -232,6 +239,7 @@ public class Eob1Settings {
 
         // Shield
         SubItemType DwarvenShield = new SubItemType(1, Shield, "dwarven", "Dwarven", DescriptionMergeType.Prefix, "");
+        SubItemType DrowShield = new SubItemType(3, Shield, "drow", "Drow", DescriptionMergeType.Prefix, "+3");
 
         // Plate mail
         SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "Great Beauty", DescriptionMergeType.SuffixWithOf, ""); // cursed -3
