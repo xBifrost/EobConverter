@@ -66,7 +66,7 @@ public class Eob1Settings {
         ItemType Ring2 = new ItemType(0x2f, "ring2", "Ring", "bracelet_tirin"); // This one has no power (found in lv 4, x=11,y=29)
         ItemType Wand = new ItemType(0x30, "wand", "Wand", "whitewood_wand");
         ItemType KenkuEgg = new ItemType(0x31, "egg", "Kenku Egg", "slime_bell"); // There is really nothing in Grimrock
-                 // that even vaguely resembles an egg. Slime bell is at least round :)
+                                                  // that even vaguely resembles an egg. Slime bell is at least round :)
 
 
 
@@ -172,7 +172,7 @@ public class Eob1Settings {
         SubItemType HumanBones1 = new SubItemType(1, Bones, "human_anya", "Human", DescriptionMergeType.Prefix, "Anya"); // resurrects Anya (from level 3)
         SubItemType HumanBones4 = new SubItemType(4, Bones, "human_ileria", "Human", DescriptionMergeType.Prefix, "Ileria"); // resurrects Ileria (from level 7)
         SubItemType HumanBones2 = new SubItemType(2, Bones, "human_beohram", "Human", DescriptionMergeType.Prefix, "Beohram"); // resurrects Beohram (from level 9)
-        SubItemType HumanBones5 = new SubItemType(5, Bones, "elf_tyrra", "Elf", DescriptionMergeType.Prefix, "Tyrra"); // resurrects Tyrra (from level 10)
+        SubItemType ElfBones = new SubItemType(5, Bones, "elf_tyrra", "Elf", DescriptionMergeType.Prefix, "Tyrra"); // resurrects Tyrra (from level 10)
         SubItemType HumanBones3 = new SubItemType(3, Bones, "human_kirath", "Human", DescriptionMergeType.Prefix, "Kirath"); // resurrects Kirath (from level 11)
 
         // Dart
@@ -198,6 +198,7 @@ public class Eob1Settings {
 
         // Dagger
         SubItemType DaggerBackstabber = new SubItemType(3, Dagger, "backstabber", "+3", "");
+        SubItemType DaggerGuinsoo = new SubItemType(4, Dagger, "guinsoo", "'Guinsoo'", "+4");
         SubItemType DaggerFlica  = new SubItemType(5, Dagger, "flicka", "'Flicka'", "");
 
         // Gem
@@ -258,15 +259,23 @@ public class Eob1Settings {
         SubItemType BracersOfDefense2 = new SubItemType(2, Bracers, "defense2", "Defense", DescriptionMergeType.SuffixWithOf, "+2");
         SubItemType ElvenBracersOfDefense = new SubItemType(3, Bracers, "defense3", "Elven Bracers of Defense", DescriptionMergeType.Replace, "+3");
 
-        // Kenku Eggs
+        // Kenku Eggs (I don't know how the egg types differ from each other)
         SubItemType KenkuEgg10 = new SubItemType(10, KenkuEgg, "10", "", "");
         SubItemType KenkuEgg20 = new SubItemType(20, KenkuEgg, "20", "", "");
         SubItemType KenkuEgg30 = new SubItemType(30, KenkuEgg, "30", "", "");
         SubItemType KenkuEgg40 = new SubItemType(40, KenkuEgg, "40", "", "");
 
         // Orb of Power
-        // orb of power from level 11 (I think it looks like the regular one)
+        // orb of power from level 11 (I think it looks like the regular one and the different subtype is used to just distinguish between them)
         SubItemType OrbOfPowerLevel11 = new SubItemType(1, OrbOfPower, "_from_level11", "", "");
+
+        // The following items are not present in the dungeons. I do not know what they really are, so their descriptions and names
+        // are just guesses
+        SubItemType RationDoubleIron = new SubItemType(100, Rations, "iron_double", "", ""); // 100 type suggest that is is twice as good as iron (50)
+        SubItemType LongSword1 = new SubItemType(1, Longsword, "sharp","Sharp", DescriptionMergeType.Prefix, "+1");
+        SubItemType LongSwordCursed2 = new SubItemType(-2, Longsword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
+        SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
+        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "no_used_in_dugneon", "Mysterious", "not found anywhere in the duneon"); // (item offset=0x1EC)
 
         //-------------
         // --- Wall ---
