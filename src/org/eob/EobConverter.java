@@ -177,8 +177,22 @@ public class EobConverter {
     private static boolean DEBUG = true;
 
     public static void main(String[] args) {
+        ArrayList<String> levelFiles = new ArrayList<String>();
         if (args.length == 0) {
-            return;
+            levelFiles.add("LEVEL1.MAZ");
+            levelFiles.add("LEVEL2.MAZ");
+            levelFiles.add("LEVEL3.MAZ");
+            levelFiles.add("LEVEL4.MAZ");
+            levelFiles.add("LEVEL5.MAZ");
+            levelFiles.add("LEVEL6.MAZ");
+            levelFiles.add("LEVEL7.MAZ");
+            levelFiles.add("LEVEL8.MAZ");
+            levelFiles.add("LEVEL9.MAZ");
+            levelFiles.add("LEVEL10.MAZ");
+            levelFiles.add("LEVEL11.MAZ");
+            levelFiles.add("LEVEL12.MAZ");
+        } else {
+            levelFiles.add(args[0]);
         }
 
         initExternalChanges();
@@ -189,9 +203,11 @@ public class EobConverter {
 
         GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, itemParser, DEBUG);
 
-        LevelParser levelParser = new LevelParser(args[0]);
-        levelParser.parse();
-        grimrockExport.addLevel(levelParser);
+        for (String file: levelFiles) {
+            LevelParser levelParser = new LevelParser(file);
+            levelParser.parse();
+            grimrockExport.addLevel(levelParser);
+        }
 
 
         grimrockExport.exportIntoGrimrock(true);
