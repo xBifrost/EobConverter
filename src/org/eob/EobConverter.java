@@ -1,5 +1,7 @@
 package org.eob;
 
+import org.eob.file.EobFiles;
+import org.eob.file.FileUtility;
 import org.eob.model.ItemType;
 
 import java.util.ArrayList;
@@ -174,25 +176,37 @@ public class EobConverter {
         externalChangesList.add("S door_12_23_3");
     }
 
-    private static boolean DEBUG = true;
+    private final static String ITEMS_FILE = "ITEM.DAT";
+    private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
 
     public static void main(String[] args) {
+        String eobPath = ".";
+        int from = 1;
+        int to = 12;
+        String debugShowOnlyItemName = "";
+        boolean DEBUG = true;
+
         if (args.length == 0) {
             return;
         }
 
         initExternalChanges();
         Eob1Settings.init();
+        EobFiles eobFiles = new EobFiles(eobPath);
 
-        ItemParser itemParser = new ItemParser("ITEM.DAT", DEBUG);
-        itemParser.parseFile("");
+        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), DEBUG);
+        itemParser.parseFile(debugShowOnlyItemName);
 
         GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, itemParser, DEBUG);
 
-        LevelParser levelParser = new LevelParser(args[0]);
-        levelParser.parse();
-        grimrockExport.addLevel(levelParser);
-
+        for (int levelId = from; levelId <= to; levelId++) {
+            byte[] levelFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
+            if (levelFile != null) {
+                LevelParser levelParser = new LevelParser(levelId, levelFile);
+                levelParser.parse();
+                grimrockExport.addLevel(levelParser);
+            }
+        }
 
         grimrockExport.exportIntoGrimrock(true);
 

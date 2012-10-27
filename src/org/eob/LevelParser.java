@@ -22,25 +22,12 @@ public class LevelParser {
     public final int levelId;
     public final Square[][] level;
 
-    public LevelParser(String fileName) {
-        levelId = getLevelId(fileName);
-        levelData = FileUtility.readFile(fileName);
+    public LevelParser(int levelId, byte[] levelData) {
+        this.levelId = levelId;
+        this.levelData = levelData;
         width = ByteArrayUtility.getWord(levelData, 0);
         height = ByteArrayUtility.getWord(levelData, 2);
         level = new Square[width][height];
-    }
-
-    private int getLevelId(String fileName) {
-        String levelIdStr = "";
-        int pos = fileName.length() - 1;
-        while (fileName.charAt(pos) < '0' || fileName.charAt(pos) > '9') {
-            pos--;
-        }
-        while (fileName.charAt(pos) >= '0' && fileName.charAt(pos) <= '9') {
-            levelIdStr = fileName.charAt(pos) + levelIdStr;
-            pos--;
-        }
-        return Integer.parseInt(levelIdStr);
     }
 
     public void parse() {

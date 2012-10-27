@@ -1,4 +1,4 @@
-package org.eob;
+package org.eob.file;
 
 import java.io.*;
 

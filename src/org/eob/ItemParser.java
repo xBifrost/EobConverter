@@ -20,9 +20,9 @@ public class ItemParser {
     private List<ItemObject> items = new ArrayList<ItemObject>();
     private Map<Long, ItemObject> usedItems = new LinkedHashMap<Long, ItemObject>();
 
-    public ItemParser(String fileName, boolean debug) {
+    public ItemParser(byte[] itemsData, boolean debug) {
         this.debug = debug;
-        itemsData = FileUtility.readFile(fileName);
+        this.itemsData = itemsData;
     }
 
     public void parseFile(String debugShowOnlyItemName) {
