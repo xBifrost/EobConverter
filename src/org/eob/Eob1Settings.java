@@ -23,7 +23,7 @@ public class Eob1Settings {
         //--------------
         ItemType Axe = new ItemType(0x00, "axe", "Axe", "hand_axe");
         ItemType Longsword = new ItemType(0x01, "long_sword", "Long Sword", "long_sword");
-        ItemType Shortsword = new ItemType(0x02, "short_sword", "Short Sword", "short_sword");
+        ItemType Shortsword = new ItemType(0x02, "short_sword", "Short Sword", "cutlass");
         ItemType OrbOfPower = new ItemType(0x03, "orb_of_power", "Orb of Power", "magic_orb");
         ItemType Dart = new ItemType(0x04, "dart", "Dart", "shuriken");
         ItemType Dagger = new ItemType(0x05, "dagger", "Dagger", "dagger");
@@ -46,7 +46,7 @@ public class Eob1Settings {
         ItemType ScaleMail = new ItemType(0x19, "scale_mail", "Scale Mail", "ring_mail");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
-        ItemType SpellBook = new ItemType(0x1d, "spellbook", "Spell Book", "tome_of_wisdom");
+        ItemType SpellBook = new ItemType(0x1d, "spellbook", "Spell Book", "tome_wisdom");
         ItemType HolySymbol = new ItemType(0x1E, "holy_symbol", "Holy Symbol", "golden_chalice"); // there's nothing that looks like ankh symbol
         ItemType Rations = new ItemType(0x1F, "rations", "Rations", "pitroot_bread");
         ItemType LeatherBoots = new ItemType(0x20, "leather_boots", "Leather boots", "leather_boots");
@@ -275,7 +275,7 @@ public class Eob1Settings {
         SubItemType LongSword1 = new SubItemType(1, Longsword, "sharp","Sharp", DescriptionMergeType.Prefix, "+1");
         SubItemType LongSwordCursed2 = new SubItemType(-2, Longsword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
         SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
-        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "no_used_in_dugneon", "Mysterious", "not found anywhere in the duneon"); // (item offset=0x1EC)
+        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "Mysterious", "not found anywhere in the duneon"); // (item offset=0x1EC)
 
         //-------------
         // --- Wall ---
