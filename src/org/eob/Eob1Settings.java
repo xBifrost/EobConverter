@@ -33,6 +33,7 @@ public class Eob1Settings {
         ItemType Halberd = new ItemType(0x0A, "halberd", "Halberd", "legionary_spear"); // there is no other long weapon in Grimrock, so spear will have to do
         ItemType Mace = new ItemType(0x0B, "mace", "Mace", "knoffer");
         ItemType Flail = new ItemType(0x0C, "flail", "Flail", "flail");
+        ItemType Staff = new ItemType(0x0D, "staff", "Staff", "whitewood_wand"); // Not present in the dungeon, but defined as 4th item (offset=0x2c)
         ItemType Sling = new ItemType(0x0E, "sling", "Sling", "sling");
         ItemType Dart2 = new ItemType(0x0F, "dart", "Dart", "shuriken");
         ItemType Arrow = new ItemType(0x10, "arrow", "Arrow", "arrow");
@@ -45,6 +46,7 @@ public class Eob1Settings {
         ItemType ScaleMail = new ItemType(0x19, "scale_mail", "Scale Mail", "ring_mail");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
+        ItemType SpellBook = new ItemType(0x1d, "spellbook", "Spell Book", "tome_of_wisdom");
         ItemType HolySymbol = new ItemType(0x1E, "holy_symbol", "Holy Symbol", "golden_chalice"); // there's nothing that looks like ankh symbol
         ItemType Rations = new ItemType(0x1F, "rations", "Rations", "pitroot_bread");
         ItemType LeatherBoots = new ItemType(0x20, "leather_boots", "Leather boots", "leather_boots");
@@ -140,7 +142,7 @@ public class Eob1Settings {
         SubItemType PotionCurePoison = new SubItemType(8, Potion, "cure_poison", "Cure Poison", "");
 
         // Dwarven potion
-        SubItemType DwarvenPotionHealing = new SubItemType(8, Potion, "healing", "Healing", "");
+        SubItemType DwarvenPotionHealing = new SubItemType(8, DwarvenPotion, "healing", "Healing", "");
 
         // Key
         SubItemType KeySilver = new SubItemType(1, Key, "silver", "", "");
@@ -216,6 +218,7 @@ public class Eob1Settings {
 
         // Longsword
         SubItemType LongSwordNightStalker = new SubItemType(3, Longsword, "nightstalker", "'Night Stalker'", DescriptionMergeType.Replace, "+3");
+        SubItemType LognSwordSlasher = new SubItemType(4, Longsword, "slasher", "'Slasher'", DescriptionMergeType.Replace, "+4");
         SubItemType LongSwordSeverious = new SubItemType(5, Longsword, "severious", "'Severious'", DescriptionMergeType.Replace, "+5");
 
         // Sword
@@ -230,6 +233,7 @@ public class Eob1Settings {
 
         // Rock
         SubItemType GlowingRock = new SubItemType(1, Rock, "glowing", "", "glowing");
+        SubItemType MossyRock = new SubItemType(2, Rock, "mossy", "Mossy", DescriptionMergeType.Prefix, "");
 
         // Halberd
         SubItemType HalberdChieftain = new SubItemType(5, Halberd, "chieftain", "Chieftain", DescriptionMergeType.Prefix, "");
@@ -242,9 +246,16 @@ public class Eob1Settings {
         SubItemType DrowShield = new SubItemType(3, Shield, "drow", "Drow", DescriptionMergeType.Prefix, "+3");
 
         // Plate mail
-        SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "Great Beauty", DescriptionMergeType.SuffixWithOf, ""); // cursed -3
+        SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "Great Beauty", DescriptionMergeType.SuffixWithOf, "-3"); // cursed -3
+
+        // Banded Armor
+        SubItemType BandedArmor3 = new SubItemType(3, BandedArmor, "plus3", "", "+3");
+
+        // Robe
+        SubItemType RobeOfProtection5 = new SubItemType(5, Robe, "protection5", "Protection", DescriptionMergeType.SuffixWithOf, "+5");
 
         // Bracers
+        SubItemType BracersOfDefense2 = new SubItemType(2, Bracers, "defense2", "Defense", DescriptionMergeType.SuffixWithOf, "+2");
         SubItemType ElvenBracersOfDefense = new SubItemType(3, Bracers, "defense3", "Elven Bracers of Defense", DescriptionMergeType.Replace, "+3");
 
         // Kenku Eggs
@@ -252,6 +263,10 @@ public class Eob1Settings {
         SubItemType KenkuEgg20 = new SubItemType(20, KenkuEgg, "20", "", "");
         SubItemType KenkuEgg30 = new SubItemType(30, KenkuEgg, "30", "", "");
         SubItemType KenkuEgg40 = new SubItemType(40, KenkuEgg, "40", "", "");
+
+        // Orb of Power
+        // orb of power from level 11 (I think it looks like the regular one)
+        SubItemType OrbOfPowerLevel11 = new SubItemType(1, OrbOfPower, "_from_level11", "", "");
 
         //-------------
         // --- Wall ---
