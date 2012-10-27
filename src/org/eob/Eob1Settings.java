@@ -23,21 +23,31 @@ public class Eob1Settings {
         //--------------
         ItemType Axe = new ItemType(0x00, "axe", "Axe", "hand_axe");
         ItemType Longsword = new ItemType(0x01, "long_sword", "Long Sword", "long_sword");
+        ItemType Shortsword = new ItemType(0x02, "short_sword", "Short Sword", "cutlass");
+        ItemType OrbOfPower = new ItemType(0x03, "orb_of_power", "Orb of Power", "magic_orb");
         ItemType Dart = new ItemType(0x04, "dart", "Dart", "shuriken");
         ItemType Dagger = new ItemType(0x05, "dagger", "Dagger", "dagger");
         ItemType DwarvenPotion = new ItemType(0x06, "dwarven_potion", "Dwarven potion", "potion_healing");
         ItemType Bow = new ItemType(0x07, "bow", "Bow", "short_bow");
         ItemType Spear = new ItemType(0x09, "spear", "Spear", "legionary_spear");
+        ItemType Halberd = new ItemType(0x0A, "halberd", "Halberd", "legionary_spear"); // there is no other long weapon in Grimrock, so spear will have to do
         ItemType Mace = new ItemType(0x0B, "mace", "Mace", "knoffer");
+        ItemType Flail = new ItemType(0x0C, "flail", "Flail", "flail");
+        ItemType Staff = new ItemType(0x0D, "staff", "Staff", "whitewood_wand"); // Not present in the dungeon, but defined as 4th item (offset=0x2c)
         ItemType Sling = new ItemType(0x0E, "sling", "Sling", "sling");
         ItemType Dart2 = new ItemType(0x0F, "dart", "Dart", "shuriken");
         ItemType Arrow = new ItemType(0x10, "arrow", "Arrow", "arrow");
         ItemType Rock = new ItemType(0x12, "rock", "Rock", "rock");
+        ItemType BandedArmor = new ItemType(0x13, "banded_armor", "Banded Armor", "ring_mail");
         ItemType Chainmail = new ItemType(0x14, "chainmail", "Chainmail", "ring_mail");
         ItemType DwarvenHelmet = new ItemType(0x15, "dwarven_helmet", "Dwarven Helmet", "full_helmet");
         ItemType LeatherArmor = new ItemType(0x16, "leather_armor", "Leather Armor", "leather_brigandine");
+        ItemType PlateMail = new ItemType(0x18, "plate_mail", "Plate Mail", "plate_cuirass");
+        ItemType ScaleMail = new ItemType(0x19, "scale_mail", "Scale Mail", "ring_mail");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
+        ItemType SpellBook = new ItemType(0x1d, "spellbook", "Spell Book", "tome_wisdom");
+        ItemType HolySymbol = new ItemType(0x1E, "holy_symbol", "Holy Symbol", "golden_chalice"); // there's nothing that looks like ankh symbol
         ItemType Rations = new ItemType(0x1F, "rations", "Rations", "pitroot_bread");
         ItemType LeatherBoots = new ItemType(0x20, "leather_boots", "Leather boots", "leather_boots");
         ItemType Bones = new ItemType(0x21, "bones", "Bones", "remains_of_toorum");
@@ -51,8 +61,14 @@ public class Eob1Settings {
         ItemType Robe = new ItemType(0x29, "robe", "Robe", "peasant_tunic");
         ItemType MedallionOfAdornment = new ItemType(0x2c, "medallion_of_adornment", "Medallion of Adornment", "spirit_mirror_pendant");
         ItemType Ring = new ItemType(0x2a, "ring", "Ring", "hardstone_bracelet"); // There are no rings in Grimrock, we need to replace them with bracelets
+        ItemType Bracers = new ItemType(0x2b, "bracers", "Bracers", "bracelet_tirin");
+        ItemType Medallion = new ItemType(0x2e, "medallion", "Stone Medallion", "frostbite_necklace"); // Actual name Luck Stone Medallion
         ItemType Ring2 = new ItemType(0x2f, "ring2", "Ring", "bracelet_tirin"); // This one has no power (found in lv 4, x=11,y=29)
         ItemType Wand = new ItemType(0x30, "wand", "Wand", "whitewood_wand");
+        ItemType KenkuEgg = new ItemType(0x31, "egg", "Kenku Egg", "slime_bell"); // There is really nothing in Grimrock
+                                                  // that even vaguely resembles an egg. Slime bell is at least round :)
+
+
 
 
         //-----------------
@@ -126,7 +142,7 @@ public class Eob1Settings {
         SubItemType PotionCurePoison = new SubItemType(8, Potion, "cure_poison", "Cure Poison", "");
 
         // Dwarven potion
-        SubItemType DwarvenPotionHealing = new SubItemType(8, Potion, "healing", "Healing", "");
+        SubItemType DwarvenPotionHealing = new SubItemType(8, DwarvenPotion, "healing", "Healing", "");
 
         // Key
         SubItemType KeySilver = new SubItemType(1, Key, "silver", "", "");
@@ -147,14 +163,17 @@ public class Eob1Settings {
         SubItemType WandMagicMissile = new SubItemType(6, Wand, "magic_missile", "Magic Missile", "");
         SubItemType WandMagicalVestment = new SubItemType(7, Wand, "magical_vestment", "Magical Vestment", "");
 
-
         // Rations
         SubItemType RationsBasic = new SubItemType(25, Rations, "", "Rations", "");
         SubItemType RationsIron = new SubItemType(50, Rations, "iron", "Iron Rations", "");
 
-        // Bones
-        SubItemType HumanBones = new SubItemType(1, Bones, "human", "", "");
-        SubItemType HalflingBones = new SubItemType(6, Bones, "halfling", "", "");
+        // Bones (sorted by level they appear on)
+        SubItemType HalflingBones = new SubItemType(6, Bones, "halfling_tod", "Halfling", DescriptionMergeType.Prefix, "Tod Uphill"); // resurrects Tod Uphill (from level 1)
+        SubItemType HumanBones1 = new SubItemType(1, Bones, "human_anya", "Human", DescriptionMergeType.Prefix, "Anya"); // resurrects Anya (from level 3)
+        SubItemType HumanBones4 = new SubItemType(4, Bones, "human_ileria", "Human", DescriptionMergeType.Prefix, "Ileria"); // resurrects Ileria (from level 7)
+        SubItemType HumanBones2 = new SubItemType(2, Bones, "human_beohram", "Human", DescriptionMergeType.Prefix, "Beohram"); // resurrects Beohram (from level 9)
+        SubItemType ElfBones = new SubItemType(5, Bones, "elf_tyrra", "Elf", DescriptionMergeType.Prefix, "Tyrra"); // resurrects Tyrra (from level 10)
+        SubItemType HumanBones3 = new SubItemType(3, Bones, "human_kirath", "Human", DescriptionMergeType.Prefix, "Kirath"); // resurrects Kirath (from level 11)
 
         // Dart
         SubItemType DartPlus1 = new SubItemType(1, Dart, "plus1", "+1", DescriptionMergeType.Suffix,  "");
@@ -175,9 +194,11 @@ public class Eob1Settings {
         SubItemType StoneDagger = new SubItemType(4, Stone, "dagger", "", "");
         SubItemType StoneMedallion = new SubItemType(5, Stone, "medallion", "", "");
         SubItemType StoneScepter = new SubItemType(6, Stone, "scepter", "", "");
+        SubItemType StoneRing = new SubItemType(7, Stone, "ring", "", "");
 
         // Dagger
         SubItemType DaggerBackstabber = new SubItemType(3, Dagger, "backstabber", "+3", "");
+        SubItemType DaggerGuinsoo = new SubItemType(4, Dagger, "guinsoo", "'Guinsoo'", "+4");
         SubItemType DaggerFlica  = new SubItemType(5, Dagger, "flicka", "'Flicka'", "");
 
         // Gem
@@ -188,8 +209,73 @@ public class Eob1Settings {
         SubItemType RingProtection2 = new SubItemType(2, Ring, "protection2", "Protection +2", ""); // level 11, (x=27,y=16)
         SubItemType RingProtection3 = new SubItemType(3, Ring, "protection3", "Protection +3", ""); // level 4, (x=6, y=24)
 
+        // Different base type for this ring
+        SubItemType BlueRingOfFeatherFall = new SubItemType(3, Ring2, "feather_fall", "Feather Fall", "");
+        SubItemType RingOfSustenance = new SubItemType(2, Ring2, "sustenance", "Sustenance", DescriptionMergeType.SuffixWithOf, "");
+        SubItemType RingOfWizardry = new SubItemType(1, Ring2, "wizardry", "Wizardry", DescriptionMergeType.SuffixWithOf, "");
+
+        // Medallion
+        SubItemType LuckStoneMedallion = new SubItemType(1, Medallion, "luck_stone", "Luck Stone", DescriptionMergeType.Prefix, "");
+
+        // Longsword
+        SubItemType LongSwordNightStalker = new SubItemType(3, Longsword, "nightstalker", "'Night Stalker'", DescriptionMergeType.Replace, "+3");
+        SubItemType LognSwordSlasher = new SubItemType(4, Longsword, "slasher", "'Slasher'", DescriptionMergeType.Replace, "+4");
+        SubItemType LongSwordSeverious = new SubItemType(5, Longsword, "severious", "'Severious'", DescriptionMergeType.Replace, "+5");
+
+        // Sword
+        SubItemType ShortSwordSlicer = new SubItemType(3, Shortsword, "slicer", "'Slicer'", DescriptionMergeType.Replace, "+3");
+
         // Axe
         SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", DescriptionMergeType.Replace, "");
+        SubItemType AxeCursed3 = new SubItemType(-3, Axe, "cursed3", "Cursed -3", DescriptionMergeType.Suffix, "");
+
+        // Mace
+        SubItemType MacePlus3 = new SubItemType(3, Mace, "plus3", "+3", "");
+
+        // Rock
+        SubItemType GlowingRock = new SubItemType(1, Rock, "glowing", "", "glowing");
+        SubItemType MossyRock = new SubItemType(2, Rock, "mossy", "Mossy", DescriptionMergeType.Prefix, "");
+
+        // Halberd
+        SubItemType HalberdChieftain = new SubItemType(5, Halberd, "chieftain", "Chieftain", DescriptionMergeType.Prefix, "");
+
+        // Sling
+        SubItemType SlingCursed3 = new SubItemType(-3, Sling, "cursed3", "Cursed -3", DescriptionMergeType.Suffix, "");
+
+        // Shield
+        SubItemType DwarvenShield = new SubItemType(1, Shield, "dwarven", "Dwarven", DescriptionMergeType.Prefix, "");
+        SubItemType DrowShield = new SubItemType(3, Shield, "drow", "Drow", DescriptionMergeType.Prefix, "+3");
+
+        // Plate mail
+        SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "Great Beauty", DescriptionMergeType.SuffixWithOf, "-3"); // cursed -3
+
+        // Banded Armor
+        SubItemType BandedArmor3 = new SubItemType(3, BandedArmor, "plus3", "", "+3");
+
+        // Robe
+        SubItemType RobeOfProtection5 = new SubItemType(5, Robe, "protection5", "Protection", DescriptionMergeType.SuffixWithOf, "+5");
+
+        // Bracers
+        SubItemType BracersOfDefense2 = new SubItemType(2, Bracers, "defense2", "Defense", DescriptionMergeType.SuffixWithOf, "+2");
+        SubItemType ElvenBracersOfDefense = new SubItemType(3, Bracers, "defense3", "Elven Bracers of Defense", DescriptionMergeType.Replace, "+3");
+
+        // Kenku Eggs (I don't know how the egg types differ from each other)
+        SubItemType KenkuEgg10 = new SubItemType(10, KenkuEgg, "10", "", "");
+        SubItemType KenkuEgg20 = new SubItemType(20, KenkuEgg, "20", "", "");
+        SubItemType KenkuEgg30 = new SubItemType(30, KenkuEgg, "30", "", "");
+        SubItemType KenkuEgg40 = new SubItemType(40, KenkuEgg, "40", "", "");
+
+        // Orb of Power
+        // orb of power from level 11 (I think it looks like the regular one and the different subtype is used to just distinguish between them)
+        SubItemType OrbOfPowerLevel11 = new SubItemType(1, OrbOfPower, "_from_level11", "", "");
+
+        // The following items are not present in the dungeons. I do not know what they really are, so their descriptions and names
+        // are just guesses
+        SubItemType RationDoubleIron = new SubItemType(100, Rations, "iron_double", "", ""); // 100 type suggest that is is twice as good as iron (50)
+        SubItemType LongSword1 = new SubItemType(1, Longsword, "sharp","Sharp", DescriptionMergeType.Prefix, "+1");
+        SubItemType LongSwordCursed2 = new SubItemType(-2, Longsword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
+        SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
+        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "Mysterious", "not found anywhere in the duneon"); // (item offset=0x1EC)
 
         //-------------
         // --- Wall ---
