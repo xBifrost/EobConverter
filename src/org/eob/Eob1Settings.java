@@ -36,6 +36,8 @@ public class Eob1Settings {
         ItemType Chainmail = new ItemType(0x14, "chainmail", "Chainmail", "ring_mail");
         ItemType DwarvenHelmet = new ItemType(0x15, "dwarven_helmet", "Dwarven Helmet", "full_helmet");
         ItemType LeatherArmor = new ItemType(0x16, "leather_armor", "Leather Armor", "leather_brigandine");
+        ItemType PlateMail = new ItemType(0x18, "plate_mail", "Plate Mail", "plate_cuirass");
+        ItemType ScaleMail = new ItemType(0x19, "scale_mail", "Scale Mail", "ring_mail");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
         ItemType Rations = new ItemType(0x1F, "rations", "Rations", "pitroot_bread");
@@ -188,8 +190,17 @@ public class Eob1Settings {
         SubItemType RingProtection2 = new SubItemType(2, Ring, "protection2", "Protection +2", ""); // level 11, (x=27,y=16)
         SubItemType RingProtection3 = new SubItemType(3, Ring, "protection3", "Protection +3", ""); // level 4, (x=6, y=24)
 
+        SubItemType BlueRingOfFeatherFall = new SubItemType(3, Ring2, "feather_fall", "Feather Fall", "");
+
         // Axe
         SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", DescriptionMergeType.Replace, "");
+        SubItemType AxeCursed3 = new SubItemType(-3, Axe, "cursed3", "Cursed -3", DescriptionMergeType.Suffix, "");
+
+        // Sling
+        SubItemType SlingCursed3 = new SubItemType(-3, Sling, "cursed3", "Cursed -3", DescriptionMergeType.Suffix, "");
+
+        // Plate mail
+        SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "Great Beauty", DescriptionMergeType.SuffixWithOf, ""); // cursed -3
 
         //-------------
         // --- Wall ---
