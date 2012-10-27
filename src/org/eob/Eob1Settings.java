@@ -28,6 +28,7 @@ public class Eob1Settings {
         ItemType DwarvenPotion = new ItemType(0x06, "dwarven_potion", "Dwarven potion", "potion_healing");
         ItemType Bow = new ItemType(0x07, "bow", "Bow", "short_bow");
         ItemType Spear = new ItemType(0x09, "spear", "Spear", "legionary_spear");
+        ItemType Halberd = new ItemType(0x0A, "halberd", "Halberd", "legionary_spear"); // there is no other long weapon in Grimrock, so spear will have to do
         ItemType Mace = new ItemType(0x0B, "mace", "Mace", "knoffer");
         ItemType Sling = new ItemType(0x0E, "sling", "Sling", "sling");
         ItemType Dart2 = new ItemType(0x0F, "dart", "Dart", "shuriken");
@@ -53,8 +54,13 @@ public class Eob1Settings {
         ItemType Robe = new ItemType(0x29, "robe", "Robe", "peasant_tunic");
         ItemType MedallionOfAdornment = new ItemType(0x2c, "medallion_of_adornment", "Medallion of Adornment", "spirit_mirror_pendant");
         ItemType Ring = new ItemType(0x2a, "ring", "Ring", "hardstone_bracelet"); // There are no rings in Grimrock, we need to replace them with bracelets
+        ItemType Bracers = new ItemType(0x2b, "bracers", "Bracers", "bracelet_tirin");
         ItemType Ring2 = new ItemType(0x2f, "ring2", "Ring", "bracelet_tirin"); // This one has no power (found in lv 4, x=11,y=29)
         ItemType Wand = new ItemType(0x30, "wand", "Wand", "whitewood_wand");
+        ItemType KenkuEgg = new ItemType(0x31, "egg", "Kenku Egg", "slime_bell"); // There is really nothing in Grimrock
+                 // that even vaguely resembles an egg. Slime bell is at least round :)
+
+
 
 
         //-----------------
@@ -177,6 +183,7 @@ public class Eob1Settings {
         SubItemType StoneDagger = new SubItemType(4, Stone, "dagger", "", "");
         SubItemType StoneMedallion = new SubItemType(5, Stone, "medallion", "", "");
         SubItemType StoneScepter = new SubItemType(6, Stone, "scepter", "", "");
+        SubItemType StoneRing = new SubItemType(7, Stone, "ring", "", "");
 
         // Dagger
         SubItemType DaggerBackstabber = new SubItemType(3, Dagger, "backstabber", "+3", "");
@@ -196,11 +203,26 @@ public class Eob1Settings {
         SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", DescriptionMergeType.Replace, "");
         SubItemType AxeCursed3 = new SubItemType(-3, Axe, "cursed3", "Cursed -3", DescriptionMergeType.Suffix, "");
 
+        // Mace
+        SubItemType MacePlus3 = new SubItemType(3, Mace, "plus3", "+3", "");
+
+        // Halbers
+        SubItemType HalberdChieftain = new SubItemType(5, Halberd, "chieftain", "Chieftain", DescriptionMergeType.Prefix, "");
+
         // Sling
         SubItemType SlingCursed3 = new SubItemType(-3, Sling, "cursed3", "Cursed -3", DescriptionMergeType.Suffix, "");
 
+        // Shield
+        SubItemType DwarvenShield = new SubItemType(1, Shield, "dwarven", "Dwarven", DescriptionMergeType.Prefix, "");
+
         // Plate mail
         SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "Great Beauty", DescriptionMergeType.SuffixWithOf, ""); // cursed -3
+
+        // Kenku Eggs
+        SubItemType KenkuEgg10 = new SubItemType(10, KenkuEgg, "10", "", "");
+        SubItemType KenkuEgg20 = new SubItemType(20, KenkuEgg, "20", "", "");
+        SubItemType KenkuEgg30 = new SubItemType(30, KenkuEgg, "30", "", "");
+        SubItemType KenkuEgg40 = new SubItemType(40, KenkuEgg, "40", "", "");
 
         //-------------
         // --- Wall ---
