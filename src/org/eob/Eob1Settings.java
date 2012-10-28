@@ -323,6 +323,7 @@ public class Eob1Settings {
         Wall.createWall("sewersWallWithRune", 65L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_text_rune1", "eob_sewers_wall_text_rune"); // Rune on the wall
         Wall.createWall("sewersWallWithDaggerKeyHole", 66L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_alcove_dagger", "eob_sewers_alcove_dagger"); // Dagger is used as key
         Wall.createWall("sewersWallIllusionWithRune", 67L, WallType.Wall, false, Wall.levels(1, 2, 3), "eob_sewers_illusion_wall_rune", "eob_sewers_illusion_wall_rune");
+        Wall.createWall("sewersWallPortalInactive", 68L, WallType.SolidPart, false, Wall.levels(2), "temple_glass_wall_2", "portal"); // Level 2 - debug area left by developers
         Wall.createWall("sewersCaveIn", 69L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_sewers_cave_in", "eob_sewers_cave_in");
 
         // Ruins levels
