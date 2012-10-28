@@ -8,10 +8,14 @@ import java.io.*;
  * Time: 10:08 AM
  */
 public class FileUtility {
-    public static byte[] readFile(String aInputFileName) {
-        System.out.println("Reading in binary file named : " + aInputFileName);
+    public static byte[] readFile(String aInputFileName, boolean debug) {
+        if (debug) {
+            System.out.println("Reading in binary file named : " + aInputFileName);
+        }
         File file = new File(aInputFileName);
-        System.out.println("File size: " + file.length());
+        if (debug) {
+            System.out.println("File size: " + file.length());
+        }
         byte[] result = new byte[(int) file.length()];
         try {
             InputStream input = null;
@@ -26,15 +30,19 @@ public class FileUtility {
                         totalBytesRead = totalBytesRead + bytesRead;
                     }
                 }
-                System.out.println("Num bytes read: " + totalBytesRead);
+                if (debug) {
+                    System.out.println("Num bytes read: " + totalBytesRead);
+                }
             } finally {
-                System.out.println("Closing input stream.");
+                if (debug) {
+                    System.out.println("Closing input stream.");
+                }
                 if (input != null) {
                     input.close();
                 }
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("File not found.");
+            System.out.println("File not found: " + aInputFileName);
         } catch (IOException ex) {
             System.out.println(ex);
         }

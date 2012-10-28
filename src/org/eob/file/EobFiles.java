@@ -13,6 +13,11 @@ import java.util.Map;
  */
 public class EobFiles {
     private Map<String, FileData> files = new HashMap<String, FileData>();
+    private boolean debug = false;
+
+    public EobFiles(boolean debug) {
+        this.debug = debug;
+    }
 
     public EobFiles(String eobPath) {
         File directory = new File(eobPath);
@@ -24,7 +29,7 @@ public class EobFiles {
         for (File file : filesInDir) {
             if (file.isFile()) {
                 if (file.getName().toLowerCase().endsWith(".pak")) {
-                    PakFile pakFile = new PakFile(file.getPath());
+                    PakFile pakFile = new PakFile(file.getPath(), debug);
                     for (PakFile.FilePos filePos : pakFile.getFiles()) {
                         FileData fileData = new FileData();
                         fileData.name = filePos.name;
@@ -51,6 +56,6 @@ public class EobFiles {
             return fileData.data;
         }
 
-        return FileUtility.readFile(fileData.path);
+        return FileUtility.readFile(fileData.path, debug);
     }
 }

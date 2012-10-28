@@ -21,8 +21,8 @@ public class PakFile {
         public byte[] data;
     }
 
-    public PakFile(String fileName) {
-        byte[] pakData = FileUtility.readFile(fileName);
+    public PakFile(String fileName, boolean debug) {
+        byte[] pakData = FileUtility.readFile(fileName, debug);
         parse(pakData);
     }
 

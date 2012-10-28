@@ -6,6 +6,7 @@ import org.eob.model.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * User: Bifrost
@@ -182,22 +183,51 @@ public class EobConverter {
     public static void main(String[] args) {
         String eobPath = ".";
         int from = 1;
-        int to = 12;
+        int to = 99;
         String debugShowOnlyItemName = "";
-        boolean DEBUG = true;
+        boolean debug = false;
 
-        if (args.length == 0) {
-            return;
+        for (String arg : args) {
+            if (arg.charAt(0) == '-') {
+                int pos = arg.indexOf("=");
+                String name = pos >= 0 ? arg.substring(0, pos) : arg;
+                String value = pos >= 0 ? arg.substring(pos + 1) : "";
+                try {
+                    if (name.equals("--help")) {
+                        System.out.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-d|--debug] [-di|--debug-item=<value>]");
+                        System.out.println("");
+                        System.out.println("List of commands:");
+                        System.out.println("   levels     Convert all levels in range: <from,to>. (default=1;99)");
+                        System.out.println("   src-path   Eob of Beholder path. (default=\".\")");
+                        System.out.println("   debug      Show debug info.");
+                        System.out.println("   debug-item Show debug info only for items contains <value> string. (default=\"\")");
+                        System.out.println("");
+                        return;
+                    } else if (name.equals("--levels") || name.equals("-l")) {
+                        String[] range = value.split(";");
+                        from = Integer.parseInt(range[0]);
+                        to = Integer.parseInt(range[1]);
+                    } else if (name.equals("--debug") || name.equals("-d")) {
+                        debug = true;
+                    } else if (name.equals("--src-path") || name.equals("-sp")) {
+                        eobPath = value;
+                    } else if (name.equals("--debug-item") || name.equals("-di")) {
+                        debugShowOnlyItemName = value;
+                    }
+                } catch (IllegalArgumentException exception) {
+                    System.out.println("Value " + value + " is not a number. Parameter " + name + " is ignored.");
+                }
+            }
         }
 
         initExternalChanges();
         Eob1Settings.init();
         EobFiles eobFiles = new EobFiles(eobPath);
 
-        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), DEBUG);
+        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), debug);
         itemParser.parseFile(debugShowOnlyItemName);
 
-        GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, itemParser, DEBUG);
+        GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, itemParser, debug);
 
         for (int levelId = from; levelId <= to; levelId++) {
             byte[] levelFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
