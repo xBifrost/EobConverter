@@ -1,8 +1,5 @@
 package org.eob;
 
-import org.eob.EobConverter;
-import org.eob.ItemParser;
-import org.eob.LevelParser;
 import org.eob.enums.GameSupportType;
 import org.eob.enums.InSquarePositionType;
 import org.eob.enums.WallType;
@@ -38,18 +35,18 @@ public class GrimrockExport {
 
     private final Map<String, Long> itemNameNextIndex = new HashMap<String, Long>();
     private final List<GrimrockLevelSettings> levelsSettings = Arrays.asList(
-            new GrimrockLevelSettings(1L, "Severs 1", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
-            new GrimrockLevelSettings(2L, "Severs 2", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
-            new GrimrockLevelSettings(3L, "Severs 3", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
-            new GrimrockLevelSettings(4L, "Dungeon 1", "temple", "assets/samples/music/temple_ambient.ogg"),
-            new GrimrockLevelSettings(5L, "Dungeon 2", "temple", "assets/samples/music/temple_ambient.ogg"),
-            new GrimrockLevelSettings(6L, "Dungeon 3", "temple", "assets/samples/music/temple_ambient.ogg"),
-            new GrimrockLevelSettings(7L, "Drow 1", "prison", "assets/samples/music/prison_ambient.ogg"),
-            new GrimrockLevelSettings(8L, "Drow 2", "prison", "assets/samples/music/prison_ambient.ogg"),
-            new GrimrockLevelSettings(9L, "Drow 3", "prison", "assets/samples/music/prison_ambient.ogg"),
-            new GrimrockLevelSettings(10L, "Hive 1", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
-            new GrimrockLevelSettings(11L, "Hive 2", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
-            new GrimrockLevelSettings(12L, "Sanctum", "temple", "assets/samples/music/temple_ambient.ogg")
+            new GrimrockLevelSettings(1L, "Upper Sewer Level", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
+            new GrimrockLevelSettings(2L, "Middle Sewer Level", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
+            new GrimrockLevelSettings(3L, "Lower Sewer Level", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
+            new GrimrockLevelSettings(4L, "Upper Level Dwarven Ruins", "temple", "assets/samples/music/temple_ambient.ogg"),
+            new GrimrockLevelSettings(5L, "Dwarven Ruins and Camp", "temple", "assets/samples/music/temple_ambient.ogg"),
+            new GrimrockLevelSettings(6L, "Botton Level of Dwarven Ruins", "temple", "assets/samples/music/temple_ambient.ogg"),
+            new GrimrockLevelSettings(7L, "Upper Reaches of The Drow", "prison", "assets/samples/music/prison_ambient.ogg"),
+            new GrimrockLevelSettings(8L, "Drow Outcasts", "prison", "assets/samples/music/prison_ambient.ogg"),
+            new GrimrockLevelSettings(9L, "Lower Reaches of The Drow", "prison", "assets/samples/music/prison_ambient.ogg"),
+            new GrimrockLevelSettings(10L, "Xanthar's Outer Sanctum, Mantis Hive", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
+            new GrimrockLevelSettings(11L, "Xanthar's Outer Sanctum, Lower Reaches", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
+            new GrimrockLevelSettings(12L, "Xanthar's Inner Sanctum", "temple", "assets/samples/music/temple_ambient.ogg")
     );
 
     public GrimrockExport(List<String> externalChangesList, ItemParser itemParser, boolean debug) {
