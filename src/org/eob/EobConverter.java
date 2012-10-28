@@ -1,10 +1,12 @@
 package org.eob;
 
 import org.eob.file.EobFiles;
+import org.eob.file.FileUtility;
 import org.eob.model.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * User: Bifrost
@@ -237,9 +239,6 @@ public class EobConverter {
         }
 
         grimrockExport.exportIntoGrimrock(true);
-
-        // export wall definitions for levels 1 to 12 to obejcts_converter.lua
-        grimrockExport.exportGrimrockWallTypes("objects_converter.lua", 1, 12);
 
         System.out.println("Summary:");
         System.out.println("Exported " + itemParser.getItemsCount() + " items of " + ItemType.getItemsCount() + " different types (" + ItemType.getUnknownItemsCount() + " are unknown)");
