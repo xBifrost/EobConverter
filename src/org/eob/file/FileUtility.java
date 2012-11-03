@@ -8,11 +8,11 @@ import java.io.*;
  * Time: 10:08 AM
  */
 public class FileUtility {
-    public static byte[] readFile(String aInputFileName, boolean debug) {
+    public static byte[] readFile(String inputFileName, boolean debug) {
         if (debug) {
-            System.out.println("Reading in binary file named : " + aInputFileName);
+            System.out.println("Reading in binary file with name: " + inputFileName + " ...");
         }
-        File file = new File(aInputFileName);
+        File file = new File(inputFileName);
         if (debug) {
             System.out.println("File size: " + file.length());
         }
@@ -42,10 +42,31 @@ public class FileUtility {
                 }
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("File not found: " + aInputFileName);
+            System.out.println("File not found: " + inputFileName);
         } catch (IOException ex) {
             System.out.println(ex);
         }
         return result;
+    }
+
+    public static void writeFile(String outputFileName, byte[] data, boolean debug) {
+        if (debug) {
+            System.out.println("Writing binary file with name: " + outputFileName + " ...");
+        }
+        try {
+            OutputStream output = null;
+            try {
+                output = new BufferedOutputStream(new FileOutputStream(outputFileName));
+                output.write(data, 0, data.length);
+            } finally {
+                if (output != null) {
+                    output.close();
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found.");
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
     }
 }

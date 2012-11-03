@@ -17,8 +17,7 @@ public class ItemParser {
     private final byte[] itemsData;
     private final boolean debug;
 
-    private List<ItemObject> items = new ArrayList<ItemObject>();
-    private Map<Long, ItemObject> usedItems = new LinkedHashMap<Long, ItemObject>();
+    private Map<Integer, ItemObject> items = new LinkedHashMap<Integer, ItemObject>();
 
     public ItemParser(byte[] itemsData, boolean debug) {
         this.debug = debug;
@@ -45,7 +44,7 @@ public class ItemParser {
 
         // Get items
         offset = 2;
-        for (int i = 0; i < itemsNum; i++) {
+        for (int itemIndex = 0; itemIndex < itemsNum; itemIndex++) {
             ItemObject itemObject = new ItemObject(Arrays.copyOfRange(itemsData, offset, offset + 14));
             offset += 14;
 
@@ -54,10 +53,7 @@ public class ItemParser {
                 continue;
             }
 
-            items.add(itemObject);
-            if (itemObject.objectId != 0) {
-                usedItems.put(itemObject.objectId, itemObject);
-            }
+            items.put(itemIndex, itemObject);
         }
 
         System.out.println("Found " + items.size() + " items with unique " +
@@ -69,9 +65,9 @@ public class ItemParser {
     }
 
     private void printItems(String itemName) {
-        for (int pos = 0; pos < items.size(); pos++) {
-            if (itemName == null || itemName.equals("") || items.get(pos).item.identifiedName.toLowerCase().contains(itemName.toLowerCase())) {
-                System.out.println(String.format("Item %03d: %s", pos, itemToText(pos * 14 + 2, items.get(pos))));
+        for (Map.Entry<Integer, ItemObject> entry : items.entrySet()) {
+            if (itemName == null || itemName.equals("") || entry.getValue().item.identifiedName.toLowerCase().contains(itemName.toLowerCase())) {
+                System.out.println(String.format("Item %03d: %s", entry.getKey(), itemToText(entry.getKey() * 14 + 2, entry.getValue())));
             }
         }
     }
@@ -89,10 +85,10 @@ public class ItemParser {
     }
 
     public Set<ItemObject> getItemSet() {
-        return new HashSet<ItemObject>(items);
+        return new HashSet<ItemObject>(items.values());
     }
 
-    public Set<ItemObject> getUsedItemSet() {
-        return new HashSet<ItemObject>(usedItems.values());
+    public ItemObject getItemByIndex(int itemIndex) {
+        return items.get(itemIndex);
     }
 }

@@ -2,11 +2,11 @@ package org.eob;
 
 import org.eob.file.EobFiles;
 import org.eob.file.FileUtility;
+import org.eob.file.inf.InfFile;
 import org.eob.model.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * User: Bifrost
@@ -179,6 +179,7 @@ public class EobConverter {
 
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
+    private final static String LEVEL_INF_FILE = "LEVEL%d.INF";
 
     public static void main(String[] args) {
         String eobPath = ".";
@@ -227,14 +228,20 @@ public class EobConverter {
         ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), debug);
         itemParser.parseFile(debugShowOnlyItemName);
 
-        GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, itemParser, debug);
+        GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, itemParser, to, debug);
 
         for (int levelId = from; levelId <= to; levelId++) {
-            byte[] levelFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
-            if (levelFile != null) {
-                LevelParser levelParser = new LevelParser(levelId, levelFile);
+            byte[] levelMazFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
+            if (levelMazFile != null) {
+                LevelParser levelParser = new LevelParser(levelId, levelMazFile);
                 levelParser.parse();
                 grimrockExport.addLevel(levelParser);
+            }
+
+            byte[] levelInfFile = eobFiles.getFile(String.format(LEVEL_INF_FILE, levelId));
+            if (levelInfFile != null) {
+                InfFile infFile = new InfFile(levelId, levelInfFile, itemParser);
+                grimrockExport.addLevelInfo(infFile);
             }
         }
 

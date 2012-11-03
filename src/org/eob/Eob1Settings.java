@@ -4,6 +4,7 @@ import org.eob.enums.DescriptionMergeType;
 import org.eob.enums.GameSupportType;
 import org.eob.enums.WallType;
 import org.eob.model.ItemType;
+import org.eob.model.Monster;
 import org.eob.model.SubItemType;
 import org.eob.model.Wall;
 
@@ -67,9 +68,6 @@ public class Eob1Settings {
         ItemType Wand = new ItemType(0x30, "wand", "Wand", "whitewood_wand");
         ItemType KenkuEgg = new ItemType(0x31, "egg", "Kenku Egg", "slime_bell"); // There is really nothing in Grimrock
                                                   // that even vaguely resembles an egg. Slime bell is at least round :)
-
-
-
 
         //-----------------
         // --- SubItems ---
@@ -276,6 +274,46 @@ public class Eob1Settings {
         SubItemType LongSwordCursed2 = new SubItemType(-2, Longsword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
         SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
         SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "Mysterious", "not found anywhere in the duneon"); // (item offset=0x1EC)
+
+        //----------------
+        // --- Monster ---
+        //----------------
+
+        // Level 1
+        Monster.createMonster("kobold", 0, "eob_kobold");
+        Monster.createMonster("leech", 1, "eob_leech");
+        // Level 2
+        Monster.createMonster("zombie", 2, "eob_zombie"); // 2?
+        Monster.createMonster("skeleton", 3, "eob_skeleton"); // 3?
+        // Level 3
+        Monster.createMonster("kuotoa", 4, "eob_kuotoa"); // 4?
+        Monster.createMonster("flind", 5, "eob_flind"); // 5?
+        // Level 4
+        Monster.createMonster("spider", 6, "eob_spider");
+        // Level 5
+        Monster.createMonster("dwarf", 7, "eob_dwarf");
+        // Level 6
+        Monster.createMonster("kenku", 16, "eob_kenku"); // 16?
+        Monster.createMonster("mage", 11, "eob_mage"); // 11?
+        // Level 7
+        Monster.createMonster("drowelf", 8, "eob_drowelf"); // 8?
+        Monster.createMonster("skelwar", 12, "eob_skelwar"); // 12?
+        // Level 8
+        Monster.createMonster("drider", 20, "eob_drider"); // 20
+        Monster.createMonster("hellhnd", 15, "eob_hellhnd"); // 15
+        // Level 9
+        Monster.createMonster("rust", 9, "eob_rust"); // 9?
+        Monster.createMonster("disbeast", 18, "eob_disbeast"); // 18?
+        // Level 10
+        Monster.createMonster("shindia", 14, "eob_shindia"); // 14?
+        Monster.createMonster("mantis", 10, "eob_mantis"); // 10?
+        // Level 11
+        Monster.createMonster("xorn", 19, "eob_xorn"); // 19?
+        Monster.createMonster("mflayer", 17, "eob_mflayer"); // 17?
+        // Level 12
+        Monster.createMonster("xanath", 21, "eob_xanath"); // 21?
+        Monster.createMonster("golem", 13, "eob_golem");
+
 
         //-------------
         // --- Wall ---

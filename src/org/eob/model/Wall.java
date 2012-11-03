@@ -33,7 +33,6 @@ public class Wall {
         this.elementType = elementType;
         this.elementName = elementName;
         this.properties = properties;
-        registeredWalls.put(this, null);
     }
 
     public static Wall createWall(String internalName, Long wallId, WallType wallType, boolean containCompartment, Set<Long> level, String elementType, String elementName, String properties) {
