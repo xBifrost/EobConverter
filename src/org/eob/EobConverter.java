@@ -187,6 +187,7 @@ public class EobConverter {
         int to = 99;
         String debugShowOnlyItemName = "";
         boolean debug = false;
+        boolean addLevelInSeparateFile = false;
 
         for (String arg : args) {
             if (arg.charAt(0) == '-') {
@@ -195,12 +196,13 @@ public class EobConverter {
                 String value = pos >= 0 ? arg.substring(pos + 1) : "";
                 try {
                     if (name.equals("--help")) {
-                        System.out.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-d|--debug] [-di|--debug-item=<value>]");
+                        System.out.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-d|--debug] [-di|--debug-item=<value>] [-l1|--levels-in-one-file]");
                         System.out.println("");
                         System.out.println("List of commands:");
                         System.out.println("   levels     Convert all levels in range: <from,to>. (default=1;99)");
                         System.out.println("   src-path   Eob of Beholder path. (default=\".\")");
                         System.out.println("   debug      Show debug info.");
+                        System.out.println("   debug-item Show debug info only for items contains <value> string. (default=\"\")");
                         System.out.println("   debug-item Show debug info only for items contains <value> string. (default=\"\")");
                         System.out.println("");
                         return;
@@ -214,6 +216,8 @@ public class EobConverter {
                         eobPath = value;
                     } else if (name.equals("--debug-item") || name.equals("-di")) {
                         debugShowOnlyItemName = value;
+                    } else if (name.equals("--levels-in-one-file") || name.equals("-l1")) {
+                        addLevelInSeparateFile = true;
                     }
                 } catch (IllegalArgumentException exception) {
                     System.out.println("Value " + value + " is not a number. Parameter " + name + " is ignored.");
@@ -245,8 +249,7 @@ public class EobConverter {
             }
         }
 
-        grimrockExport.exportIntoGrimrock(false);
-        grimrockExport.exportIntoGrimrock(true);
+        grimrockExport.exportIntoGrimrock(addLevelInSeparateFile);
 
         System.out.println("Summary:");
         System.out.println("Exported " + itemParser.getItemsCount() + " items of " + ItemType.getItemsCount() + " different types (" + ItemType.getUnknownItemsCount() + " are unknown)");
