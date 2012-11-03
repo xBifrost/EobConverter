@@ -6,3 +6,15 @@
 
  This converter is part of the larger effort. See details here:
  http://www.grimrock.net/forum/viewtopic.php?f=14&t=3350
+
+ Authors: Bifrost, Thomson
+
+ Status:
+ 1. Level walls exported: 12 of 12
+  - Walls, doors, switches, levels, secret buttons, decorations, etc.
+ 2. Items: levels 1-12
+  - item locations are correct
+  - item names are mostly ok, but sometimes are bit mangled
+  - item properties are understood, but not exported yet
+ 3. Monsters: not supported yet
+ 4. Events: not supported yet

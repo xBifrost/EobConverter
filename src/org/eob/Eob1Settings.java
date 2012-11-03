@@ -275,7 +275,7 @@ public class Eob1Settings {
         SubItemType LongSword1 = new SubItemType(1, Longsword, "sharp","Sharp", DescriptionMergeType.Prefix, "+1");
         SubItemType LongSwordCursed2 = new SubItemType(-2, Longsword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
         SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
-        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "Mysterious", "not found anywhere in the duneon"); // (item offset=0x1EC)
+        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "not found anywhere in the dungeon", DescriptionMergeType.Ignore, ""); // (item offset=0x1EC)
 
         //-------------
         // --- Wall ---

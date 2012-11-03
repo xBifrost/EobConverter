@@ -61,6 +61,8 @@ public class Item {
                         case Replace:
                             result = itemSubType.description;
                             break;
+                        case Ignore: // just use basic item name
+                            break;
                     }
                 }
                 return result.trim();

@@ -1,12 +1,10 @@
 package org.eob;
 
 import org.eob.file.EobFiles;
-import org.eob.file.FileUtility;
 import org.eob.model.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * User: Bifrost
@@ -238,6 +236,7 @@ public class EobConverter {
             }
         }
 
+        grimrockExport.exportIntoGrimrock(false);
         grimrockExport.exportIntoGrimrock(true);
 
         System.out.println("Summary:");
