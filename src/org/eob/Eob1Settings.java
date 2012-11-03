@@ -23,8 +23,8 @@ public class Eob1Settings {
         // --- Items ---
         //--------------
         ItemType Axe = new ItemType(0x00, "axe", "Axe", "hand_axe");
-        ItemType Longsword = new ItemType(0x01, "long_sword", "Long Sword", "long_sword");
-        ItemType Shortsword = new ItemType(0x02, "short_sword", "Short Sword", "cutlass");
+        ItemType LongSword = new ItemType(0x01, "long_sword", "Long Sword", "long_sword");
+        ItemType ShortSword = new ItemType(0x02, "short_sword", "Short Sword", "cutlass");
         ItemType OrbOfPower = new ItemType(0x03, "orb_of_power", "Orb of Power", "magic_orb");
         ItemType Dart = new ItemType(0x04, "dart", "Dart", "shuriken");
         ItemType Dagger = new ItemType(0x05, "dagger", "Dagger", "dagger");
@@ -40,14 +40,14 @@ public class Eob1Settings {
         ItemType Arrow = new ItemType(0x10, "arrow", "Arrow", "arrow");
         ItemType Rock = new ItemType(0x12, "rock", "Rock", "rock");
         ItemType BandedArmor = new ItemType(0x13, "banded_armor", "Banded Armor", "ring_mail");
-        ItemType Chainmail = new ItemType(0x14, "chainmail", "Chainmail", "ring_mail");
+        ItemType ChainMail = new ItemType(0x14, "chain_mail", "Chain Mail", "ring_mail");
         ItemType DwarvenHelmet = new ItemType(0x15, "dwarven_helmet", "Dwarven Helmet", "full_helmet");
         ItemType LeatherArmor = new ItemType(0x16, "leather_armor", "Leather Armor", "leather_brigandine");
         ItemType PlateMail = new ItemType(0x18, "plate_mail", "Plate Mail", "plate_cuirass");
         ItemType ScaleMail = new ItemType(0x19, "scale_mail", "Scale Mail", "ring_mail");
         ItemType Shield = new ItemType(0x1B, "shield", "Shield", "round_shield");
         ItemType LockPicks = new ItemType(0x1C, "lock_picks", "Lock picks", "machine_part_south");
-        ItemType SpellBook = new ItemType(0x1d, "spellbook", "Spell Book", "tome_wisdom");
+        ItemType SpellBook = new ItemType(0x1d, "spell_book", "Spell Book", "tome_wisdom");
         ItemType HolySymbol = new ItemType(0x1E, "holy_symbol", "Holy Symbol", "golden_chalice"); // there's nothing that looks like ankh symbol
         ItemType Rations = new ItemType(0x1F, "rations", "Rations", "pitroot_bread");
         ItemType LeatherBoots = new ItemType(0x20, "leather_boots", "Leather boots", "leather_boots");
@@ -216,12 +216,12 @@ public class Eob1Settings {
         SubItemType LuckStoneMedallion = new SubItemType(1, Medallion, "luck_stone", "Luck Stone", DescriptionMergeType.Prefix, "");
 
         // Longsword
-        SubItemType LongSwordNightStalker = new SubItemType(3, Longsword, "nightstalker", "'Night Stalker'", DescriptionMergeType.Replace, "+3");
-        SubItemType LognSwordSlasher = new SubItemType(4, Longsword, "slasher", "'Slasher'", DescriptionMergeType.Replace, "+4");
-        SubItemType LongSwordSeverious = new SubItemType(5, Longsword, "severious", "'Severious'", DescriptionMergeType.Replace, "+5");
+        SubItemType LongSwordNightStalker = new SubItemType(3, LongSword, "night_stalker", "'Night Stalker'", DescriptionMergeType.Replace, "+3");
+        SubItemType LongSwordSlasher = new SubItemType(4, LongSword, "slasher", "'Slasher'", DescriptionMergeType.Replace, "+4");
+        SubItemType LongSwordSeverious = new SubItemType(5, LongSword, "severious", "'Severious'", DescriptionMergeType.Replace, "+5");
 
         // Sword
-        SubItemType ShortSwordSlicer = new SubItemType(3, Shortsword, "slicer", "'Slicer'", DescriptionMergeType.Replace, "+3");
+        SubItemType ShortSwordSlicer = new SubItemType(3, ShortSword, "slicer", "'Slicer'", DescriptionMergeType.Replace, "+3");
 
         // Axe
         SubItemType AxeDrowCleaver = new SubItemType(3, Axe, "drow_cleaver", "'Drow Cleaver'", DescriptionMergeType.Replace, "");
@@ -270,10 +270,10 @@ public class Eob1Settings {
         // The following items are not present in the dungeons. I do not know what they really are, so their descriptions and names
         // are just guesses
         SubItemType RationDoubleIron = new SubItemType(100, Rations, "iron_double", "", ""); // 100 type suggest that is is twice as good as iron (50)
-        SubItemType LongSword1 = new SubItemType(1, Longsword, "sharp","Sharp", DescriptionMergeType.Prefix, "+1");
-        SubItemType LongSwordCursed2 = new SubItemType(-2, Longsword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
+        SubItemType LongSword1 = new SubItemType(1, LongSword, "sharp","Sharp", DescriptionMergeType.Prefix, "+1");
+        SubItemType LongSwordCursed2 = new SubItemType(-2, LongSword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
         SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
-        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "not found anywhere in the dungeon", DescriptionMergeType.Ignore, ""); // (item offset=0x1EC)
+        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dungeon", "not found anywhere in the dungeon", DescriptionMergeType.Ignore, ""); // (item offset=0x1EC)
 
         //----------------
         // --- Monster ---
