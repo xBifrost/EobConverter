@@ -9,7 +9,8 @@ public enum DescriptionMergeType {
     Prefix(""),
     Suffix(""),
     SuffixWithOf("of"),
-    Replace("");
+    Replace(""),
+    Ignore("");
 
     public final String preposition;
 

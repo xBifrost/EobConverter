@@ -245,6 +245,7 @@ public class EobConverter {
             }
         }
 
+        grimrockExport.exportIntoGrimrock(false);
         grimrockExport.exportIntoGrimrock(true);
 
         System.out.println("Summary:");

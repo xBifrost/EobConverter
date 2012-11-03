@@ -273,7 +273,7 @@ public class Eob1Settings {
         SubItemType LongSword1 = new SubItemType(1, Longsword, "sharp","Sharp", DescriptionMergeType.Prefix, "+1");
         SubItemType LongSwordCursed2 = new SubItemType(-2, Longsword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
         SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
-        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "Mysterious", "not found anywhere in the duneon"); // (item offset=0x1EC)
+        SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dugneon", "not found anywhere in the dungeon", DescriptionMergeType.Ignore, ""); // (item offset=0x1EC)
 
         //----------------
         // --- Monster ---
@@ -361,6 +361,7 @@ public class Eob1Settings {
         Wall.createWall("sewersWallWithRune", 65L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_text_rune1", "eob_sewers_wall_text_rune"); // Rune on the wall
         Wall.createWall("sewersWallWithDaggerKeyHole", 66L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_alcove_dagger", "eob_sewers_alcove_dagger"); // Dagger is used as key
         Wall.createWall("sewersWallIllusionWithRune", 67L, WallType.Wall, false, Wall.levels(1, 2, 3), "eob_sewers_illusion_wall_rune", "eob_sewers_illusion_wall_rune");
+        Wall.createWall("sewersWallPortalInactive", 68L, WallType.SolidPart, false, Wall.levels(2), "temple_glass_wall_2", "portal"); // Level 2 - debug area left by developers
         Wall.createWall("sewersCaveIn", 69L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_sewers_cave_in", "eob_sewers_cave_in");
 
         // Ruins levels
