@@ -27,14 +27,17 @@ public class GrimrockExport {
     private static String DUNGEON_FILE = "dungeon.lua";
     private static String ITEM_FILE = "items.lua";
     private static String MONSTER_FILE = "monsters.lua";
+    private static String OBJECTS_FILE = "objects.lua";
 
     private ItemParser itemParser;
     private int maxLevel;
+    private boolean generateDefaultStructures;
     private boolean debug;
 
     private static String LEVEL_FILE = "level%d.lua";
-    private final Map<String, String> externalChanges = new HashMap<String, String>();
-    private final Map<String, String> externalElementName = new HashMap<String, String>();
+    private final Map<String, String> externalChanges = new LinkedHashMap<String, String>();
+    private final Map<String, String> externalElementName = new LinkedHashMap<String, String>();
+    private final Set<String> unusedExternalChanges = new LinkedHashSet<String>();
 
     // Map of the already defined monster groups
     private final Map<String, String> monstersByPosition = new HashMap<String, String>();
@@ -59,11 +62,188 @@ public class GrimrockExport {
             new GrimrockLevelSettings(12L, "Xanthar's Inner Sanctum", "temple", "assets/samples/music/temple_ambient.ogg")
     );
 
-    public GrimrockExport(List<String> externalChangesList, ItemParser itemParser, int maxLevel, boolean debug) {
+    Map<String, String> defaultMonsters = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock monsters
+    Map<String, GrimrockWall> grimrockWalls = new LinkedHashMap<String, GrimrockWall>();
+
+    public GrimrockExport(List<String> externalChangesList, ItemParser itemParser, int maxLevel, boolean generateDefaultStructures, boolean debug) {
         this.itemParser = itemParser;
         this.maxLevel = maxLevel;
+        this.generateDefaultStructures = generateDefaultStructures;
         this.debug = debug;
         prepareExternalChanges(externalChangesList);
+        if (generateDefaultStructures) {
+            generateDefaultStructuresFromGrimrock();
+        }
+    }
+
+    private void generateDefaultStructuresFromGrimrock() {
+        defaultMonsters.put("eob_kobold", "skeleton_warrior");
+        defaultMonsters.put("eob_leech", "snail");
+        defaultMonsters.put("eob_zombie", "skeleton_warrior");
+        defaultMonsters.put("eob_skeleton", "skeleton_warrior");
+        defaultMonsters.put("eob_kuotoa", "herder_big");
+        defaultMonsters.put("eob_flind", "uggardian");
+        defaultMonsters.put("eob_spider", "spider");
+        defaultMonsters.put("eob_dwarf", "skeleton_warrior");
+        defaultMonsters.put("eob_kenku", "skeleton_archer");
+        defaultMonsters.put("eob_mage", "uggardian");
+        defaultMonsters.put("eob_drowelf", "uggardian");
+        defaultMonsters.put("eob_skelwar", "skeleton_warrior");
+        defaultMonsters.put("eob_drider", "crab");
+        defaultMonsters.put("eob_hellhnd", "shrakk_torr");
+        defaultMonsters.put("eob_rust", "crab");
+        defaultMonsters.put("eob_disbeast", "ice_lizard");
+        defaultMonsters.put("eob_shindia", "skeleton_warrior");
+        defaultMonsters.put("eob_mantis", "ogre");
+        defaultMonsters.put("eob_xorn", "crab");
+        defaultMonsters.put("eob_mflayer", "goromorg");
+        defaultMonsters.put("eob_xanath", "cube");
+        defaultMonsters.put("eob_golem", "warden");
+
+        GrimrockWall.addWall(grimrockWalls, "All", "Blockages", "emptyMonsterBlock", "blocker", "eob_blocker", "");
+        GrimrockWall.addWall(grimrockWalls, "All", "Teleporters", "teleporter", "teleporter", "eob_teleporter", "");
+
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorWithButton", "dungeon_door_metal", "eob_sewers_door_metal", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoor", "dungeon_door_metal", "eob_sewers_door_metal", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorOpened", "dungeon_door_metal", "eob_sewers_door_metal", "\t:setDoorState(\"open\")");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorStacked", "dungeon_door_metal", "eob_sewers_door_metal_stacked", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorPortcullisWithButton", "dungeon_door_portcullis", "eob_sewers_door_portcullis", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorPortcullisStacked", "dungeon_door_portcullis", "eob_sewers_door_portcullis_stacked", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorPortcullisThrowableThrough", "dungeon_ivy_1", "eob_sewers_portcullis_throwable", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Floor", "sewersEmptyPit", "dungeon_pit", "eob_sewers_pit", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Floor", "sewersPressurePlate", "dungeon_pressure_plate", "eob_sewers_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Ceiling", "sewersEmptyCeilingShaft", "dungeon_ceiling_shaft", "eob_sewers_ceiling_shaft", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Walls", "sewersWallIllusion", "dungeon_secret_door", "eob_sewers_illusion_wall_rune", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Walls", "sewersWallIllusionWithRune", "dungeon_secret_door", "eob_sewers_illusion_wall_rune", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Wall Texts", "sewersWallWithText", "dungeon_wall_text_long", "eob_sewers_wall_text_long", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Wall Texts", "sewersWallWithText2", "dungeon_wall_text_long", "eob_sewers_wall_text_rats", ""); // Read able text (Rats ->)
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Wall Texts", "sewersWallWithRune", "dungeon_wall_text", "eob_sewers_wall_text_rune1", ""); // Rune on the wall
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Decorations", "sewersWallWithDrainage", "dungeon_wall_drainage", "eob_sewers_wall_drainage", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Decorations", "sewersWallWithDrainageBent1", "dungeon_wall_drainage", "eob_sewers_wall_drainage_bent", ""); // Is it the same as 62???
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Decorations", "sewersWallWithDrainageBent2", "dungeon_wall_drainage", "eob_sewers_wall_drainage_bent", ""); // Is it the same as 44???
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Decorations", "sewersWallWithPipe", "receptor", "eob_sewers_wall_pipe", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Stairs / Ladders", "sewersLevelUp", "lever", "eob_sewers_ladder_up", ""); // Ladder
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Stairs / Ladders", "sewersLevelDown", "lever", "eob_sewers_ladder_down", ""); // Ladder
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Alcoves", "sewersWallWithAlcove", "dungeon_alcove", "eob_sewers_alcove", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Locks", "sewersWallWithKeyHoleButton", "lock", "eob_sewers_lock_iron", ""); // Key hole -> button
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Locks", "sewersWallWithSilverKeyHole", "lock_round", "eob_sewers_lock_silver", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Locks", "sewersWallWithGoldKeyHole", "lock_golden", "eob_sewers_lock_golden", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Locks", "sewersWallWithEyeKeyHole", "lock_round", "eob_sewers_lock_eye", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Locks", "sewersWallWithJewelKeyHole", "lock_gear", "eob_sewers_lock_gem", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Locks", "sewersWallWithDaggerKeyHole", "dungeon_alcove", "eob_sewers_alcove_dagger", ""); // Dagger is used as key
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Buttons / Levers", "sewersWallWithLever", "lever", "eob_sewers_lever", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Buttons / Levers", "sewersWallWithSecretButtonLarge", "dungeon_secret_button_large", "eob_sewers_secret_button_large", ""); // Brick
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Buttons / Levers", "sewersWallWithButtonSmall", "dungeon_secret_button_small", "eob_sewers_secret_button_small", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Buttons / Levers", "sewersWallWithButton", "wall_button", "eob_sewers_button", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Buttons / Levers", "sewersWallWithButtonPressed", "lever", "eob_sewers_switch", "\t:setLeverState(\"activated\")");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Blockages", "sewersCaveIn", "dungeon_cave_in", "eob_sewers_cave_in", "");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Portals", "sewersWallPortalInactive", "temple_glass_wall_2", "eob_sewers_portal_inactive", ""); // Level 2 - debug area left by developers
+
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoorWithButton", "temple_door_metal", "eob_ruins_door_stone", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoor", "temple_door_metal", "eob_ruins_door_stone", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoorStacked", "temple_door_metal", "eob_ruins_door_stone_stacked", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsNet", "temple_door_portcullis", "eob_ruins_net", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsNetTorn", "temple_door_portcullis", "eob_ruins_net", "\t:setDoorState(\"open\")"); // Torn Net (4 level)
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Floor", "ruinsEmptyPit", "temple_pit", "eob_ruins_pit", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Floor", "ruinsPressurePlate", "temple_pressure_plate", "eob_ruins_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Ceiling", "ruinsEmptyCeilingShaft", "temple_ceiling_shaft", "eob_ruins_ceiling_shaft", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Walls", "ruinsWallIllusion", "temple_secret_door", "eob_ruins_illusion_wall", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Walls", "ruinsWallIllusionWithStatue", "temple_secret_door", "eob_ruins_illusion_wall_statue", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Walls", "ruinsWallIllusionWithRune", "temple_secret_door", "eob_ruins_illusion_wall_rune", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Wall Texts", "ruinsWallWithText", "temple_wall_text_long", "eob_ruins_wall_text", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Decorations", "ruinsWallWithSmallStatue", "temple_mosaic_wall_1", "eob_ruins_wall_small_statue", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Stairs / Ladders", "ruinsLevelUp", "temple_stairs_up", "eob_ruins_stairs_up", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Stairs / Ladders", "ruinsLevelDown", "temple_stairs_down", "eob_ruins_stairs_down", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Alcoves", "ruinsWallWithAlcove", "temple_alcove", "eob_ruins_alcove", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Locks", "ruinsWallWithKeyHole", "lock", "eob_ruins_statue_lock", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Locks", "ruinsWallWithKeyHole2", "lock_ornate", "eob_ruins_ornate_lock", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Buttons / Levers", "ruinsWallWithLever", "lever", "eob_ruins_lever", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Buttons / Levers", "ruinsWallWithStatueLever", "lever", "eob_ruins_statue_lever", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Buttons / Levers", "ruinsWallWithChain", "lever", "eob_ruins_chain_lever", ""); // Chain on the wall -> Type of the lever
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Buttons / Levers", "ruinsWallWithSecretButtonTiny", "temple_secret_button_tiny", "eob_ruins_secret_button_tiny", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Buttons / Levers", "ruinsWallWithButton", "wall_button", "eob_ruins_button", "");
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Firing mechanism", "ruinsWallWithFiringMechanism", "daemon_head", "eob_ruins_dart_firing_pad", ""); // Level 6: Darts
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Portals", "ruinsWallPortalLevelNecklace", "temple_glass_wall_2", "eob_ruins_portal_necklace", ""); // Level 5 - Stone Necklace
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Portals", "ruinsWallPortalLevelScepter", "temple_glass_wall_2", "eob_ruins_portal_scepter", ""); // Level 6 - Stone Scepter
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Portals", "ruinsWallPortalLevelAmulet", "temple_glass_wall_2", "eob_ruins_portal_amulet", ""); // Level 4 - Stone Amulet
+
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Doors", "drowDoorWithButton", "prison_door_metal", "eob_drow_door", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Doors", "drowDoor", "prison_door_metal", "eob_drow_door", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Floor", "drowEmptyPit", "prison_pit", "eob_drow_pit", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Floor", "drowPressurePlate", "prison_pressure_plate", "eob_drow_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Ceiling", "drowEmptyCeilingShaft", "prison_ceiling_shaft", "eob_drow_ceiling_shaft", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Walls", "drowWallIllusionWithSpider", "temple_secret_door", "eob_drow_wall_illusion_with_spider", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Walls", "drowWallIllusion", "prison_secret_door", "eob_drow_wall_illusion", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Walls", "drowWallThrowable", "dungeon_ivy_1", "eob_drow_wall_throwable", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Wall Texts", "drowWallWithText", "prison_wall_text_long", "eob_drow_wall_text", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Wall Texts", "drowWallWithText2", "dungeon_wall_text_long", "eob_drow_wall_text", ""); // It is written, the key lies on the other side.
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Stairs / Ladders", "drowLevelUp", "prison_stairs_up", "eob_drow_stairs_up", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Stairs / Ladders", "drowLevelDown", "prison_stairs_down", "eob_drow_stairs_down", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Alcoves", "drowWallWithAlcove", "prison_alcove", "eob_drow_alcove", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Locks", "drowWallWithGemKeyHole", "lock_prison", "eob_drow_lock_gem", ""); // Gem is used as key
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Locks", "drowWallWithKeyHole", "lock", "eob_drow_lock_spider", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Locks", "drowWallWithKeyHole2", "lock_ornate", "eob_drow_lock_ornate", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Buttons", "drowWallWithSecretButtonTiny", "prison_secret_button_small", "eob_drow_secret_button_tiny", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Buttons / Levers", "drowWallWithLever", "lever", "eob_drow_lever", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Buttons / Levers", "drowWallWithButton", "wall_button", "eob_drow_button", "");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Firing mechanism", "drowWallWithFiringMechanismFireball", "daemon_head", "eob_drow_fireball_firing_pad", ""); // Level 7: Fireball
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Firing mechanism", "drowWallWithFiringMechanismFireball2", "daemon_head", "eob_drow_fireball_firing_pad", ""); // Level 7: Fireball
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Firing mechanism", "drowWallWithFiringMechanismDartsL9", "daemon_head", "eob_drow_dart_firing_pad", ""); // Level 9: Darts
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Firing mechanism", "drowWallWithFiringMechanismDartsL8", "daemon_head", "eob_drow_dart_firing_pad", ""); // Level 7: Darts
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Firing mechanism", "drowWallWithFiringMechanismMagicMissile", "daemon_head", "eob_drow_magic_missile_firing_pad", ""); // Level 9: MagicMissile
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelCross", "temple_glass_wall_2", "eob_drow_portal_cross", ""); // Level 7 -  Stone Cross
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelNecklace", "temple_glass_wall_2", "eob_drow_portal_necklace", ""); // Level 7 -  Stone Necklace
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelDaggerL7", "temple_glass_wall_2", "eob_drow_portal_dagger", ""); // Level 7 -  Stone Dagger
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelDaggerL9", "temple_glass_wall_2", "eob_drow_portal_dagger", ""); // Level 9 -  Stone Dagger
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelAmulet", "temple_glass_wall_2", "eob_drow_portal_amulet", ""); // Level 7 -  Stone Amulet
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelScepter", "temple_glass_wall_2", "eob_drow_portal_scepter", ""); // Level 8 -  Stone Scepter
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelGem", "temple_glass_wall_2", "eob_drow_portal_gem", ""); // Level 7 -  Gem
+
+        // Hive levels
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Doors", "hiveDoorWithButton", "dungeon_door_metal", "eob_hive_door", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Doors", "hiveDoor", "prison_door_metal", "eob_hive_door", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Floor", "hiveEmptyPit", "dungeon_pit", "eob_hive_pit", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Floor", "hivePressurePlate", "dungeon_pressure_plate", "eob_hive_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Ceiling", "hiveEmptyCeilingShaft", "dungeon_ceiling_shaft", "eob_hive_ceiling_shaft", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Wall Texts", "hiveWallWithText", "dungeon_wall_text_long", "eob_hive_wall_text", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Decorations", "hiveWallWithManacles", "prison_bench", "eob_hive_prison_manacles", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Decorations", "hiveWallWithRift", "dungeon_ivy_1", "eob_hive_wall_rift", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Decorations", "hiveWallWithStar", "daemon_head", "eob_hive_wall_star", ""); // Level 11: Celestial star
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Stairs / Ladders", "hiveLevelUp", "dungeon_stairs_up", "eob_hive_stairs_up", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Stairs / Ladders", "hiveLevelDown", "dungeon_stairs_down", "eob_hive_stairs_down", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Alcoves", "hiveWallWithAlcove", "dungeon_alcove", "eob_hive_alcove", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Locks", "hiveWallWithKeyHole", "lock", "eob_hive_lock", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Buttons / Levers", "hiveWallWithLeverUp", "lever", "eob_hive_lever", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Buttons / Levers", "hiveWallWithLeverDown", "lever", "eob_hive_lever", "\t:setLeverState(\"activated\")");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Buttons / Levers", "hiveWallWithSwitch", "lever", "eob_hive_switch", ""); // Can be pressed or released
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Buttons / Levers", "hiveWallWithSecretButtonSmall", "dungeon_secret_button_small", "eob_hive_secret_button_small", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Buttons / Levers", "hiveWallWithSecretButtonTiny", "dungeon_secret_button_small", "eob_hive_secret_button_tiny", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Buttons / Levers", "hiveWallWithButton", "wall_button", "eob_hive_button", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Buttons / Levers", "hiveWallWithButton2", "wall_button", "eob_hive_button2", "");
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Portals", "hiveWallPortalLevelCross", "temple_glass_wall_2", "eob_hive_portal_cross", ""); // Level 11 - Stone Cross
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Portals", "hiveWallPortalLevelOrb", "temple_glass_wall_2", "eob_hive_portal_orb", ""); // Level 11 - Stone Orb
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Portals", "hiveWallPortalLevelScepter", "temple_glass_wall_2", "eob_hive_portal_scepter", ""); // Level 10 - Stone Scepter
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Portals", "hiveWallPortalLevelRing", "temple_glass_wall_2", "eob_hive_portal_ring", ""); // Level 10 - Stone Ring
+
+        // Sanctum levels
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Doors", "sanctumDoorWithButton", "temple_door_metal", "eob_sanctum_door", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Doors", "sanctumDoor", "temple_door_metal", "eob_sanctum_door", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Floor", "sanctumPressurePlate", "temple_pressure_plate", "eob_sanctum_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Floor", "sanctumSpikeTrap", "temple_floor_drainage", "eob_sanctum_spike_trap", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Decorations", "sanctumPedestal", "altar", "eob_sanctum_pedestal", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Decorations", "sanctumPedestalWithEye", "altar", "eob_sanctum_pedestal_eye", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Decorations", "sanctumPedestalWithEyeDetector", "altar", "eob_sanctum_pedestal_eye", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Decorations", "sanctumWallWithLamp", "torch_holder", "eob_sanctum_wall_lamp", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Decorations", "sanctumWallWithLampSmoke", "torch_holder", "eob_sanctum_wall_lamp_smoke", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Wall Texts", "sanctumWallWithText", "temple_wall_text_long", "eob_sanctum_text", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Alcoves", "sanctumWallWithAlcove", "temple_alcove", "eob_sanctum_alcove", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Locks", "sanctumWallWithKeyHole", "lock", "eob_sanctum_skull_lock", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Buttons / Levers", "sanctumWallWithButton", "wall_button", "eob_sanctum_button", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Buttons / Levers", "sanctumWallWithButton2", "wall_button", "eob_sanctum_button2", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Buttons / Levers", "sanctumWallWithSecretButtonSmall", "temple_secret_button_small", "eob_sanctum_secret_button_small", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Buttons / Levers", "sanctumWallWithSecretButtonTiny", "temple_secret_button_small", "eob_sanctum_secret_button_tiny", "");
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Firing mechanism", "sanctumWallWithFiringMechanism", "daemon_head", "eob_sanctum_fireball_firing_pad", ""); // Level 12: Fireball
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Portals", "sanctumWallPortalLevelOrb", "temple_glass_wall_2", "eob_sanctum_portal_orb", ""); // Level 12 - missing Stone Orb
     }
 
     public void addLevel(LevelParser levelParser) {
@@ -75,8 +255,12 @@ public class GrimrockExport {
     }
 
     public void exportIntoGrimrock(boolean addLevelInSeparateFile) {
+        unusedExternalChanges.clear();
+        unusedExternalChanges.addAll(externalChanges.keySet());
+
         exportItems(itemParser, ITEM_FILE, maxLevel);
         exportMonsters(levelsInfo.values(), MONSTER_FILE);
+        exportObjects(OBJECTS_FILE);
 
         if (addLevelInSeparateFile) {
             for (Long levelId : levels.keySet()) {
@@ -103,6 +287,13 @@ public class GrimrockExport {
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+
+        if (unusedExternalChanges.size() > 0) {
+            System.out.println("[WARNING] Next external changes was not used: ");
+            for (String unusedExternalChange : unusedExternalChanges) {
+                System.out.println(unusedExternalChange);
             }
         }
     }
@@ -253,6 +444,25 @@ public class GrimrockExport {
         try {
             PrintWriter out = new PrintWriter(fileName);
 
+            out.println(String.format("-- This file has been generated by EobConverter v%s", EobConverter.CONVERTER_VERSION));
+            out.println("");
+
+            if (generateDefaultStructures) {
+                out.println("--======================--");
+                out.println("--== Default monsters ==--");
+                out.println("--======================--");
+                out.println("");
+
+                for (Map.Entry<String, String> monsterEntry : defaultMonsters.entrySet()) {
+
+                    out.println("cloneObject {");
+                    out.println(String.format("\tname = \"%s\",", monsterEntry.getKey()));
+                    out.println(String.format("\tbaseObject = \"%s\",", monsterEntry.getValue()));
+                    out.println("}");
+                    out.println("");
+                }
+            }
+
             out.println("--========================--");
             out.println("--== Generated monsters ==--");
             out.println("--========================--");
@@ -373,8 +583,7 @@ public class GrimrockExport {
 
                 alreadyDefinedMonsterGroups.put(monsterGroupId, monsterName);
             } else {
-                monstersByPosition.put(monstersPos, monsterGroup.monsterObject.monster.monsterName + (monsters.size() < 2 ? "" : "_group"));
-                return;
+                monsterName = monsterGroup.monsterObject.monster.monsterName + (monsters.size() < 2 ? "" : monsters.size());
             }
 
         } else {
@@ -472,6 +681,71 @@ public class GrimrockExport {
     //--- Levels Export ---
     //---------------------
 
+    private void exportObjects(String fileName) {
+        try {
+            PrintWriter out = new PrintWriter(fileName);
+
+            out.println(String.format("-- This file has been generated by EobConverter v%s", EobConverter.CONVERTER_VERSION));
+            out.println("");
+
+            if (generateDefaultStructures) {
+                Map<String, Map<String, List<GrimrockWall>>> objects = new LinkedHashMap<String, Map<String, List<GrimrockWall>>>();
+                for (GrimrockWall grimrockWall : grimrockWalls.values()) {
+                    Map<String, List<GrimrockWall>> wallGroupMap = objects.get(grimrockWall.wallGroup);
+                    if (wallGroupMap == null) {
+                        wallGroupMap = new LinkedHashMap<String, List<GrimrockWall>>();
+                        objects.put(grimrockWall.wallGroup, wallGroupMap);
+                    }
+
+                    List<GrimrockWall> walls = wallGroupMap.get(grimrockWall.typeGroup);
+                    if (walls == null) {
+                        walls = new ArrayList<GrimrockWall>();
+                        wallGroupMap.put(grimrockWall.typeGroup, walls);
+                    }
+
+                    walls.add(grimrockWall);
+                }
+
+
+                for (Map.Entry<String, Map<String, List<GrimrockWall>>> wallGroupEntry : objects.entrySet()) {
+                    String row = "";
+                    for (int i = 0; i < wallGroupEntry.getKey().length(); i++) {
+                        row += "=";
+                    }
+                    out.println(String.format("--===%s===--", row));
+                    out.println(String.format("--== %s ==--", wallGroupEntry.getKey()));
+                    out.println(String.format("--===%s===--", row));
+                    out.println("");
+
+                    for (Map.Entry<String, List<GrimrockWall>> wallTypeEntry : wallGroupEntry.getValue().entrySet()) {
+                        row = "";
+                        for (int i = 0; i < wallTypeEntry.getKey().length(); i++) {
+                            row += "-";
+                        }
+                        out.println(String.format("----%s----", row));
+                        out.println(String.format("--- %s ---", wallTypeEntry.getKey()));
+                        out.println(String.format("----%s----", row));
+                        out.println("");
+
+                        for (GrimrockWall grimrockWall : wallTypeEntry.getValue()) {
+                            out.println("cloneObject {");
+                            out.println(String.format("\tname = \"%s\",", grimrockWall.grimrockType));
+                            out.println(String.format("\tbaseObject = \"%s\",", grimrockWall.originalGrimrockType));
+                            out.println("}");
+                            out.println("");
+
+                        }
+                    }
+                }
+            }
+
+            out.close();
+        } catch (java.io.IOException e) {
+            System.out.println("Error while exporting:");
+            e.printStackTrace();
+        }
+    }
+
     private void exportGrimrockLevel(LevelParser levelParser, InfFile infFile, PrintWriter out) {
         System.out.println("Writing level " + levelParser.levelId + "...");
 
@@ -515,15 +789,19 @@ public class GrimrockExport {
 
                 // Special walls
                 if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_N"))) {
+                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_N");
                     spawnWall(levelParser, out, x, y, square.north, 0, "Wall", "N");
                 }
                 if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_E"))) {
+                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_E");
                     spawnWall(levelParser, out, x, y, square.east, 1, "Wall", "E");
                 }
                 if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_S"))) {
+                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_S");
                     spawnWall(levelParser, out, x, y, square.south, 2, "Wall", "S");
                 }
                 if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_W"))) {
+                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_W");
                     spawnWall(levelParser, out, x, y, square.west, 3, "Wall", "W");
                 }
 
@@ -612,11 +890,16 @@ public class GrimrockExport {
         }
     }
 
-
     private void spawnWall(LevelParser levelParser, PrintWriter out, int x, int y, Wall wall, int facing, String text, String direction) {
-        if (!wall.elementType.equals("")) {
+        if (!wall.internalName.equals("")) {
+            GrimrockWall grimrockWall = grimrockWalls.get(wall.internalName);
+            if (grimrockWall == null) {
+                System.out.println("[ERROR] Wall " + wall.internalName + " haven't Grimrock wall equivalent!");
+                return;
+            }
+
             String positionName = levelParser.levelId + "_" + x + "_" + y;
-            String name = wall.elementName + "_" + positionName;
+            String name = grimrockWall.grimrockType + "_" + positionName;
             if (direction.equals("N") || direction.equals("E") || direction.equals("S") || direction.equals("W")) {
                 name += "_" + direction;
                 positionName += "_" + direction;
@@ -624,6 +907,7 @@ public class GrimrockExport {
 
             String externalFilledWall = externalChanges.get(positionName);
             if (externalFilledWall != null && externalFilledWall.equals("F")) {
+                unusedExternalChanges.remove(positionName);
                 if (wall.wallType.isSolid()) {
                     String elementName = externalElementName.get(positionName);
                     out.println("spawn(\"" + (elementName == null ? "???" : elementName) + "\", " + x + ", " + y + ", " + facing + ", \"wall_" + positionName + "\")");
@@ -634,26 +918,28 @@ public class GrimrockExport {
             String externalChange = externalChanges.get(name);
             if (externalChange != null) {
                 if (externalChange.equals("R")) {
+                    unusedExternalChanges.remove(name);
                     return;
                 }
 
                 if (wall.wallType.equals(WallType.DoorPart)) {
+                    unusedExternalChanges.remove(name);
                     facing = getFacing(InSquarePositionType.valueByString(externalChange));
                 }
             }
 
-            out.println("spawn(\"" + wall.elementType + "\", " + x + ", " + y + ", " + facing + ", \"" + name + "\")");
-            if (!wall.properties.equals("")) {
-                out.println(wall.properties);
+            out.println("spawn(\"" + grimrockWall.grimrockType + "\", " + x + ", " + y + ", " + facing + ", \"" + name + "\")");
+            if (!grimrockWall.grimrockProperties.equals("")) {
+                out.println(grimrockWall.grimrockProperties);
             }
         } else {
             System.out.println(text + " type haven't defined elementType: " + wall.name() + " [" + x + "," + y + "," + direction + "] ");
         }
     }
 
-    //-------------------------------
-    //--- Grimrock Level Settings ---
-    //-------------------------------
+    //-------------------------
+    //--- Grimrock Settings ---
+    //-------------------------
 
     class GrimrockLevelSettings {
         private Long levelId;
@@ -666,6 +952,28 @@ public class GrimrockExport {
             this.levelName = levelName;
             this.wallSet = wallSet;
             this.playStream = playStream;
+        }
+    }
+
+    static class GrimrockWall {
+        public final String wallGroup;
+        public final String typeGroup;
+        public final String internalName;
+        public final String originalGrimrockType;
+        public final String grimrockType;
+        public final String grimrockProperties;
+
+        private GrimrockWall(String wallGroup, String typeGroup, String internalName, String originalGrimrockType, String grimrockType, String grimrockProperties) {
+            this.wallGroup = wallGroup;
+            this.typeGroup = typeGroup;
+            this.internalName = internalName;
+            this.originalGrimrockType = originalGrimrockType;
+            this.grimrockType = grimrockType;
+            this.grimrockProperties = grimrockProperties;
+        }
+
+        public static void addWall(Map<String, GrimrockWall> walls, String wallGroup, String typeGroup, String internalName, String originalGrimrockType, String grimrockType, String grimrockProperties) {
+            walls.put(internalName, new GrimrockWall(wallGroup, typeGroup, internalName, originalGrimrockType, grimrockType, grimrockProperties));
         }
     }
 

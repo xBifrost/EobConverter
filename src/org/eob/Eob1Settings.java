@@ -283,21 +283,21 @@ public class Eob1Settings {
         Monster.createMonster("kobold", 0, "eob_kobold");
         Monster.createMonster("leech", 1, "eob_leech");
         // Level 2
-        Monster.createMonster("zombie", 2, "eob_zombie"); // 2?
-        Monster.createMonster("skeleton", 3, "eob_skeleton"); // 3?
+        Monster.createMonster("skeleton", 2, "eob_skeleton");
+        Monster.createMonster("zombie", 3, "eob_zombie");
         // Level 3
-        Monster.createMonster("kuotoa", 4, "eob_kuotoa"); // 4?
-        Monster.createMonster("flind", 5, "eob_flind"); // 5?
+        Monster.createMonster("kuotoa", 4, "eob_kuotoa");
+        Monster.createMonster("flind", 5, "eob_flind");
         // Level 4
         Monster.createMonster("spider", 6, "eob_spider");
         // Level 5
         Monster.createMonster("dwarf", 7, "eob_dwarf");
         // Level 6
-        Monster.createMonster("kenku", 16, "eob_kenku"); // 16?
-        Monster.createMonster("mage", 11, "eob_mage"); // 11?
+        Monster.createMonster("kenku", 16, "eob_kenku");
+        Monster.createMonster("mage", 11, "eob_mage");
         // Level 7
-        Monster.createMonster("drowelf", 8, "eob_drowelf"); // 8?
-        Monster.createMonster("skelwar", 12, "eob_skelwar"); // 12?
+        Monster.createMonster("skelwar", 8, "eob_skelwar");
+        Monster.createMonster("drowelf", 12, "eob_drowelf");
         // Level 8
         Monster.createMonster("drider", 20, "eob_drider"); // 20
         Monster.createMonster("hellhnd", 15, "eob_hellhnd"); // 15
@@ -305,13 +305,13 @@ public class Eob1Settings {
         Monster.createMonster("rust", 9, "eob_rust"); // 9?
         Monster.createMonster("disbeast", 18, "eob_disbeast"); // 18?
         // Level 10
-        Monster.createMonster("shindia", 14, "eob_shindia"); // 14?
-        Monster.createMonster("mantis", 10, "eob_mantis"); // 10?
+        Monster.createMonster("shindia", 14, "eob_shindia");
+        Monster.createMonster("mantis", 10, "eob_mantis");
         // Level 11
         Monster.createMonster("xorn", 19, "eob_xorn"); // 19?
         Monster.createMonster("mflayer", 17, "eob_mflayer"); // 17?
         // Level 12
-        Monster.createMonster("xanath", 21, "eob_xanath"); // 21?
+        Monster.createMonster("xanath", 21, "eob_xanath");
         Monster.createMonster("golem", 13, "eob_golem");
 
 
@@ -322,154 +322,154 @@ public class Eob1Settings {
         Wall.createWall("empty", 0L, WallType.Empty, Arrays.asList(GameSupportType.Eob1));
         Wall.createWall("wall1", 1L, WallType.SolidPart, Arrays.asList(GameSupportType.Eob1));
         Wall.createWall("wall2", 2L, WallType.SolidPart, Arrays.asList(GameSupportType.Eob1));
-        Wall.createWall("emptyMonsterBlock", 25L, WallType.SquarePart, false, null, "eob_blocker", "eob_blocker"); // Block monsters to move trough
-        Wall.createWall("teleport", 52L, WallType.SquarePart, false, null, "eob_teleporter", "eob_teleporter");
+        Wall.createWall("emptyMonsterBlock", 25L, WallType.SquarePart, false, null); // Block monsters to move trough
+        Wall.createWall("teleporter", 52L, WallType.SquarePart, false, null);
         Wall.createWall("wallWithDoor", 58L, WallType.SolidPart, Arrays.asList(GameSupportType.Eob1)); // Side look
         Wall.createWall("wallWithNet", 59L, WallType.SolidPart, Arrays.asList(GameSupportType.Eob1)); // Side look
 
         // Sewers levels
-        Wall.createWall("sewersDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(1, 2, 3), "eob_sewers_door_metal", "eob_sewers_door_metal", "\t:addPullChain()");
-        Wall.createWall("sewersDoor", 8L, WallType.DoorPart, false, Wall.levels(1, 2, 3), "eob_sewers_door_metal", "eob_sewers_door_metal");
-        Wall.createWall("sewersDoorOpened", 12L, WallType.DoorPart, false, Wall.levels(1, 2, 3), "eob_sewers_door_metal", "eob_sewers_door_metal", "\t:setDoorState(\"open\")");
-        Wall.createWall("sewersDoorPortcullisWithButton", 13L, WallType.DoorPart, false, Wall.levels(1, 2, 3), "eob_sewers_door_portcullis", "eob_sewers_door_portcullis", "\t:addPullChain()");
-        Wall.createWall("sewersDoorPortcullisThrowableThrough", 18L, WallType.DoorPart, false, Wall.levels(1, 2, 3), "eob_portcullis_throwable", "eob_portcullis_throwable");
-        Wall.createWall("sewersLevelUp", 23L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_ladder_up", "eob_ladder_up"); // Ladder
-        Wall.createWall("sewersLevelDown", 24L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_ladder_down", "eob_ladder_down"); // Ladder
-        Wall.createWall("sewersEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_sewers_ceiling_shaft", "eob_sewers_ceiling_shaft");
-        Wall.createWall("sewersEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_sewers_ceiling_shaft", "eob_sewers_ceiling_shaft");
-        Wall.createWall("sewersPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_sewers_pressure_plate", "eob_sewers_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
-        Wall.createWall("sewersWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(1, 2, 3), "eob_sewers_alcove", "eob_sewers_alcove");
-        Wall.createWall("sewersDoorStacked", 30L, WallType.DoorPart, false, Wall.levels(1, 2, 3), "eob_sewers_door_metal_force", "eob_sewers_door_metal_stacked");
-        Wall.createWall("sewersDoorPortcullisStacked", 31L, WallType.DoorPart, false, Wall.levels(1, 2, 3), "eob_sewers_door_portcullis", "eob_sewers_door_portcullis_stacked");
-        Wall.createWall("sewersWallWithEyeKeyHole", 32L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_lock_eye", "eob_sewers_lock_eye");
-        Wall.createWall("sewersWallWithJewelKeyHole", 35L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_lock_gem", "eob_sewers_lock_gem");
-        Wall.createWall("sewersWallWithSecretButtonLarge", 39L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_secret_button", "eob_sewers_secret_button_large"); // Brick
-        Wall.createWall("sewersWallWithKeyHoleButton", 41L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_lock_iron", "eob_sewers_lock_iron"); // Key hole -> button
-        Wall.createWall("sewersWallWithDrainage", 43L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_drainage", "eob_sewers_wall_drainage");
-        Wall.createWall("sewersWallWithDrainageBent1", 44L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_drainage", "eob_sewers_wall_drainage_bent"); // Is it the same as 62???
-        Wall.createWall("sewersWallWithButtonSmall", 50L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_secret_button_small", "eob_sewers_secret_button_small");
-        Wall.createWall("sewersWallWithText", 51L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_text_long", "eob_sewers_wall_text_long");
-        Wall.createWall("sewersWallWithKeyHole", 53L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_lock_silver", "eob_lock_silver");
-        Wall.createWall("sewersWallWithKeyHole2", 54L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_lock_golden", "eob_lock_golden");
-        Wall.createWall("sewersWallWithLever", 55L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_lever", "eob_lever");
-        Wall.createWall("sewersWallWithText2", 57L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_text_long", "eob_sewers_wall_text_rats"); // Read able text (Rats ->)
-        Wall.createWall("sewersWallWithButton", 60L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_wall_button", "eob_severs_wall_button");
-        Wall.createWall("sewersWallWithButtonPressed", 61L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_switch", "eob_sewers_switch", "\t:setLeverState(\"activated\")");
-        Wall.createWall("sewersWallWithDrainageBent2", 62L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_drainage", "eob_sewers_wall_drainage_bent"); // Is it the same as 44???
-        Wall.createWall("sewersWallWithPipe", 63L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_pipe", "eob_sewers_wall_pipe");
-        Wall.createWall("sewersWallIllusion", 64L, WallType.Wall, false, Wall.levels(1, 2, 3), "eob_sewers_illusion_wall_rune", "eob_sewers_illusion_wall_rune");
-        Wall.createWall("sewersWallWithRune", 65L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_wall_text_rune1", "eob_sewers_wall_text_rune"); // Rune on the wall
-        Wall.createWall("sewersWallWithDaggerKeyHole", 66L, WallType.SolidPart, false, Wall.levels(1, 2, 3), "eob_sewers_alcove_dagger", "eob_sewers_alcove_dagger"); // Dagger is used as key
-        Wall.createWall("sewersWallIllusionWithRune", 67L, WallType.Wall, false, Wall.levels(1, 2, 3), "eob_sewers_illusion_wall_rune", "eob_sewers_illusion_wall_rune");
-        Wall.createWall("sewersWallPortalInactive", 68L, WallType.SolidPart, false, Wall.levels(2), "temple_glass_wall_2", "portal"); // Level 2 - debug area left by developers
-        Wall.createWall("sewersCaveIn", 69L, WallType.SquarePart, false, Wall.levels(1, 2, 3), "eob_sewers_cave_in", "eob_sewers_cave_in");
+        Wall.createWall("sewersDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersDoor", 8L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersDoorOpened", 12L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersDoorPortcullisWithButton", 13L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersDoorPortcullisThrowableThrough", 18L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersLevelUp", 23L, WallType.SquarePart, false, Wall.levels(1, 2, 3)); // Ladder
+        Wall.createWall("sewersLevelDown", 24L, WallType.SquarePart, false, Wall.levels(1, 2, 3)); // Ladder
+        Wall.createWall("sewersEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersDoorStacked", 30L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersDoorPortcullisStacked", 31L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithEyeKeyHole", 32L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithJewelKeyHole", 35L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithSecretButtonLarge", 39L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Brick
+        Wall.createWall("sewersWallWithKeyHoleButton", 41L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Key hole -> button
+        Wall.createWall("sewersWallWithDrainage", 43L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithDrainageBent1", 44L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Is it the same as 62???
+        Wall.createWall("sewersWallWithButtonSmall", 50L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithText", 51L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithSilverKeyHole", 53L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithGoldKeyHole", 54L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithLever", 55L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithText2", 57L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Read able text (Rats ->)
+        Wall.createWall("sewersWallWithButton", 60L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithButtonPressed", 61L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithDrainageBent2", 62L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Is it the same as 44???
+        Wall.createWall("sewersWallWithPipe", 63L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallIllusion", 64L, WallType.Wall, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallWithRune", 65L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Rune on the wall
+        Wall.createWall("sewersWallWithDaggerKeyHole", 66L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Dagger is used as key
+        Wall.createWall("sewersWallIllusionWithRune", 67L, WallType.Wall, false, Wall.levels(1, 2, 3));
+        Wall.createWall("sewersWallPortalInactive", 68L, WallType.SolidPart, false, Wall.levels(2)); // Level 2 - debug area left by developers
+        Wall.createWall("sewersCaveIn", 69L, WallType.SquarePart, false, Wall.levels(1, 2, 3));
 
         // Ruins levels
-        Wall.createWall("ruinsDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(4, 5, 6), "eob_ruins_door_stone", "eob_ruins_door_stone", "\t:addPullChain()");
-        Wall.createWall("ruinsDoor", 8L, WallType.DoorPart, false, Wall.levels(4, 5, 6), "eob_ruins_door_stone", "eob_ruins_door_stone");
-        Wall.createWall("ruinsLevelUp", 23L, WallType.SquarePart, false, Wall.levels(4, 5, 6), "eob_ruins_stairs_up", "eob_ruins_stairs_up");
-        Wall.createWall("ruinsLevelDown", 24L, WallType.SquarePart, false, Wall.levels(4, 5, 6), "eob_ruins_stairs_down", "eob_ruins_stairs_down");
-        Wall.createWall("ruinsEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(4, 5, 6), "eob_ruins_ceiling_shaft", "eob_ruins_ceiling_shaft");
-        Wall.createWall("ruinsEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(4, 5, 6), "eob_ruins_pit", "eob_ruins_pit");
-        Wall.createWall("ruinsPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(4, 5, 6), "eob_ruins_pressure_plate", "eob_ruins_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
-        Wall.createWall("ruinsWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(4, 5, 6), "eob_ruins_alcove", "eob_ruins_alcove");
-        Wall.createWall("ruinsDoorStacked", 30L, WallType.DoorPart, false, Wall.levels(4, 5, 6), "eob_ruins_door_stone_stacked", "eob_ruins_door_stone_stacked");
-        Wall.createWall("ruinsWallWithStatueLever", 32L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_statue_lever", "eob_ruins_statue_lever");
-        Wall.createWall("ruinsWallWithSmallStatue", 34L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_small_statue", "eob_ruins_small_statue");
-        Wall.createWall("ruinsWallWithChain", 36L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_chain_lever", "eob_ruins_chain_lever"); // Chain on the wall -> Type of the lever
-        Wall.createWall("ruinsWallWithFiringMechanism", 38L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_dart_firing_pad", "eob_ruins_dart_firing_pad"); // Level 6: Darts
-        Wall.createWall("ruinsWallWithSecretButtonTiny", 39L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_secret_button_tiny", "eob_ruins_secret_button_tiny");
-        Wall.createWall("ruinsNet", 40L, WallType.DoorPart, false, Wall.levels(4, 5, 6), "eob_ruins_net", "eob_ruins_net");
-        Wall.createWall("ruinsNetTorn", 41L, WallType.DoorPart, false, Wall.levels(4, 5, 6), "eob_ruins_net", "eob_ruins_net_torn", "\t:setDoorState(\"open\")"); // NetTorn (4 level)
-        Wall.createWall("ruinsWallPortalLevelNecklace", 43L, WallType.SolidPart, false, Wall.levels(5), "eob_ruins_portal_necklace", "eob_ruins_portal_necklace"); // Level 5 - Stone Necklace
-        Wall.createWall("ruinsWallPortalLevelScepter", 45L, WallType.SolidPart, false, Wall.levels(6), "eob_ruins_portal_scepter", "eob_ruins_portal_scepter"); // Level 6 - Stone Scepter
-        Wall.createWall("ruinsWallPortalLevelAmulet", 46L, WallType.SolidPart, false, Wall.levels(4), "eob_ruins_portal_amulet", "eob_ruins_portal_amulet"); // Level 4 - Stone Amulet
-        Wall.createWall("ruinsWallWithText", 51L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_wall_text", "eob_ruins_wall_text");
-        Wall.createWall("ruinsWallWithKeyHole", 53L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_statue_lock", "eob_ruins_statue_lock");
-        Wall.createWall("ruinsWallWithKeyHole2", 54L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_ornate_lock", "eob_ruins_ornate_lock");
-        Wall.createWall("ruinsWallWithLever", 55L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_lever", "eob_ruins_lever");
-        Wall.createWall("ruinsWallWithButton", 60L, WallType.SolidPart, false, Wall.levels(4, 5, 6), "eob_ruins_wall_button", "eob_ruins_wall_button");
-        Wall.createWall("ruinsWallIllusion", 64L, WallType.Wall, false, Wall.levels(4, 5, 6), "eob_ruins_illusion_wall", "eob_ruins_illusion_wall");
-        Wall.createWall("ruinsWallIllusionWithStatue", 66L, WallType.Wall, false, Wall.levels(4, 5, 6), "eob_ruins_illusion_wall_statue", "eob_ruins_illusion_wall_statue");
-        Wall.createWall("ruinsWallIllusionWithRune", 67L, WallType.Wall, false, Wall.levels(4, 5, 6), "eob_ruins_illusion_wall_rune", "eob_ruins_illusion_wall_rune");
+        Wall.createWall("ruinsDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsDoor", 8L, WallType.DoorPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsLevelUp", 23L, WallType.SquarePart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsLevelDown", 24L, WallType.SquarePart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsDoorStacked", 30L, WallType.DoorPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithStatueLever", 32L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithSmallStatue", 34L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithChain", 36L, WallType.SolidPart, false, Wall.levels(4, 5, 6)); // Chain on the wall -> Type of the lever
+        Wall.createWall("ruinsWallWithFiringMechanism", 38L, WallType.SolidPart, false, Wall.levels(4, 5, 6)); // Level 6: Darts
+        Wall.createWall("ruinsWallWithSecretButtonTiny", 39L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsNet", 40L, WallType.DoorPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsNetTorn", 41L, WallType.DoorPart, false, Wall.levels(4, 5, 6)); // NetTorn (4 level)
+        Wall.createWall("ruinsWallPortalLevelNecklace", 43L, WallType.SolidPart, false, Wall.levels(5)); // Level 5 - Stone Necklace
+        Wall.createWall("ruinsWallPortalLevelScepter", 45L, WallType.SolidPart, false, Wall.levels(6)); // Level 6 - Stone Scepter
+        Wall.createWall("ruinsWallPortalLevelAmulet", 46L, WallType.SolidPart, false, Wall.levels(4)); // Level 4 - Stone Amulet
+        Wall.createWall("ruinsWallWithText", 51L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithKeyHole", 53L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithKeyHole2", 54L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithLever", 55L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallWithButton", 60L, WallType.SolidPart, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallIllusion", 64L, WallType.Wall, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallIllusionWithStatue", 66L, WallType.Wall, false, Wall.levels(4, 5, 6));
+        Wall.createWall("ruinsWallIllusionWithRune", 67L, WallType.Wall, false, Wall.levels(4, 5, 6));
 
         // Drow levels
-        Wall.createWall("drowDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(7, 8, 9), "prison_door_metal", "door", "\t:addPullChain()");
-        Wall.createWall("drowDoor", 8L, WallType.DoorPart, false, Wall.levels(7, 8, 9), "prison_door_metal", "door");
-        Wall.createWall("drowLevelUp", 23L, WallType.SquarePart, false, Wall.levels(7, 8, 9), "prison_stairs_up", "stairs_up");
-        Wall.createWall("drowLevelDown", 24L, WallType.SquarePart, false, Wall.levels(7, 8, 9), "prison_stairs_down", "stairs_down");
-        Wall.createWall("drowEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(7, 8, 9), "prison_ceiling_shaft", "ceiling_shaft");
-        Wall.createWall("drowEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(7, 8, 9), "prison_pit", "pit");
-        Wall.createWall("drowPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(7, 8, 9), "prison_pressure_plate", "pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
-        Wall.createWall("drowWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(7, 8, 9), "prison_alcove", "wall_alcove");
-        Wall.createWall("drowWallWithFiringMechanism2", 32L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "daemon_head", "firing_mechanism"); // Level 7: Fireball
-        Wall.createWall("drowWallWithText2", 33L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "dungeon_wall_text_long", "wall_text"); // It is written, the key lies on the other side.
-        Wall.createWall("drowWallWithGemKeyHole", 36L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "lock_prison", "wall_gem_lock"); // Gem is used as key
-        Wall.createWall("drowWallWithSecretButtonTiny", 39L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "prison_secret_button_small", "secret_button_tiny");
-        Wall.createWall("drowWallPortalLevelCross", 40L, WallType.SolidPart, false, Wall.levels(7), "temple_glass_wall_2", "portal"); // Level 7 - missing Stone Cross
-        Wall.createWall("drowWallPortalLevelNecklace", 41L, WallType.SolidPart, false, Wall.levels(7), "temple_glass_wall_2", "portal"); // Level 7 - missing Stone Necklace
-        Wall.createWall("drowWallPortalLevelDaggerL7", 43L, WallType.SolidPart, false, Wall.levels(7), "temple_glass_wall_2", "portal"); // Level 7 - missing Stone Dagger
-        Wall.createWall("drowWallPortalLevelDaggerL9", 43L, WallType.SolidPart, false, Wall.levels(9), "temple_glass_wall_2", "portal"); // Level 9 - missing Stone Dagger
-        Wall.createWall("drowWallPortalLevelAmulet", 44L, WallType.SolidPart, false, Wall.levels(7), "temple_glass_wall_2", "portal"); // Level 7 - missing Stone Amulet
-        Wall.createWall("drowWallPortalLevelScepter", 45L, WallType.SolidPart, false, Wall.levels(8), "temple_glass_wall_2", "portal"); // Level 8 - missing Stone Scepter
-        Wall.createWall("drowWallPortalLevelGem", 46L, WallType.SolidPart, false, Wall.levels(7), "temple_glass_wall_2", "portal"); // Level 7 - missing Gem
-        Wall.createWall("drowWallThrowable", 47L, WallType.Wall, false, Wall.levels(7, 8, 9), "prison_secret_door", "wall_throwable");
-        Wall.createWall("drowWallWithFiringMechanismFireball", 48L, WallType.SolidPart, false, Wall.levels(7), "daemon_head", "firing_mechanism"); // Level 7: Fireball
-        Wall.createWall("drowWallWithFiringMechanismDartsL9", 48L, WallType.SolidPart, false, Wall.levels(9), "daemon_head", "firing_mechanism"); // Level 9: Darts
-        Wall.createWall("drowWallWithFiringMechanismDartsL8", 49L, WallType.SolidPart, false, Wall.levels(8), "daemon_head", "firing_mechanism"); // Level 7: Darts
-        Wall.createWall("drowWallWithFiringMechanismMagicMissile", 49L, WallType.SolidPart, false, Wall.levels(9), "daemon_head", "firing_mechanism2"); // Level 9: MagicMissile
-        Wall.createWall("drowWallWithText", 51L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "prison_wall_text_long", "wall_text");
-        Wall.createWall("drowWallWithKeyHole", 53L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "lock", "wall_spider_lock");
-        Wall.createWall("drowWallWithKeyHole2", 54L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "lock_ornate", "wall_lock_ornate");
-        Wall.createWall("drowWallWithLever", 55L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "lever", "wall_lever");
-        Wall.createWall("drowWallIllusionWithSpider", 57L, WallType.Wall, false, Wall.levels(7, 8, 9), "temple_secret_door", "wall_illusion_with_spider");
-        Wall.createWall("drowWallWithButton", 60L, WallType.SolidPart, false, Wall.levels(7, 8, 9), "wall_button", "wall_button");
-        Wall.createWall("drowWallIllusion", 64L, WallType.Wall, false, Wall.levels(7, 8, 9), "prison_secret_door", "wall_illusion");
+        Wall.createWall("drowDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowDoor", 8L, WallType.DoorPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowLevelUp", 23L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowLevelDown", 24L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallWithFiringMechanismFireball2", 32L, WallType.SolidPart, false, Wall.levels(7, 8, 9)); // Level 7: Fireball
+        Wall.createWall("drowWallWithText2", 33L, WallType.SolidPart, false, Wall.levels(7, 8, 9)); // It is written, the key lies on the other side.
+        Wall.createWall("drowWallWithGemKeyHole", 36L, WallType.SolidPart, false, Wall.levels(7, 8, 9)); // Gem is used as key
+        Wall.createWall("drowWallWithSecretButtonTiny", 39L, WallType.SolidPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallPortalLevelCross", 40L, WallType.SolidPart, false, Wall.levels(7)); // Level 7 - missing Stone Cross
+        Wall.createWall("drowWallPortalLevelNecklace", 41L, WallType.SolidPart, false, Wall.levels(7)); // Level 7 - missing Stone Necklace
+        Wall.createWall("drowWallPortalLevelDaggerL7", 43L, WallType.SolidPart, false, Wall.levels(7)); // Level 7 - missing Stone Dagger
+        Wall.createWall("drowWallPortalLevelDaggerL9", 43L, WallType.SolidPart, false, Wall.levels(9)); // Level 9 - missing Stone Dagger
+        Wall.createWall("drowWallPortalLevelAmulet", 44L, WallType.SolidPart, false, Wall.levels(7)); // Level 7 - missing Stone Amulet
+        Wall.createWall("drowWallPortalLevelScepter", 45L, WallType.SolidPart, false, Wall.levels(8)); // Level 8 - missing Stone Scepter
+        Wall.createWall("drowWallPortalLevelGem", 46L, WallType.SolidPart, false, Wall.levels(7)); // Level 7 - missing Gem
+        Wall.createWall("drowWallThrowable", 47L, WallType.Wall, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallWithFiringMechanismFireball", 48L, WallType.SolidPart, false, Wall.levels(7)); // Level 7: Fireball
+        Wall.createWall("drowWallWithFiringMechanismDartsL9", 48L, WallType.SolidPart, false, Wall.levels(9)); // Level 9: Darts
+        Wall.createWall("drowWallWithFiringMechanismDartsL8", 49L, WallType.SolidPart, false, Wall.levels(8)); // Level 7: Darts
+        Wall.createWall("drowWallWithFiringMechanismMagicMissile", 49L, WallType.SolidPart, false, Wall.levels(9)); // Level 9: MagicMissile
+        Wall.createWall("drowWallWithText", 51L, WallType.SolidPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallWithKeyHole", 53L, WallType.SolidPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallWithKeyHole2", 54L, WallType.SolidPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallWithLever", 55L, WallType.SolidPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallIllusionWithSpider", 57L, WallType.Wall, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallWithButton", 60L, WallType.SolidPart, false, Wall.levels(7, 8, 9));
+        Wall.createWall("drowWallIllusion", 64L, WallType.Wall, false, Wall.levels(7, 8, 9));
 
         // Hive levels
-        Wall.createWall("hiveDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(10, 11), "dungeon_door_metal", "door", "\t:addPullChain()");
-        Wall.createWall("hiveDoor", 8L, WallType.DoorPart, false, Wall.levels(10, 11), "prison_door_metal", "door");
-        Wall.createWall("hiveLevelUp", 23L, WallType.SquarePart, false, Wall.levels(10, 11), "dungeon_stairs_up", "stairs_up");
-        Wall.createWall("hiveLevelDown", 24L, WallType.SquarePart, false, Wall.levels(10, 11), "dungeon_stairs_down", "stairs_down");
-        Wall.createWall("hiveEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(10, 11), "dungeon_ceiling_shaft", "ceiling_shaft");
-        Wall.createWall("hiveEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(10, 11), "dungeon_pit", "pit");
-        Wall.createWall("hivePressurePlate", 28L, WallType.SquarePart, false, Wall.levels(10, 11), "dungeon_pressure_plate", "pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
-        Wall.createWall("hiveWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(10, 11), "dungeon_alcove", "wall_alcove");
-        Wall.createWall("hiveWallWithSecretButtonSmall", 31L, WallType.SolidPart, false, Wall.levels(10, 11), "dungeon_secret_button_small", "secret_button_small");
-        Wall.createWall("hiveWallWithSecretButtonTiny", 33L, WallType.SolidPart, false, Wall.levels(10, 11), "dungeon_secret_button_small", "secret_button_tiny");
-        Wall.createWall("hiveWallPortalLevelCross", 36L, WallType.SolidPart, false, Wall.levels(11), "temple_glass_wall_2", "portal"); // Level 11 - missing Stone Cross
-        Wall.createWall("hiveWallPortalLevelOrb", 37L, WallType.SolidPart, false, Wall.levels(11), "temple_glass_wall_2", "portal"); // Level 11 - missing Stone Orb
-        Wall.createWall("hiveWallPortalLevelScepter", 38L, WallType.SolidPart, false, Wall.levels(10), "temple_glass_wall_2", "portal"); // Level 10 - missing Stone Scepter
-        Wall.createWall("hiveWallPortalLevelRing", 39L, WallType.SolidPart, false, Wall.levels(10), "temple_glass_wall_2", "portal"); // Level 10 - missing Stone Ring
-        Wall.createWall("hiveWallWithText", 41L, WallType.SolidPart, false, Wall.levels(10, 11), "dungeon_wall_text_long", "wall_text");
-        Wall.createWall("hiveWallWithKeyHole", 42L, WallType.SolidPart, false, Wall.levels(10, 11), "lock", "wall_lock");
-        Wall.createWall("hiveWallWithLeverUp", 43L, WallType.SolidPart, false, Wall.levels(10, 11), "lever", "wall_lever");
-        Wall.createWall("hiveWallWithLeverDown", 44L, WallType.SolidPart, false, Wall.levels(10, 11), "lever", "wall_lever", "\t:setLeverState(\"activated\")");
-        Wall.createWall("hiveWallWithButton", 45L, WallType.SolidPart, false, Wall.levels(10, 11), "wall_button", "wall_button");
-        Wall.createWall("hiveWallWithSwitch", 46L, WallType.SolidPart, false, Wall.levels(10, 11), "wall_button", "wall_switch"); // Can be pressed or released
-        Wall.createWall("hiveWallWithStar", 48L, WallType.SolidPart, false, Wall.levels(10, 11), "daemon_head", "wall_star"); // Level 11: Celestial star
-        Wall.createWall("hiveWallWithRift", 49L, WallType.SolidPart, false, Wall.levels(10, 11), "dungeon_ivy_1", "hive_wall_rift");
-        Wall.createWall("hiveWallWithManacles", 50L, WallType.SolidPart, false, Wall.levels(10, 11), "prison_bench", "prison_manacles");
-        Wall.createWall("hiveWallWithButton2", 60L, WallType.SolidPart, false, Wall.levels(10, 11), "wall_button", "wall_button");
+        Wall.createWall("hiveDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveDoor", 8L, WallType.DoorPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveLevelUp", 23L, WallType.SquarePart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveLevelDown", 24L, WallType.SquarePart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveEmptyPit", 27L, WallType.SquarePart, false, Wall.levels(10, 11));
+        Wall.createWall("hivePressurePlate", 28L, WallType.SquarePart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithSecretButtonSmall", 31L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithSecretButtonTiny", 33L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallPortalLevelCross", 36L, WallType.SolidPart, false, Wall.levels(11)); // Level 11 - missing Stone Cross
+        Wall.createWall("hiveWallPortalLevelOrb", 37L, WallType.SolidPart, false, Wall.levels(11)); // Level 11 - missing Stone Orb
+        Wall.createWall("hiveWallPortalLevelScepter", 38L, WallType.SolidPart, false, Wall.levels(10)); // Level 10 - missing Stone Scepter
+        Wall.createWall("hiveWallPortalLevelRing", 39L, WallType.SolidPart, false, Wall.levels(10)); // Level 10 - missing Stone Ring
+        Wall.createWall("hiveWallWithText", 41L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithKeyHole", 42L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithLeverUp", 43L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithLeverDown", 44L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithButton", 45L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithSwitch", 46L, WallType.SolidPart, false, Wall.levels(10, 11)); // Can be pressed or released
+        Wall.createWall("hiveWallWithStar", 48L, WallType.SolidPart, false, Wall.levels(10, 11)); // Level 11: Celestial star
+        Wall.createWall("hiveWallWithRift", 49L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithManacles", 50L, WallType.SolidPart, false, Wall.levels(10, 11));
+        Wall.createWall("hiveWallWithButton2", 60L, WallType.SolidPart, false, Wall.levels(10, 11));
 
         // Sanctum levels
-        Wall.createWall("sanctumDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(12), "temple_door_metal", "door", "\t:addPullChain()");
-        Wall.createWall("sanctumDoor", 8L, WallType.DoorPart, false, Wall.levels(12), "temple_door_metal", "door");
-        Wall.createWall("sanctumPedestal", 22L, WallType.SquarePart, false, Wall.levels(12), "altar", "pedestal");
-        Wall.createWall("sanctumPedestalWithEye", 26L, WallType.SquarePart, false, Wall.levels(12), "altar", "pedestal_eye");
-        Wall.createWall("sanctumPedestalWithEyeDetector", 27L, WallType.SquarePart, false, Wall.levels(12), "altar", "pedestal_eye");
-        Wall.createWall("sanctumPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(12), "temple_pressure_plate", "pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
-        Wall.createWall("sanctumWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(12), "temple_alcove", "wall_alcove");
-        Wall.createWall("sanctumWallWithFiringMechanism", 30L, WallType.SolidPart, false, Wall.levels(12), "daemon_head", "firing_mechanism"); // Level 12: Fireball
-        Wall.createWall("sanctumWallWithSecretButtonSmall", 31L, WallType.SolidPart, false, Wall.levels(12), "temple_secret_button_small", "secret_button_small");
-        Wall.createWall("sanctumWallWithSecretButtonTiny", 33L, WallType.SolidPart, false, Wall.levels(12), "temple_secret_button_small", "secret_button_tiny");
-        Wall.createWall("sanctumWallPortalLevelOrb", 37L, WallType.SolidPart, false, Wall.levels(12), "temple_glass_wall_2", "portal"); // Level 12 - missing Stone Orb
-        Wall.createWall("sanctumWallWithLamp", 38L, WallType.SolidPart, false, Wall.levels(12), "torch_holder", "wall_lamp");
-        Wall.createWall("sanctumSpikeTrap", 39L, WallType.SquarePart, false, Wall.levels(12), "temple_floor_drainage", "spike_trap");
-        Wall.createWall("sanctumWallWithText", 41L, WallType.SolidPart, false, Wall.levels(12), "temple_wall_text_long", "wall_text");
-        Wall.createWall("sanctumWallWithKeyHole", 42L, WallType.SolidPart, false, Wall.levels(12), "lock", "wall_skull_lock");
-        Wall.createWall("sanctumWallWithLampSmoke", 43L, WallType.SolidPart, false, Wall.levels(12), "torch_holder", "wall_lamp_smoke");
-        Wall.createWall("sanctumWallWithButton", 45L, WallType.SolidPart, false, Wall.levels(12), "wall_button", "wall_button");
-        Wall.createWall("sanctumWallWithButton2", 60L, WallType.SolidPart, false, Wall.levels(12), "wall_button", "wall_button");
+        Wall.createWall("sanctumDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(12));
+        Wall.createWall("sanctumDoor", 8L, WallType.DoorPart, false, Wall.levels(12));
+        Wall.createWall("sanctumPedestal", 22L, WallType.SquarePart, false, Wall.levels(12));
+        Wall.createWall("sanctumPedestalWithEye", 26L, WallType.SquarePart, false, Wall.levels(12));
+        Wall.createWall("sanctumPedestalWithEyeDetector", 27L, WallType.SquarePart, false, Wall.levels(12));
+        Wall.createWall("sanctumPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallWithAlcove", 29L, WallType.SolidPart, true, Wall.levels(12));
+        Wall.createWall("sanctumWallWithFiringMechanism", 30L, WallType.SolidPart, false, Wall.levels(12)); // Level 12: Fireball
+        Wall.createWall("sanctumWallWithSecretButtonSmall", 31L, WallType.SolidPart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallWithSecretButtonTiny", 33L, WallType.SolidPart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallPortalLevelOrb", 37L, WallType.SolidPart, false, Wall.levels(12)); // Level 12 - missing Stone Orb
+        Wall.createWall("sanctumWallWithLamp", 38L, WallType.SolidPart, false, Wall.levels(12));
+        Wall.createWall("sanctumSpikeTrap", 39L, WallType.SquarePart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallWithText", 41L, WallType.SolidPart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallWithKeyHole", 42L, WallType.SolidPart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallWithLampSmoke", 43L, WallType.SolidPart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallWithButton", 45L, WallType.SolidPart, false, Wall.levels(12));
+        Wall.createWall("sanctumWallWithButton2", 60L, WallType.SolidPart, false, Wall.levels(12));
     }
 }
