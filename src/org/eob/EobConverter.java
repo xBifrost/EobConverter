@@ -2,8 +2,12 @@ package org.eob;
 
 import org.eob.file.EobFiles;
 import org.eob.file.inf.InfFile;
+import org.eob.gui.EobConverterForm;
 import org.eob.model.ItemType;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +17,15 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.5";
+    public final static String CONVERTER_VERSION = "0.6.0";
     private final static List<String> externalChangesList = new ArrayList<String>();
+    private final static String ITEMS_FILE = "ITEM.DAT";
+
+    private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
+    private final static String LEVEL_INF_FILE = "LEVEL%d.INF";
+
+    private Settings settings = new Settings();
+    private EobConverterForm eobConverterForm;
 
     private static void initExternalChanges() {
         externalChangesList.add("W eob_sewers_door_metal_1_2_3");
@@ -176,19 +187,7 @@ public class EobConverter {
         externalChangesList.add("S eob_sanctum_door_12_23_3");
     }
 
-    private final static String ITEMS_FILE = "ITEM.DAT";
-    private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
-    private final static String LEVEL_INF_FILE = "LEVEL%d.INF";
-
-    public static void main(String[] args) {
-        String eobPath = ".";
-        int from = 1;
-        int to = 99;
-        String debugShowOnlyItemName = "";
-        boolean debug = false;
-        boolean addLevelInSeparateFile = true;
-        boolean generateDefaultStructures = false;
-
+    public EobConverter(String[] args) {
         for (String arg : args) {
             if (arg.charAt(0) == '-') {
                 int pos = arg.indexOf("=");
@@ -196,48 +195,55 @@ public class EobConverter {
                 String value = pos >= 0 ? arg.substring(pos + 1) : "";
                 try {
                     if (name.equals("--help")) {
-                        System.out.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-d|--debug] [-di|--debug-item=<value>] [-l1|--levels-in-one-file] [-gs|--generate-default-structures]");
-                        System.out.println("");
-                        System.out.println("List of commands:");
-                        System.out.println("   levels                      Convert all levels in range: <from,to>. (default=1;99)");
-                        System.out.println("   src-path                    Eob of Beholder path. (default=\".\")");
-                        System.out.println("   debug                       Show debug info.");
-                        System.out.println("   debug-item                  Show debug info only for items contains <value> string. (default=\"\")");
-                        System.out.println("   levels-in-one-file          Store all levels in one file.");
-                        System.out.println("   generate-default-structures Generate default structures.");
-                        System.out.println("");
+                        EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>] [-c|--console] [-d|--debug] [-di|--debug-item=<value>] [-l1|--file-per-level] [-gs|--generate-default-structures]");
+                        EobLogger.println("");
+                        EobLogger.println("List of commands:");
+                        EobLogger.println("   src-path                    Source path. (default=\".\")");
+                        EobLogger.println("   dst-path                    Destination path. (default=\".\")");
+                        EobLogger.println("   debug                       Show debug info.");
+                        EobLogger.println("   debug-item                  Show debug info only for items contains <value> string. (default=\"\")");
+                        EobLogger.println("   levels                      Convert all levels in range: <from,to>. (default=1;99)");
+                        EobLogger.println("   file-per-level              Store each level in separate file.");
+                        EobLogger.println("   generate-default-structures Generate default structures.");
+                        EobLogger.println("");
                         return;
                     } else if (name.equals("--levels") || name.equals("-l")) {
                         String[] range = value.split(";");
-                        from = Integer.parseInt(range[0]);
-                        to = Integer.parseInt(range[1]);
+                        settings.from = Integer.parseInt(range[0]);
+                        settings.to = Integer.parseInt(range[1]);
                     } else if (name.equals("--debug") || name.equals("-d")) {
-                        debug = true;
+                        settings.debug = true;
+                    } else if (name.equals("--console") || name.equals("-c")) {
+                        settings.console = true;
                     } else if (name.equals("--src-path") || name.equals("-sp")) {
-                        eobPath = value;
+                        settings.srcPath = value;
+                    } else if (name.equals("--dst-path") || name.equals("-dp")) {
+                        settings.dstPath = value;
                     } else if (name.equals("--debug-item") || name.equals("-di")) {
-                        debugShowOnlyItemName = value;
-                    } else if (name.equals("--levels-in-one-file") || name.equals("-l1")) {
-                        addLevelInSeparateFile = false;
+                        settings.debugShowOnlyItemName = value;
+                    } else if (name.equals("--file-per-level") || name.equals("-l1")) {
+                        settings.createFilePerLevel = true;
                     } else if (name.equals("--generate-default-structures") || name.equals("-gs")) {
-                        generateDefaultStructures = true;
+                        settings.generateDefaultStructures = true;
                     }
                 } catch (IllegalArgumentException exception) {
-                    System.out.println("Value " + value + " is not a number. Parameter " + name + " is ignored.");
+                    EobLogger.println("Value " + value + " is not a number. Parameter " + name + " is ignored.");
                 }
             }
         }
+    }
 
+    private void convert() {
         initExternalChanges();
         Eob1Settings.init();
-        EobFiles eobFiles = new EobFiles(eobPath);
+        EobFiles eobFiles = new EobFiles(settings.srcPath);
 
-        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), debug);
-        itemParser.parseFile(debugShowOnlyItemName);
+        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), settings.debug);
+        itemParser.parseFile(settings.debugShowOnlyItemName);
 
-        GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, itemParser, to, generateDefaultStructures, debug);
+        GrimrockExport grimrockExport = new GrimrockExport(settings.dstPath, externalChangesList, itemParser, settings.to, settings.generateDefaultStructures, settings.debug);
 
-        for (int levelId = from; levelId <= to; levelId++) {
+        for (int levelId = settings.from; levelId <= settings.to; levelId++) {
             byte[] levelMazFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
             if (levelMazFile != null) {
                 LevelParser levelParser = new LevelParser(levelId, levelMazFile);
@@ -252,9 +258,101 @@ public class EobConverter {
             }
         }
 
-        grimrockExport.exportIntoGrimrock(addLevelInSeparateFile);
+        grimrockExport.exportIntoGrimrock(settings.createFilePerLevel);
 
-        System.out.println("Summary:");
-        System.out.println("Exported " + itemParser.getItemsCount() + " items of " + ItemType.getItemsCount() + " different types (" + ItemType.getUnknownItemsCount() + " are unknown)");
+        EobLogger.println("Summary:");
+        EobLogger.println("Exported " + itemParser.getItemsCount() + " items of " + ItemType.getItemsCount() + " different types (" + ItemType.getUnknownItemsCount() + " are unknown)");
+    }
+
+    private void execute() {
+        if (!settings.console) {
+            settings.generateDefaultStructures = true;
+
+            eobConverterForm = new EobConverterForm();
+            final JFrame settingsFrame = new JFrame("Eye of Beholder Converter");
+            settingsFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            settingsFrame.add(eobConverterForm.getMainPanel());
+
+            eobConverterForm.getSrcPathField().setText(settings.srcPath);
+            eobConverterForm.getDstPathField().setText(settings.dstPath);
+            eobConverterForm.getDebugModeCheckBox().setSelected(settings.debug);
+            eobConverterForm.getItemNameField().setText(settings.debugShowOnlyItemName);
+            eobConverterForm.getFromLevelField().setText(settings.from.toString());
+            eobConverterForm.getToLevelField().setText(settings.to.toString());
+            eobConverterForm.getGenerateDefaultStructuresCheckBox().setSelected(settings.generateDefaultStructures);
+            eobConverterForm.getCreateLevelInSeparateCheckBox().setSelected(settings.createFilePerLevel);
+            eobConverterForm.getConvertButton().addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    eobConverterForm.getOutput().setText("");
+                    fillSettings();
+                    convert();
+                }
+            });
+            eobConverterForm.getSrcPathChooser().addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser fileChooser = new JFileChooser(eobConverterForm.getSrcPathField().getText());
+                    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    if (fileChooser.showOpenDialog(settingsFrame) == JFileChooser.APPROVE_OPTION) {
+                        eobConverterForm.getSrcPathField().setText(fileChooser.getSelectedFile().getPath());
+                    }
+                }
+            });
+            eobConverterForm.getDstPathChooser().addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser fileChooser = new JFileChooser(eobConverterForm.getDstPathField().getText());
+                    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    if (fileChooser.showOpenDialog(settingsFrame) == JFileChooser.APPROVE_OPTION) {
+                        eobConverterForm.getDstPathField().setText(fileChooser.getSelectedFile().getPath());
+                    }
+                }
+            });
+            EobLogger.output = eobConverterForm.getOutput();
+
+            settingsFrame.setMinimumSize(new Dimension(600, 500));
+            settingsFrame.pack();
+            settingsFrame.setLocationRelativeTo(null);
+            settingsFrame.setVisible(true);
+        } else {
+            convert();
+        }
+    }
+
+    private void fillSettings() {
+        settings.srcPath = eobConverterForm.getSrcPathField().getText();
+        settings.dstPath = eobConverterForm.getDstPathField().getText();
+        settings.debug = eobConverterForm.getDebugModeCheckBox().isSelected();
+        settings.debugShowOnlyItemName = eobConverterForm.getItemNameField().getText();
+        try {
+            settings.from = Integer.parseInt(eobConverterForm.getFromLevelField().getText());
+        } finally {
+            settings.from = 1;
+        }
+        try {
+            settings.to = Integer.parseInt(eobConverterForm.getToLevelField().getText());
+        } finally {
+            settings.to = 99;
+        }
+        settings.generateDefaultStructures = eobConverterForm.getGenerateDefaultStructuresCheckBox().isSelected();
+        settings.createFilePerLevel = eobConverterForm.getCreateLevelInSeparateCheckBox().isSelected();
+    }
+
+    public static void main(String[] args) {
+        EobConverter converter = new EobConverter(args);
+        converter.execute();
+    }
+
+    private static class Settings {
+        public String srcPath = ".";
+        public String dstPath = ".";
+        public Integer from = 1;
+        public Integer to = 99;
+        public String debugShowOnlyItemName = "";
+        public boolean debug = false;
+        public boolean createFilePerLevel = false;
+        public boolean generateDefaultStructures = false;
+        public boolean console = false;
     }
 }

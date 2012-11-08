@@ -1,5 +1,7 @@
 package org.eob.file.cps.enums;
 
+import org.eob.EobLogger;
+
 /**
  * User: Bifrost
  * Date: 10/28/12
@@ -27,7 +29,7 @@ public enum CpsCompressionType {
             }
         }
 
-        System.out.println("Unsupported compressionType: " + intValue);
+        EobLogger.println("Unsupported compressionType: " + intValue);
         return Uncompressed;
     }
 }

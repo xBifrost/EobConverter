@@ -1,5 +1,7 @@
 package org.eob.model;
 
+import org.eob.EobLogger;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class ItemType {
         if (result == null) {
             unknownItemsCount++;
             result = new ItemType(itemType, "unknown_" + itemType, "Unknown " + itemType, DEFAULT_BASE_OBJECT , true);
-            System.out.println("Unknown item type: " + itemType);
+            EobLogger.println("Unknown item type: " + itemType);
         }
 
         return result;

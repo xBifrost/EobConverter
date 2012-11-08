@@ -1,5 +1,6 @@
 package org.eob.model;
 
+import org.eob.EobLogger;
 import org.eob.enums.InSquarePositionType;
 
 /**
@@ -54,7 +55,7 @@ public class ItemObject {
         y = (coords >> 5) & 0x1f;
 
         if (orig[8] != orig[10] || orig[9] != orig[11]) {
-            System.out.println("Different values of objectIds: (" + ((orig[8] & 0xFF) + 0x0100 * (orig[9] & 0xFF)) + "," + ((orig[10] & 0xFF) + 0x0100 * (orig[11] & 0xFF)) + ")");
+            EobLogger.println("Different values of objectIds: (" + ((orig[8] & 0xFF) + 0x0100 * (orig[9] & 0xFF)) + "," + ((orig[10] & 0xFF) + 0x0100 * (orig[11] & 0xFF)) + ")");
         }
         objectId = (orig[8] & 0xFF) + 0x0100 * (orig[9] & 0xFF);
         level = orig[12] & 0xFF;

@@ -1,5 +1,7 @@
 package org.eob.file;
 
+import org.eob.EobLogger;
+
 import java.io.*;
 
 /**
@@ -10,11 +12,11 @@ import java.io.*;
 public class FileUtility {
     public static byte[] readFile(String inputFileName, boolean debug) {
         if (debug) {
-            System.out.println("Reading in binary file with name: " + inputFileName + " ...");
+            EobLogger.println("Reading in binary file with name: " + inputFileName + " ...");
         }
         File file = new File(inputFileName);
         if (debug) {
-            System.out.println("File size: " + file.length());
+            EobLogger.println("File size: " + file.length());
         }
         byte[] result = new byte[(int) file.length()];
         try {
@@ -31,27 +33,28 @@ public class FileUtility {
                     }
                 }
                 if (debug) {
-                    System.out.println("Num bytes read: " + totalBytesRead);
+                    EobLogger.println("Num bytes read: " + totalBytesRead);
                 }
             } finally {
                 if (debug) {
-                    System.out.println("Closing input stream.");
+                    EobLogger.println("Closing input stream.");
                 }
                 if (input != null) {
                     input.close();
                 }
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("File not found: " + inputFileName);
+            EobLogger.println("File not found: " + inputFileName);
         } catch (IOException ex) {
-            System.out.println(ex);
+            EobLogger.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return result;
     }
 
     public static void writeFile(String outputFileName, byte[] data, boolean debug) {
         if (debug) {
-            System.out.println("Writing binary file with name: " + outputFileName + " ...");
+            EobLogger.println("Writing binary file with name: " + outputFileName + " ...");
         }
         try {
             OutputStream output = null;
@@ -64,9 +67,10 @@ public class FileUtility {
                 }
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("File not found.");
+            EobLogger.println("File not found.");
         } catch (IOException ex) {
-            System.out.println(ex);
+            EobLogger.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }

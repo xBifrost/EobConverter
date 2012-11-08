@@ -1,5 +1,6 @@
 package org.eob.model;
 
+import org.eob.EobLogger;
 import org.eob.enums.WallType;
 import org.eob.enums.GameSupportType;
 
@@ -61,7 +62,8 @@ public class Wall {
                 try {
                     registeredWalls.put((Wall) field.get(null), field.getName());
                 } catch (Exception e) {
-                    System.out.println(e);
+                    EobLogger.println(e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }

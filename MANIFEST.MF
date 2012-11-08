@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: 1.6.0_35 (Sun Microsystems Inc.)
+Built-By: Bifrost, Thomson
+Build-Jdk: 1.6.0_35 (Sun Microsystems Inc.)
+Main-Class: org.eob.EobConverter

@@ -1,5 +1,7 @@
 package org.eob.enums;
 
+import org.eob.EobLogger;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public enum DirectionType {
             }
         }
 
-        System.out.println("Unsupported direction:" + posId);
+        EobLogger.println("Unsupported direction:" + posId);
         return North;
     }
 }

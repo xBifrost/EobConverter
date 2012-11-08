@@ -1,0 +1,1 @@
+jar cfm EobConverter.jar manifest.mf -C out\production\EobConverter .

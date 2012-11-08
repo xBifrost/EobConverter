@@ -1,5 +1,6 @@
 package org.eob.model;
 
+import org.eob.EobLogger;
 import org.eob.enums.WallType;
 
 import java.util.Set;
@@ -41,7 +42,7 @@ public class Square {
             usedWalls.add(east);
             usedWalls.add(west);
             if (!east.equals(west)) {
-                System.out.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", E:" + east.name() + ", W:" + west.name() + "] ");
+                EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", E:" + east.name() + ", W:" + west.name() + "] ");
             }
             return east;
         }
@@ -49,7 +50,7 @@ public class Square {
             usedWalls.add(north);
             usedWalls.add(south);
             if (!north.equals(south)) {
-                System.out.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", N:" + north.name() + ", S:" + south.name() + "] ");
+                EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", N:" + north.name() + ", S:" + south.name() + "] ");
             }
             return north;
         }
@@ -81,16 +82,16 @@ public class Square {
 
     public void checkWalls() {
         if (north.wallType.equals(WallType.Unknown)) {
-            System.out.println("Unknown type of north wall id: " + north.wallId + " [" + x + "," + y + "]");
+            EobLogger.println("Unknown type of north wall id: " + north.wallId + " [" + x + "," + y + "]");
         }
         if (east.wallType.equals(WallType.Unknown)) {
-            System.out.println("Unknown type of east wall id: " + east.wallId + " [" + x + "," + y + "]");
+            EobLogger.println("Unknown type of east wall id: " + east.wallId + " [" + x + "," + y + "]");
         }
         if (south.wallType.equals(WallType.Unknown)) {
-            System.out.println("Unknown type of south wall id: " + south.wallId + " [" + x + "," + y + "]");
+            EobLogger.println("Unknown type of south wall id: " + south.wallId + " [" + x + "," + y + "]");
         }
         if (west.wallType.equals(WallType.Unknown)) {
-            System.out.println("Unknown type of west wall id: " + west.wallId + " [" + x + "," + y + "]");
+            EobLogger.println("Unknown type of west wall id: " + west.wallId + " [" + x + "," + y + "]");
         }
     }
 }

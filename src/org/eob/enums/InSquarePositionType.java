@@ -1,5 +1,7 @@
 package org.eob.enums;
 
+import org.eob.EobLogger;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public enum InSquarePositionType {
             }
         }
 
-        System.out.println("Unsupported In Square Position:" + posId);
+        EobLogger.println("Unsupported In Square Position:" + posId);
         return Unknown;
     }
 
@@ -51,7 +53,7 @@ public enum InSquarePositionType {
             }
         }
 
-        System.out.println("Unsupported In Square Position:" + posId);
+        EobLogger.println("Unsupported In Square Position:" + posId);
         return Unknown;
     }
 
@@ -63,7 +65,7 @@ public enum InSquarePositionType {
             }
         }
 
-        System.out.println("[ERROR]: Unsupported type of position: " + value);
+        EobLogger.println("[ERROR]: Unsupported type of position: " + value);
         return Unknown;
     }
 }

@@ -25,16 +25,16 @@ public class ItemParser {
     }
 
     public void parseFile(String debugShowOnlyItemName) {
-        System.out.println("Parsing item data");
+        EobLogger.println("Parsing item data");
 
         int itemsNum = ByteArrayUtility.getWord(itemsData, 0); // first two bytes specifies number of records
-        System.out.println("Found " + itemsNum + " items entries.");
+        EobLogger.println("Found " + itemsNum + " items entries.");
 
         // Get item names
         int offset = 14 * itemsNum + 2;
         int namesNum = ByteArrayUtility.getWord(itemsData, offset);
         offset += 2;
-        System.out.println("Found " + namesNum + " item names.");
+        EobLogger.println("Found " + namesNum + " item names.");
         for (int i = 0; i < namesNum; i++) {
             byte[] nameBytes = Arrays.copyOfRange(itemsData, offset, offset + 34);
             String name = new String(nameBytes);
@@ -56,7 +56,7 @@ public class ItemParser {
             items.put(itemIndex, itemObject);
         }
 
-        System.out.println("Found " + items.size() + " items with unique " +
+        EobLogger.println("Found " + items.size() + " items with unique " +
                 ItemName.itemNames.size() + " names");
 
         if (debug) {
@@ -67,7 +67,7 @@ public class ItemParser {
     private void printItems(String itemName) {
         for (Map.Entry<Integer, ItemObject> entry : items.entrySet()) {
             if (itemName == null || itemName.equals("") || entry.getValue().item.identifiedName.toLowerCase().contains(itemName.toLowerCase())) {
-                System.out.println(String.format("Item %03d: %s", entry.getKey(), itemToText(entry.getKey() * 14 + 2, entry.getValue())));
+                EobLogger.println(String.format("Item %03d: %s", entry.getKey(), itemToText(entry.getKey() * 14 + 2, entry.getValue())));
             }
         }
     }

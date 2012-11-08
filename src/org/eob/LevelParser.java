@@ -31,7 +31,7 @@ public class LevelParser {
     }
 
     public void parse() {
-        System.out.println("Parsing level " + levelId + "...");
+        EobLogger.println("Parsing level " + levelId + "...");
         int width = ByteArrayUtility.getWord(levelData, 0);
         int height = ByteArrayUtility.getWord(levelData, 2);
         int sizePerSquare = ByteArrayUtility.getWord(levelData, 4);

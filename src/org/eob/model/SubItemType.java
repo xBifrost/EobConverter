@@ -1,5 +1,6 @@
 package org.eob.model;
 
+import org.eob.EobLogger;
 import org.eob.enums.DescriptionMergeType;
 
 import java.util.*;
@@ -54,7 +55,7 @@ public class SubItemType {
         SubItemType subItemType = typeMap != null ? typeMap.get((long) id) : null;
         if (subItemType == null) {
             subItemType = new SubItemType(id, itemType, "unknown_" + id, "Unknown " + id, "");
-            System.out.println("Unknown sub type of item type. (Item type: " + itemType.elementType + ", SubType: " + id + ")");
+            EobLogger.println("Unknown sub type of item type. (Item type: " + itemType.elementType + ", SubType: " + id + ")");
         }
         return subItemType;
     }
