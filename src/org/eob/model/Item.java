@@ -16,10 +16,11 @@ public class Item {
     public final Long imageId;
     public final ItemType itemType;
     public final SubItemType itemSubType;
+    public final Long initialCountValue;
 
     public static final List<Item> registeredItems = new ArrayList<Item>();
 
-    private Item(String notIdentifiedName, String identifiedName, Boolean glowMagic, Boolean cursed, Long imageId, ItemType itemType, SubItemType itemSubType) {
+    private Item(String notIdentifiedName, String identifiedName, Boolean glowMagic, Boolean cursed, Long imageId, ItemType itemType, SubItemType itemSubType, Long initialCountValue) {
         this.notIdentifiedName = notIdentifiedName;
         this.identifiedName = identifiedName;
         this.glowMagic = glowMagic;
@@ -27,11 +28,12 @@ public class Item {
         this.imageId = imageId;
         this.itemType = itemType;
         this.itemSubType = itemSubType;
+        this.initialCountValue = initialCountValue;
     }
 
-    public static Item getById(Long notIdentifiedNameId, Long identifiedNameId, Boolean glowMagic, Boolean cursed, Long imageId, ItemType itemType, int itemSubType) {
+    public static Item getById(Long notIdentifiedNameId, Long identifiedNameId, Boolean glowMagic, Boolean cursed, Long imageId, ItemType itemType, int itemSubType, Long countValue) {
         Item newItem = new Item(ItemName.itemNames.get(notIdentifiedNameId).name, ItemName.itemNames.get(identifiedNameId).name,
-                glowMagic, cursed, imageId, itemType, SubItemType.getSubItemById(itemType, itemSubType));
+                glowMagic, cursed, imageId, itemType, SubItemType.getSubItemById(itemType, itemSubType), countValue);
 
         for (Item registeredItem : registeredItems) {
             if (registeredItem.equals(newItem)) {
@@ -79,6 +81,9 @@ public class Item {
         if (itemSubType.elementType.length() != 0) {
             result += "_" + itemSubType.elementType;
         }
+        if (initialCountValue > 0) {
+            result += "_" + initialCountValue;
+        }
         if (!identified) {
             result += "_u";
         }
@@ -98,6 +103,8 @@ public class Item {
         if (identifiedName != null ? !identifiedName.equals(item.identifiedName) : item.identifiedName != null)
             return false;
         if (imageId != null ? !imageId.equals(item.imageId) : item.imageId != null) return false;
+        if (initialCountValue != null ? !initialCountValue.equals(item.initialCountValue) : item.initialCountValue != null)
+            return false;
         if (itemSubType != null ? !itemSubType.equals(item.itemSubType) : item.itemSubType != null) return false;
         if (itemType != null ? !itemType.equals(item.itemType) : item.itemType != null) return false;
         if (notIdentifiedName != null ? !notIdentifiedName.equals(item.notIdentifiedName) : item.notIdentifiedName != null)
@@ -115,6 +122,7 @@ public class Item {
         result = 31 * result + (imageId != null ? imageId.hashCode() : 0);
         result = 31 * result + (itemType != null ? itemType.hashCode() : 0);
         result = 31 * result + (itemSubType != null ? itemSubType.hashCode() : 0);
+        result = 31 * result + (initialCountValue != null ? initialCountValue.hashCode() : 0);
         return result;
     }
 }

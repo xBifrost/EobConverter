@@ -76,7 +76,7 @@ public class ItemParser {
         return String.format("Name=%-35s, (l=%02d, x=%02d, y=%02d, c=%d) [G:%s I:%s C:%s] itemId=0x%02x, count=%02d (debug info: offset=0x%04x hex=%s)",
                 item.item.getDescription(true), item.level, item.x, item.y, item.inSquarePosition.itemPosition,
                 item.item.glowMagic ? "1" : "0", item.identified ? "1" : "0", item.item.cursed ? "1" : "0",
-                item.item.itemType.itemTypeId, item.countValue,
+                item.item.itemType.itemTypeId, item.item.initialCountValue,
                 pos, ByteArrayUtility.bytesToHex(item.orig, 0, 14));
     }
 

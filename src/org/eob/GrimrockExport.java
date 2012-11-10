@@ -416,10 +416,14 @@ public class GrimrockExport {
         out.println(String.format("\tname = \"%s\",%s", namePrefix + item.getElementType(identified), identified ? "" : "  -- " + item.getDescription(identified)));
         out.println(String.format("\tbaseObject = \"%s\",", item.itemType.baseObject));
         out.println(String.format("\tuiName = \"%s\",", item.getDescription(identified)));
+        if (item.initialCountValue > 0) {
+            out.println(String.format("\tcharges = %d,", item.initialCountValue));
+        }
 /*
         if (item.glowMagic) {
-            out.println("\tglitterEffect = \"magic_glow_blue\",");
+            out.println("\tglitterEffect= \"magic_glow_blue\",");
         }
+         = 9,
 */
         out.println("}");
         out.println("");

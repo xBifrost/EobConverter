@@ -26,7 +26,6 @@ public class ItemObject {
 
     final public Item item;
     final public Boolean identified;
-    final public Long countValue;
     final public InSquarePositionType inSquarePosition;
     final public int x;
     final public int y;
@@ -43,11 +42,11 @@ public class ItemObject {
                 (orig[2] & 0x20) == 0x20,
                 (long) (orig[3] & 0xFF),
                 ItemType.getById((long) (orig[4] & 0xFF)),
-                orig[13]
+                orig[13],
+                (long) (orig[2] & 0x1F)
         );
 
         identified = (orig[2] & 0x40) == 0x40;
-        countValue = (long) (orig[2] & 0x1F);
         inSquarePosition = InSquarePositionType.getItemPositionById(orig[5] & 0xFF);
 
         int coords = (orig[6] & 0xff) + (orig[7] & 0xff) * 256;
