@@ -2,6 +2,9 @@ package org.eob.model;
 
 import org.eob.EobLogger;
 import org.eob.enums.InSquarePositionType;
+import org.eob.file.dat.ItemTypeDatFile;
+
+import java.util.Map;
 
 /**
  * User: Bifrost
@@ -32,7 +35,7 @@ public class ItemObject {
     final public long objectId;
     final public int level;
 
-    public ItemObject(byte[] orig) {
+    public ItemObject(byte[] orig, ItemTypeDatFile itemTypeList) {
         this.orig = orig;
 
         item = Item.getById(
@@ -41,7 +44,7 @@ public class ItemObject {
                 (orig[2] & 0x80) == 0x80,
                 (orig[2] & 0x20) == 0x20,
                 (long) (orig[3] & 0xFF),
-                ItemType.getById((long) (orig[4] & 0xFF)),
+                itemTypeList.getById((long) (orig[4] & 0xFF)),
                 orig[13],
                 (long) (orig[2] & 0x1F)
         );

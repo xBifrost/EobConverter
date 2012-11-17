@@ -1,6 +1,7 @@
 package org.eob;
 
 import org.eob.file.EobFiles;
+import org.eob.file.dat.ItemTypeDatFile;
 import org.eob.file.inf.InfFile;
 import org.eob.gui.EobConverterForm;
 import org.eob.model.ItemType;
@@ -17,10 +18,10 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.6.1";
+    public final static String CONVERTER_VERSION = "0.6.5";
     private final static List<String> externalChangesList = new ArrayList<String>();
     private final static String ITEMS_FILE = "ITEM.DAT";
-
+    private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
     private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
     private final static String LEVEL_INF_FILE = "LEVEL%d.INF";
 
@@ -235,10 +236,16 @@ public class EobConverter {
 
     private void convert() {
         initExternalChanges();
-        Eob1Settings.init();
-        EobFiles eobFiles = new EobFiles(settings.srcPath);
 
-        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), settings.debug);
+        EobFiles eobFiles = new EobFiles(settings.srcPath);
+        ItemTypeDatFile itemTypeDatFile = new ItemTypeDatFile(eobFiles.getFile(ITEM_TYPE_FILE));
+        Eob1Settings.init(itemTypeDatFile);
+
+        if (settings.debug) {
+            itemTypeDatFile.printItemTypes();
+        }
+
+        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), itemTypeDatFile, settings.debug);
         itemParser.parseFile(settings.debugShowOnlyItemName);
 
         GrimrockExport grimrockExport = new GrimrockExport(settings.dstPath, externalChangesList, itemParser, settings.to, settings.generateDefaultStructures, settings.debug);
@@ -261,7 +268,7 @@ public class EobConverter {
         grimrockExport.exportIntoGrimrock(settings.createFilePerLevel);
 
         EobLogger.println("Summary:");
-        EobLogger.println("Exported " + itemParser.getItemsCount() + " items of " + ItemType.getItemsCount() + " different types (" + ItemType.getUnknownItemsCount() + " are unknown)");
+        EobLogger.println("Exported " + itemParser.getItemsCount() + " items of " + itemTypeDatFile.itemTypeList.size() + " different types (" + itemTypeDatFile.getUnknownItemsCount() + " are unknown)");
     }
 
     private void execute() {

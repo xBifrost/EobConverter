@@ -19,6 +19,8 @@ import java.util.*;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class GrimrockExport {
+    private final static String DEFAULT_BASE_OBJECT = "rock";
+
     private Map<Long, LevelParser> levels = new TreeMap<Long, LevelParser>();
     private Map<Long, InfFile> levelsInfo = new TreeMap<Long, InfFile>();
 
@@ -64,6 +66,7 @@ public class GrimrockExport {
     );
 
     Map<String, String> defaultMonsters = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock monsters
+    Map<String, String> defaultItems = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock itemss
     Map<String, GrimrockWall> grimrockWalls = new LinkedHashMap<String, GrimrockWall>();
 
     public GrimrockExport(String dstPath, List<String> externalChangesList, ItemParser itemParser, int maxLevel, boolean generateDefaultStructures, boolean debug) {
@@ -99,6 +102,52 @@ public class GrimrockExport {
         defaultMonsters.put("eob_mflayer", "goromorg");
         defaultMonsters.put("eob_xanath", "cube");
         defaultMonsters.put("eob_golem", "warden");
+
+        defaultItems.put("axe", "hand_axe");
+        defaultItems.put("long_sword", "long_sword");
+        defaultItems.put("short_sword", "cutlass");
+        defaultItems.put("orb_of_power", "magic_orb");
+        defaultItems.put("dart", "shuriken");
+        defaultItems.put("dagger", "dagger");
+        defaultItems.put("dwarven_potion", "potion_healing");
+        defaultItems.put("bow", "short_bow");
+        defaultItems.put("spear", "legionary_spear");
+        defaultItems.put("halberd", "legionary_spear"); // there is no other long weapon in Grimrock, so spear will have to do
+        defaultItems.put("mace", "knoffer");
+        defaultItems.put("flail", "flail");
+        defaultItems.put("staff", "whitewood_wand"); // Not present in the dungeon, but defined as 4th item (offset=0x2c)
+        defaultItems.put("sling", "sling");
+        defaultItems.put("dart", "shuriken");
+        defaultItems.put("arrow", "arrow");
+        defaultItems.put("rock", "rock");
+        defaultItems.put("banded_armor", "ring_mail");
+        defaultItems.put("chain_mail", "ring_mail");
+        defaultItems.put("dwarven_helmet", "full_helmet");
+        defaultItems.put("leather_armor", "leather_brigandine");
+        defaultItems.put("plate_mail", "plate_cuirass");
+        defaultItems.put("scale_mail", "ring_mail");
+        defaultItems.put("shield", "round_shield");
+        defaultItems.put("lock_picks", "machine_part_south");
+        defaultItems.put("spell_book", "tome_wisdom");
+        defaultItems.put("holy_symbol", "golden_chalice"); // there's nothing that looks like ankh symbol
+        defaultItems.put("rations", "pitroot_bread");
+        defaultItems.put("leather_boots", "leather_boots");
+        defaultItems.put("bones", "remains_of_toorum");
+        defaultItems.put("mage_scroll", "scroll");
+        defaultItems.put("cleric_scroll", "scroll");
+        defaultItems.put("scroll", "scroll");
+        defaultItems.put("stone", "rock");
+        defaultItems.put("key", "brass_key"); // Different keys
+        defaultItems.put("potion", "potion_healing");
+        defaultItems.put("gem", "blue_gem"); // Gems of different colors (red and blue)
+        defaultItems.put("robe", "peasant_tunic");
+        defaultItems.put("medallion_of_adornment", "spirit_mirror_pendant");
+        defaultItems.put("ring", "hardstone_bracelet"); // There are no rings in Grimrock, we need to replace them with bracelets
+        defaultItems.put("bracers", "bracelet_tirin");
+        defaultItems.put("medallion", "frostbite_necklace"); // Actual name Luck Stone Medallion
+        defaultItems.put("ring2", "bracelet_tirin"); // This one has no power (found in lv 4, x=11,y=29)
+        defaultItems.put("wand", "whitewood_wand");
+        defaultItems.put("egg", "slime_bell"); // There is really nothing in Grimrock that even vaguely resembles an egg. Slime bell is at least round :)
 
         GrimrockWall.addWall(grimrockWalls, "All", "Blockages", "emptyMonsterBlock", "blocker", "eob_blocker", "");
         GrimrockWall.addWall(grimrockWalls, "All", "Teleporters", "teleporter", "teleporter", "eob_teleporter", "");
@@ -414,7 +463,8 @@ public class GrimrockExport {
     private void createItem(Item item, PrintWriter out, boolean identified) {
         out.println("cloneObject {");
         out.println(String.format("\tname = \"%s\",%s", namePrefix + item.getElementType(identified), identified ? "" : "  -- " + item.getDescription(identified)));
-        out.println(String.format("\tbaseObject = \"%s\",", item.itemType.baseObject));
+        String baseObject = defaultItems.get(item.itemType.elementType);
+        out.println(String.format("\tbaseObject = \"%s\",", baseObject != null ? baseObject : DEFAULT_BASE_OBJECT));
         out.println(String.format("\tuiName = \"%s\",", item.getDescription(identified)));
         if (item.initialCountValue > 0) {
             out.println(String.format("\tcharges = %d,", item.initialCountValue));
@@ -423,7 +473,6 @@ public class GrimrockExport {
         if (item.glowMagic) {
             out.println("\tglitterEffect= \"magic_glow_blue\",");
         }
-         = 9,
 */
         out.println("}");
         out.println("");

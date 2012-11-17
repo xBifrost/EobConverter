@@ -1,5 +1,6 @@
 package org.eob;
 
+import org.eob.file.dat.ItemTypeDatFile;
 import org.eob.model.ItemName;
 import org.eob.model.ItemObject;
 
@@ -15,13 +16,15 @@ import java.util.*;
  */
 public class ItemParser {
     private final byte[] itemsData;
+    private ItemTypeDatFile itemTypeDatFile;
     private final boolean debug;
 
     private Map<Integer, ItemObject> items = new LinkedHashMap<Integer, ItemObject>();
 
-    public ItemParser(byte[] itemsData, boolean debug) {
-        this.debug = debug;
+    public ItemParser(byte[] itemsData, ItemTypeDatFile itemTypeDatFile, boolean debug) {
         this.itemsData = itemsData;
+        this.itemTypeDatFile = itemTypeDatFile;
+        this.debug = debug;
     }
 
     public void parseFile(String debugShowOnlyItemName) {
@@ -45,7 +48,7 @@ public class ItemParser {
         // Get items
         offset = 2;
         for (int itemIndex = 0; itemIndex < itemsNum; itemIndex++) {
-            ItemObject itemObject = new ItemObject(Arrays.copyOfRange(itemsData, offset, offset + 14));
+            ItemObject itemObject = new ItemObject(Arrays.copyOfRange(itemsData, offset, offset + 14), itemTypeDatFile);
             offset += 14;
 
             // Ignore empty objects
