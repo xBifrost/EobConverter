@@ -2,6 +2,7 @@ package org.eob;
 
 import org.eob.enums.GameSupportType;
 import org.eob.enums.InSquarePositionType;
+import org.eob.enums.ItemSlotType;
 import org.eob.enums.WallType;
 import org.eob.export.MonsterGroup;
 import org.eob.file.inf.InfFile;
@@ -469,11 +470,27 @@ public class GrimrockExport {
         if (item.initialCountValue > 0) {
             out.println(String.format("\tcharges = %d,", item.initialCountValue));
         }
-/*
-        if (item.glowMagic) {
-            out.println("\tglitterEffect= \"magic_glow_blue\",");
+
+        String slot = "";
+        if (item.itemType.itemSlotSupported.contains(ItemSlotType.Armour)) {
+            slot = "\"Torso\"";
+        } else if (item.itemType.itemSlotSupported.contains(ItemSlotType.Helmet)) {
+            slot = "\"Head\"";
+        } else if (item.itemType.itemSlotSupported.contains(ItemSlotType.Bracers)) {
+            slot = "\"Bracers\"";
+        } else if (item.itemType.itemSlotSupported.contains(ItemSlotType.Necklace)) {
+            slot = "\"Neck\"";
+        } else if (item.itemType.itemSlotSupported.contains(ItemSlotType.Boots)) {
+            slot = "\"Feet\"";
         }
-*/
+        if (slot.length() > 0) {
+            out.println(String.format("\tslot = %s,", slot));
+        }
+
+        if (item.itemType.addArmorClass != 0) {
+            out.println(String.format("\tprotection = %d,", Math.abs(item.itemType.addArmorClass) * 2));
+        }
+
         out.println("}");
         out.println("");
     }
