@@ -139,7 +139,7 @@ public class Eob1Settings {
         SubItemType PotionVitality = new SubItemType(5, Potion, "vitality", "Vitality", "");
         SubItemType PotionSpeed = new SubItemType(6, Potion, "speed", "Speed", "");
         SubItemType PotionInvisibility = new SubItemType(7, Potion, "invisibility", "Invisibility", "");
-        SubItemType PotionCurePoison = new SubItemType(8, Potion, "cure_poison", "Cure Poison", "");
+        SubItemType PotionCurePoison = new SubItemType(8, Potion, "cure_poison", "", ""); // Cure Poison
 
         // Dwarven potion
         SubItemType DwarvenPotionHealing = new SubItemType(8, DwarvenPotion, "healing", "Healing", "");
@@ -159,21 +159,21 @@ public class Eob1Settings {
         SubItemType WandConeOfCold = new SubItemType(2, Wand, "cone_of_cold", "Cone of Cold", "");
         SubItemType WandCureSeriousWounds = new SubItemType(3, Wand, "cure_serious_wnds", "Cure Serious Wounds", "");
         SubItemType WandFireball = new SubItemType(4, Wand, "fireball", "Fireball", "");
-        SubItemType WandSlivias = new SubItemType(5, Wand, "slivias", "Slivias", "Move 1 square away");
+        SubItemType WandSlivias = new SubItemType(5, Wand, "slivias", "", "Move 1 square away");
         SubItemType WandMagicMissile = new SubItemType(6, Wand, "magic_missile", "Magic Missile", "");
         SubItemType WandMagicalVestment = new SubItemType(7, Wand, "magical_vestment", "Magical Vestment", "");
 
         // Rations
-        SubItemType RationsBasic = new SubItemType(25, Rations, "", "Rations", "");
-        SubItemType RationsIron = new SubItemType(50, Rations, "iron", "Iron Rations", "");
+        SubItemType RationsBasic = new SubItemType(25, Rations, "", "Rations", DescriptionMergeType.Ignore, "");
+        SubItemType RationsIron = new SubItemType(50, Rations, "iron", "Iron Rations", DescriptionMergeType.Replace,  "");
 
         // Bones (sorted by level they appear on)
-        SubItemType HalflingBones = new SubItemType(6, Bones, "halfling_tod", "Halfling", DescriptionMergeType.Prefix, "Tod Uphill"); // resurrects Tod Uphill (from level 1)
-        SubItemType HumanBones1 = new SubItemType(1, Bones, "human_anya", "Human", DescriptionMergeType.Prefix, "Anya"); // resurrects Anya (from level 3)
-        SubItemType HumanBones4 = new SubItemType(4, Bones, "human_ileria", "Human", DescriptionMergeType.Prefix, "Ileria"); // resurrects Ileria (from level 7)
-        SubItemType HumanBones2 = new SubItemType(2, Bones, "human_beohram", "Human", DescriptionMergeType.Prefix, "Beohram"); // resurrects Beohram (from level 9)
-        SubItemType ElfBones = new SubItemType(5, Bones, "elf_tyrra", "Elf", DescriptionMergeType.Prefix, "Tyrra"); // resurrects Tyrra (from level 10)
-        SubItemType HumanBones3 = new SubItemType(3, Bones, "human_kirath", "Human", DescriptionMergeType.Prefix, "Kirath"); // resurrects Kirath (from level 11)
+        SubItemType HalflingBones = new SubItemType(6, Bones, "halfling_tod", "Halfling", DescriptionMergeType.Ignore, "Tod Uphill"); // resurrects Tod Uphill (from level 1)
+        SubItemType HumanBones1 = new SubItemType(1, Bones, "human_anya", "Human", DescriptionMergeType.Ignore, "Anya"); // resurrects Anya (from level 3)
+        SubItemType HumanBones4 = new SubItemType(4, Bones, "human_ileria", "Human", DescriptionMergeType.Ignore, "Ileria"); // resurrects Ileria (from level 7)
+        SubItemType HumanBones2 = new SubItemType(2, Bones, "human_beohram", "Human", DescriptionMergeType.Ignore, "Beohram"); // resurrects Beohram (from level 9)
+        SubItemType ElfBones = new SubItemType(5, Bones, "elf_tyrra", "Elf", DescriptionMergeType.Ignore, "Tyrra"); // resurrects Tyrra (from level 10)
+        SubItemType HumanBones3 = new SubItemType(3, Bones, "human_kirath", "Human", DescriptionMergeType.Ignore, "Kirath"); // resurrects Kirath (from level 11)
 
         // Dart
         SubItemType DartPlus1 = new SubItemType(1, Dart, "plus1", "+1", DescriptionMergeType.Suffix, "");
@@ -198,12 +198,12 @@ public class Eob1Settings {
 
         // Dagger
         SubItemType DaggerBackstabber = new SubItemType(3, Dagger, "backstabber", "+3", "");
-        SubItemType DaggerGuinsoo = new SubItemType(4, Dagger, "guinsoo", "'Guinsoo'", "+4");
+        SubItemType DaggerGuinsoo = new SubItemType(4, Dagger, "guinsoo", "'Guinsoo'", DescriptionMergeType.Replace, "+4");
         SubItemType DaggerFlica = new SubItemType(5, Dagger, "flicka", "'Flicka'", "");
 
         // Gem
-        SubItemType GemRed = new SubItemType(1, Gem, "red", "Red Gem", "");
-        SubItemType GemBlue = new SubItemType(2, Gem, "blue", "Blue Gem", "");
+        SubItemType GemRed = new SubItemType(1, Gem, "red", "Red Gem", DescriptionMergeType.Ignore, "Red");
+        SubItemType GemBlue = new SubItemType(2, Gem, "blue", "Blue Gem", DescriptionMergeType.Ignore, "Blue");
 
         // Rings
         SubItemType RingProtection2 = new SubItemType(2, Ring, "protection2", "Protection +2", ""); // level 11, (x=27,y=16)
@@ -247,7 +247,7 @@ public class Eob1Settings {
         SubItemType DrowShield = new SubItemType(3, Shield, "drow", "Drow", DescriptionMergeType.Prefix, "+3");
 
         // Plate mail
-        SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "Great Beauty", DescriptionMergeType.SuffixWithOf, "-3"); // cursed -3
+        SubItemType PlateMailCursed3 = new SubItemType(-3, PlateMail, "cursed3", "", DescriptionMergeType.Ignore, "-3"); // Plate Mail of Great Beauty, cursed -3
 
         // Banded Armor
         SubItemType BandedArmor3 = new SubItemType(3, BandedArmor, "plus3", "", "+3");
@@ -274,7 +274,7 @@ public class Eob1Settings {
         SubItemType RationDoubleIron = new SubItemType(100, Rations, "iron_double", "", ""); // 100 type suggest that is is twice as good as iron (50)
         SubItemType LongSword1 = new SubItemType(1, LongSword, "sharp", "Sharp", DescriptionMergeType.Prefix, "+1");
         SubItemType LongSwordCursed2 = new SubItemType(-2, LongSword, "cursed2", "Unlucky", DescriptionMergeType.Prefix, "-2");
-        SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "Mysterious", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
+        SubItemType UnknownBones = new SubItemType(7, Bones, "not_used_in_dungeon", "", DescriptionMergeType.Prefix, ""); // Not present in the dungeon (item offset=0x1D0 uses that subtype)
         SubItemType UnknownTextScroll = new SubItemType(46, TextScroll, "not_used_in_dungeon", "not found anywhere in the dungeon", DescriptionMergeType.Ignore, ""); // (item offset=0x1EC)
 
         //----------------
