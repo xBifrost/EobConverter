@@ -70,7 +70,7 @@ public class ItemTypeDatFile {
 
     public void printItemTypes() {
         for (ItemType itemType : itemTypeList.values()) {
-            EobLogger.println(String.format("ItemType %02d: Name=%-25s, Possible Slots: %s, Active: %s, AC: %d, Proffesion: %s, HandCount: %d",
+            EobLogger.println(String.format("ItemType %02d: Name=%-25s, Possible Slots: %s, Active: %s, AC: %d, Profession: %s, HandCount: %d",
                     itemType.itemTypeId, itemType.description == null ? "" : itemType.description,
                     getSlotSetString(itemType.itemSlotSupported), getSlotSetString(itemType.itemSlotActivate),
                     itemType.addArmorClass, getProfessionString(itemType.professionAllowed), itemType.handCount));
