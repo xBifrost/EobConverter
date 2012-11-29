@@ -22,6 +22,7 @@ public class EobConverterForm {
     private JCheckBox createLevelInSeparateCheckBox;
     private JTextArea output;
     private JButton convertButton;
+    private JCheckBox debugWallCheckBox;
 
     public JPanel getMainPanel() {
         return mainPanel;
@@ -45,6 +46,10 @@ public class EobConverterForm {
 
     public JCheckBox getDebugModeCheckBox() {
         return debugModeCheckBox;
+    }
+
+    public JCheckBox getDebugWallCheckBox() {
+        return debugWallCheckBox;
     }
 
     public JTextField getItemNameField() {

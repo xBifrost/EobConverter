@@ -4,7 +4,6 @@ import org.eob.file.EobFiles;
 import org.eob.file.dat.ItemTypeDatFile;
 import org.eob.file.inf.InfFile;
 import org.eob.gui.EobConverterForm;
-import org.eob.model.ItemType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -248,7 +247,8 @@ public class EobConverter {
         ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), itemTypeDatFile, settings.debug);
         itemParser.parseFile(settings.debugShowOnlyItemName);
 
-        GrimrockExport grimrockExport = new GrimrockExport(settings.dstPath, externalChangesList, itemParser, settings.to, settings.generateDefaultStructures, settings.debug);
+        GrimrockExport grimrockExport = new GrimrockExport(settings.dstPath, externalChangesList, itemParser, settings.to, settings.generateDefaultStructures,
+                                                           settings.debug, settings.debugWalls);
 
         for (int levelId = settings.from; levelId <= settings.to; levelId++) {
             byte[] levelMazFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
@@ -283,6 +283,7 @@ public class EobConverter {
             eobConverterForm.getSrcPathField().setText(settings.srcPath);
             eobConverterForm.getDstPathField().setText(settings.dstPath);
             eobConverterForm.getDebugModeCheckBox().setSelected(settings.debug);
+            eobConverterForm.getDebugWallCheckBox().setSelected(settings.debugWalls);
             eobConverterForm.getItemNameField().setText(settings.debugShowOnlyItemName);
             eobConverterForm.getFromLevelField().setText(settings.from.toString());
             eobConverterForm.getToLevelField().setText(settings.to.toString());
@@ -331,6 +332,7 @@ public class EobConverter {
         settings.srcPath = eobConverterForm.getSrcPathField().getText();
         settings.dstPath = eobConverterForm.getDstPathField().getText();
         settings.debug = eobConverterForm.getDebugModeCheckBox().isSelected();
+        settings.debugWalls = eobConverterForm.getDebugWallCheckBox().isSelected();
         settings.debugShowOnlyItemName = eobConverterForm.getItemNameField().getText();
         try {
             settings.from = Integer.parseInt(eobConverterForm.getFromLevelField().getText());
@@ -358,6 +360,7 @@ public class EobConverter {
         public Integer to = 99;
         public String debugShowOnlyItemName = "";
         public boolean debug = false;
+        public boolean debugWalls = true;
         public boolean createFilePerLevel = false;
         public boolean generateDefaultStructures = false;
         public boolean console = false;

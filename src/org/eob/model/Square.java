@@ -37,11 +37,11 @@ public class Square {
                 south.wallType.equals(WallType.Unknown) || west.wallType.equals(WallType.Unknown);
     }
 
-    public Wall getDoor(Set<Wall> usedWalls) {
+    public Wall getDoor(Set<Wall> usedWalls, boolean debug) {
         if (east.wallType.equals(WallType.DoorPart) && west.wallType.equals(WallType.DoorPart)) {
             usedWalls.add(east);
             usedWalls.add(west);
-            if (!east.equals(west)) {
+            if (!east.equals(west) && debug) {
                 EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", E:" + east.name() + ", W:" + west.name() + "] ");
             }
             return east;
@@ -49,7 +49,7 @@ public class Square {
         if (north.wallType.equals(WallType.DoorPart) && south.wallType.equals(WallType.DoorPart)) {
             usedWalls.add(north);
             usedWalls.add(south);
-            if (!north.equals(south)) {
+            if (!north.equals(south) && debug) {
                 EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", N:" + north.name() + ", S:" + south.name() + "] ");
             }
             return north;

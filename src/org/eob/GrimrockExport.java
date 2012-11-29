@@ -37,6 +37,7 @@ public class GrimrockExport {
     private int maxLevel;
     private boolean generateDefaultStructures;
     private boolean debug;
+    private boolean debugWalls;
     private String dstPath;
 
     private final Map<String, String> externalChanges = new LinkedHashMap<String, String>();
@@ -70,12 +71,14 @@ public class GrimrockExport {
     Map<String, String> defaultItems = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock itemss
     Map<String, GrimrockWall> grimrockWalls = new LinkedHashMap<String, GrimrockWall>();
 
-    public GrimrockExport(String dstPath, List<String> externalChangesList, ItemParser itemParser, int maxLevel, boolean generateDefaultStructures, boolean debug) {
+    public GrimrockExport(String dstPath, List<String> externalChangesList, ItemParser itemParser, int maxLevel, boolean generateDefaultStructures,
+                          boolean debug, boolean debugWalls) {
         this.dstPath = dstPath;
         this.itemParser = itemParser;
         this.maxLevel = maxLevel;
         this.generateDefaultStructures = generateDefaultStructures;
         this.debug = debug;
+        this.debugWalls = debugWalls;
         prepareExternalChanges(externalChangesList);
         generateDefaultStructuresFromGrimrock();
     }
@@ -876,7 +879,7 @@ public class GrimrockExport {
                 }
 
                 // Doors
-                Wall squareType = square.getDoor(usedWalls);
+                Wall squareType = square.getDoor(usedWalls, debugWalls);
                 if (squareType != null) {
                     spawnWall(levelParser, out, x, y, squareType, square.getDoorFacing(), "Door", square.getDoorFacing() == 1 ? "EW" : "NS");
                 }
