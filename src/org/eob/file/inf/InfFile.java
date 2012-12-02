@@ -1,8 +1,10 @@
 package org.eob.file.inf;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobLogger;
 import org.eob.ItemParser;
 import org.eob.file.cps.CpsFile;
+import org.eob.model.EobCommand;
 import org.eob.model.MonsterObject;
 
 import java.util.ArrayList;
@@ -30,7 +32,8 @@ public class InfFile {
     public final byte unknown2[]; // Array size: 5
     public final List<MonsterObject> monsterObjects = new ArrayList<MonsterObject>();
     public final int commandsCount;
-    public final List<Object> commands = new ArrayList<Object>();
+    public final List<EobCommand> commands = new ArrayList<EobCommand>();
+    public final List<EobCommand> script = new ArrayList<EobCommand>();
 
     public InfFile(int levelId, byte[] levelInfDataPacked, ItemParser itemParser) {
         this.levelId = levelId;
@@ -69,11 +72,31 @@ public class InfFile {
         }
         commandsCount = ByteArrayUtility.getWord(levelInfData, pos);
         pos += 2;
+        ParseCommand parseCommand = new ParseCommand();
+        EobLogger.println(String.format("Command count: %d", commandsCount));
         for (int commandIdx = 0; commandIdx < commandsCount; commandIdx++) {
-            int commandId = ByteArrayUtility.getByte(levelInfData, pos);
-            pos++;
-
+            EobCommand command = parseCommand.parse(levelInfData, pos);
+            if (command == null) {
+                EobLogger.println(String.format("Unknown command: 0x%02x", ByteArrayUtility.getByte(levelInfData, pos)));
+                break;
+            }
+            pos += command.originalCommands.length + 1;
+            commands.add(command);
         }
+
+        EobLogger.println("script parsing...");
+        int commandIdx = 0;
+        while (pos < levelInfDataPacked.length) {
+            EobCommand command = parseCommand.parse(levelInfData, pos);
+            if (command == null) {
+                EobLogger.println(String.format("Unknown command: 0x%02x", ByteArrayUtility.getByte(levelInfData, pos)));
+                break;
+            }
+            pos += command.originalCommands.length + 1;
+            commandIdx++;
+            script.add(command);
+        }
+        EobLogger.println(String.format("Script command count: %d", commandIdx));
     }
 
     public byte[] getLevelInfData() {

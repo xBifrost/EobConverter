@@ -135,6 +135,14 @@ public class EobConverterForm {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 3, 0, 0);
         panel1.add(itemNameField, gbc);
+        debugWallCheckBox = new JCheckBox();
+        debugWallCheckBox.setSelected(true);
+        debugWallCheckBox.setText("Print Wall errors");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(debugWallCheckBox, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
