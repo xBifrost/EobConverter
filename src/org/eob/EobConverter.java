@@ -195,13 +195,16 @@ public class EobConverter {
                 String value = pos >= 0 ? arg.substring(pos + 1) : "";
                 try {
                     if (name.equals("--help")) {
-                        EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>] [-c|--console] [-d|--debug] [-di|--debug-item=<value>] [-l1|--file-per-level] [-gs|--generate-default-structures]");
+                        EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>]");
+                        EobLogger.println("                        [-c|--console] [-d|--debug] [-di|--debug-item=<value>] [-l1|--file-per-level]");
+                        EobLogger.println("                        [-gs|--generate-default-structures] [-sw|--skip-wall-errors]");
                         EobLogger.println("");
                         EobLogger.println("List of commands:");
                         EobLogger.println("   src-path                    Source path. (default=\".\")");
                         EobLogger.println("   dst-path                    Destination path. (default=\".\")");
                         EobLogger.println("   debug                       Show debug info.");
                         EobLogger.println("   debug-item                  Show debug info only for items contains <value> string. (default=\"\")");
+                        EobLogger.println("   skip-wall-errors            Skip showing wall errors (default=show)");
                         EobLogger.println("   levels                      Convert all levels in range: <from,to>. (default=1;99)");
                         EobLogger.println("   file-per-level              Store each level in separate file.");
                         EobLogger.println("   generate-default-structures Generate default structures.");
@@ -225,6 +228,8 @@ public class EobConverter {
                         settings.createFilePerLevel = true;
                     } else if (name.equals("--generate-default-structures") || name.equals("-gs")) {
                         settings.generateDefaultStructures = true;
+                    } else if (name.equals("--skip-wall-errors") || name.equals("-sw")) {
+                        settings.debugWalls = false;
                     }
                 } catch (IllegalArgumentException exception) {
                     EobLogger.println("Value " + value + " is not a number. Parameter " + name + " is ignored.");
