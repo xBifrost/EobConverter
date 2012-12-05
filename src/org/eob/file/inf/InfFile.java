@@ -42,7 +42,7 @@ public class InfFile {
         this.levelInfData = new CpsFile(levelInfDataPacked).getData();
 
         if (writeUnpacked) {
-            FileUtility.writeFile(String.format(EobConverter.LEVEL_INF_UNPACKED, levelId), levelInfData, true);
+            FileUtility.writeFile(String.format(EobConverter.LEVEL_INF_UNPACKED, levelId), levelInfData, false);
         }
 
         int pos = 0;
