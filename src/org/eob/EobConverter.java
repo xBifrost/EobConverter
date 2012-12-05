@@ -23,6 +23,7 @@ public class EobConverter {
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
     private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
     private final static String LEVEL_INF_FILE = "LEVEL%d.INF";
+    public final static String LEVEL_INF_UNPACKED = "LEVEL%d.INF_UNPACKED";
 
     private Settings settings = new Settings();
     private EobConverterForm eobConverterForm;
@@ -265,7 +266,7 @@ public class EobConverter {
 
             byte[] levelInfFile = eobFiles.getFile(String.format(LEVEL_INF_FILE, levelId));
             if (levelInfFile != null) {
-                InfFile infFile = new InfFile(levelId, levelInfFile, itemParser);
+                InfFile infFile = new InfFile(levelId, levelInfFile, itemParser, settings.writeUnpackedInf);
                 grimrockExport.addLevelInfo(infFile);
             }
         }
@@ -369,5 +370,6 @@ public class EobConverter {
         public boolean createFilePerLevel = false;
         public boolean generateDefaultStructures = false;
         public boolean console = false;
+        public boolean writeUnpackedInf = true;
     }
 }

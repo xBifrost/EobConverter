@@ -1,8 +1,10 @@
 package org.eob.file.inf;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobConverter;
 import org.eob.EobLogger;
 import org.eob.ItemParser;
+import org.eob.file.FileUtility;
 import org.eob.file.cps.CpsFile;
 import org.eob.model.EobCommand;
 import org.eob.model.MonsterObject;
@@ -35,9 +37,13 @@ public class InfFile {
     public final List<EobCommand> commands = new ArrayList<EobCommand>();
     public final List<EobCommand> script = new ArrayList<EobCommand>();
 
-    public InfFile(int levelId, byte[] levelInfDataPacked, ItemParser itemParser) {
+    public InfFile(int levelId, byte[] levelInfDataPacked, ItemParser itemParser, boolean writeUnpacked) {
         this.levelId = levelId;
         this.levelInfData = new CpsFile(levelInfDataPacked).getData();
+
+        if (writeUnpacked) {
+            FileUtility.writeFile(String.format(EobConverter.LEVEL_INF_UNPACKED, levelId), levelInfData, true);
+        }
 
         int pos = 0;
         triggersOffset = ByteArrayUtility.getWord(levelInfData, pos);
