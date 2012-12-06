@@ -19,4 +19,7 @@
  3. Monsters
   - definitions are generated in monsters.lua
   - monster locations are added in dungeon.lua
- 4. Events: not supported yet
+ 4. Commands:
+  - parsed commands: FF, FB, EC
+  - in progress: EE (bifrost)
+  - in progress: F8 (thomson)

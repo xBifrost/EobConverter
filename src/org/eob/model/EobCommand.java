@@ -8,7 +8,7 @@ package org.eob.model;
 public class EobCommand {
     public final int commandId;
     public final int originalPos;
-    public final byte[] originalCommands;
+    public byte[] originalCommands;
 
     public EobCommand(int commandId, byte[] originalCommands, int originalPos) {
         this.commandId = commandId;
