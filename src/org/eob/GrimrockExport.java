@@ -196,7 +196,7 @@ public class GrimrockExport {
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoor", "temple_door_metal", "eob_ruins_door_stone", "");
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoorStacked", "temple_door_metal", "eob_ruins_door_stone_stacked", "");
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsNet", "temple_door_portcullis", "eob_ruins_net", "");
-        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsNetTorn", "temple_door_portcullis", "eob_ruins_net", "\t:setDoorState(\"open\")"); // Torn Net (4 level)
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsNetTorn", "temple_door_portcullis", "eob_ruins_net_torn", ""); // Torn Net (4 level)
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Floor", "ruinsEmptyPit", "temple_pit", "eob_ruins_pit", "");
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Floor", "ruinsPressurePlate", "temple_pressure_plate", "eob_ruins_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Ceiling", "ruinsEmptyCeilingShaft", "temple_ceiling_shaft", "eob_ruins_ceiling_shaft", "");

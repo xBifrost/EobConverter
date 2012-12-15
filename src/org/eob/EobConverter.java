@@ -17,7 +17,7 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.6.7";
+    public final static String CONVERTER_VERSION = "0.6.8";
     private final static List<String> externalChangesList = new ArrayList<String>();
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
@@ -62,9 +62,9 @@ public class EobConverter {
         externalChangesList.add("W eob_ruins_door_stone_4_20_8");
         externalChangesList.add("W eob_ruins_door_stone_4_20_10");
         externalChangesList.add("W eob_ruins_door_stone_4_20_12");
-        externalChangesList.add("S eob_ruins_net_4_28_18");
+        externalChangesList.add("S eob_ruins_net_torn_4_28_18");
         externalChangesList.add("S eob_ruins_door_stone_4_16_22");
-        externalChangesList.add("W eob_ruins_net_4_17_28");
+        externalChangesList.add("W eob_ruins_net_torn_4_17_28");
         externalChangesList.add("W eob_ruins_net_4_17_30");
         externalChangesList.add("S eob_ruins_door_stone_4_8_25");
         externalChangesList.add("W eob_ruins_net_4_21_24");
@@ -282,7 +282,7 @@ public class EobConverter {
             settings.generateDefaultStructures = true;
 
             eobConverterForm = new EobConverterForm();
-            final JFrame settingsFrame = new JFrame("Eye of Beholder Converter");
+            final JFrame settingsFrame = new JFrame("Eye of the Beholder Converter " + CONVERTER_VERSION);
             settingsFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             settingsFrame.add(eobConverterForm.getMainPanel());
 
