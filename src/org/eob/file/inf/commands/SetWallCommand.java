@@ -6,57 +6,71 @@ import org.eob.model.EobCommand;
 import java.util.Arrays;
 
 /**
- * Created with IntelliJ IDEA.
  * User: thomson
- * Date: 12/6/12
- * Time: 12:04 AM
- * To change this template use File | Settings | File Templates.
+ * Date: 6.12.2012
+ * Time: 00:04
  */
 public class SetWallCommand extends EobCommand {
-    final private int COMPLETE_BLOCK = 0xf7;
-    final private static int ONE_WALL = 0xe9;
-    final private static int PARTY_FACING = 0xed;
-
-    int wallMappingIndex;
-    int x;
-    int y;
-    int direction;
-    int partyFacing;
+    public final SetWallType subtype;
+    public final int x;
+    public final int y;
+    public final int wallMappingIndex;
+    public final int direction;
+    public final int partyFacing;
 
     public SetWallCommand(byte[] levelInfData, int pos) {
-        super(0xFF, levelInfData, pos);
+        super(0xFF, pos, "Set wall");
 
-        int subtype = ByteArrayUtility.getByte(levelInfData, pos);
-        int len = 0;
+        subtype = SetWallType.valueOf(ByteArrayUtility.getByte(levelInfData, pos + 1));
+        int len;
         switch (subtype) {
-            case COMPLETE_BLOCK: {
-                int coords = ByteArrayUtility.getWord(levelInfData, pos + 1);
+            case CompleteBlock: {
+                int coords = ByteArrayUtility.getWord(levelInfData, pos + 2);
                 x = (coords) & 0x1f;
                 y = (coords >> 5) & 0x1f;
-                wallMappingIndex = ByteArrayUtility.getByte(levelInfData, pos + 3);
+                wallMappingIndex = ByteArrayUtility.getByte(levelInfData, pos + 4);
+                direction = -1;
+                partyFacing = -1;
                 len = 4; // subtype(1) + coords(2) + wallindex (1)
                 break;
             }
-            case ONE_WALL: {
-                int coords = ByteArrayUtility.getWord(levelInfData, pos + 1);
+            case OneWall: {
+                int coords = ByteArrayUtility.getWord(levelInfData, pos + 2);
                 x = (coords) & 0x1f;
                 y = (coords >> 5) & 0x1f;
-                wallMappingIndex = ByteArrayUtility.getByte(levelInfData, pos + 3);
+                wallMappingIndex = ByteArrayUtility.getByte(levelInfData, pos + 4);
                 direction = ByteArrayUtility.getByte(levelInfData, pos + 4);
+                partyFacing = -1;
                 len = 5; // subtype(1) + coords(2) + wallindex (1)
                 break;
             }
-            case PARTY_FACING: {
-                partyFacing = ByteArrayUtility.getByte(levelInfData, pos + 1);
+            case PartyFacing: {
+                x= -1;
+                y = -1;
+                wallMappingIndex = -1;
+                direction = -1;
+                partyFacing = ByteArrayUtility.getByte(levelInfData, pos + 2);
                 len = 2;
                 break;
             }
             default: {
                 // unknown
+                x= -1;
+                y = -1;
+                wallMappingIndex = -1;
+                direction = -1;
+                partyFacing = -1;
                 len = 1;
             }
         }
 
-        this.originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + len);
+        this.originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + len + 1);
+    }
+
+    public static SetWallCommand parse(byte[] levelInfData, int pos) {
+        if (ByteArrayUtility.getByte(levelInfData, pos) == 0xFF) {
+            return new SetWallCommand(levelInfData, pos);
+        }
+        return null;
     }
 }

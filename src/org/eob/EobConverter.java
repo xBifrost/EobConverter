@@ -17,7 +17,7 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.6.8";
+    public final static String CONVERTER_VERSION = "0.7.0";
     private final static List<String> externalChangesList = new ArrayList<String>();
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";

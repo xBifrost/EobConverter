@@ -13,33 +13,43 @@ import java.util.Arrays;
  * Time: 2:18 PM
  */
 public class GraphicsDataCommand extends EobCommand {
-    public String graphicsDataName = ""; // Points to a .cps file containing wall graphics data.
-    public String graphicsDataExt = "";
-    public String rectanglesDataName = ""; // Points to a .dat file containing rectangular data that point into the graphics data.
+    public final String graphicsDataName; // Points to a .cps file containing wall graphics data.
+    public final String graphicsDataExt;
+    public final String rectanglesDataName; // Points to a .dat file containing rectangular data that point into the graphics data.
 
+    private GraphicsDataCommand(byte[] levelInfData, int pos) {
+        super(0xEC, pos, "Graphics data");
 
-    private GraphicsDataCommand(byte[] originalCommands, int pos) {
-        super(0xEC, originalCommands, pos);
+        int commandPos = 1;
+        String text = "";
+        while (levelInfData[pos + commandPos] != 0) {
+            text += (char) levelInfData[pos + commandPos];
+            commandPos++;
+        }
+        graphicsDataName = text;
+
+        commandPos++;
+        text = "";
+        while (levelInfData[pos + commandPos] != 0) {
+            text += (char) levelInfData[pos + commandPos];
+            commandPos++;
+        }
+        graphicsDataExt = text;
+
+        commandPos = 13;
+        text = "";
+        while (levelInfData[pos + commandPos] != 0) {
+            text += (char) levelInfData[pos + commandPos];
+            commandPos++;
+        }
+        rectanglesDataName = text;
+        originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + 25);
     }
 
     public static GraphicsDataCommand parse(byte[] levelInfData, int pos) {
-        GraphicsDataCommand command = new GraphicsDataCommand(Arrays.copyOfRange(levelInfData, pos, pos + 24), pos);
-        int commandPos = 0;
-        while (command.originalCommands[commandPos] != 0) {
-            command.graphicsDataName += (char) command.originalCommands[commandPos];
-            commandPos++;
+        if (ByteArrayUtility.getByte(levelInfData, pos) == 0xEC) {
+            return new GraphicsDataCommand(levelInfData, pos);
         }
-        commandPos++;
-        while (command.originalCommands[commandPos] != 0) {
-            command.graphicsDataExt += (char) command.originalCommands[commandPos];
-            commandPos++;
-        }
-        commandPos = 12;
-        while (command.originalCommands[commandPos] != 0) {
-            command.rectanglesDataName += (char) command.originalCommands[commandPos];
-            commandPos++;
-        }
-
-        return command;
+        return null;
     }
 }

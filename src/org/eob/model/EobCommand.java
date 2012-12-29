@@ -9,10 +9,16 @@ public class EobCommand {
     public final int commandId;
     public final int originalPos;
     public byte[] originalCommands;
+    public String description;
 
-    public EobCommand(int commandId, byte[] originalCommands, int originalPos) {
+    public EobCommand(int commandId, int originalPos) {
         this.commandId = commandId;
-        this.originalCommands = originalCommands;
         this.originalPos = originalPos;
+    }
+
+    public EobCommand(int commandId, int originalPos, String description) {
+        this.commandId = commandId;
+        this.originalPos = originalPos;
+        this.description = description;
     }
 }

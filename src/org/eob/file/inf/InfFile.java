@@ -86,19 +86,19 @@ public class InfFile {
                 EobLogger.println(String.format("Unknown command: 0x%02x", ByteArrayUtility.getByte(levelInfData, pos)));
                 break;
             }
-            pos += command.originalCommands.length + 1;
+            pos += command.originalCommands.length;
             commands.add(command);
         }
 
         EobLogger.println("script parsing...");
         int commandIdx = 0;
         while (pos < levelInfDataPacked.length) {
-            EobCommand command = parseCommand.parse(levelInfData, pos);
+            EobCommand command = parseCommand.parseScript(levelInfData, pos);
             if (command == null) {
                 EobLogger.println(String.format("Unknown command: 0x%02x", ByteArrayUtility.getByte(levelInfData, pos)));
                 break;
             }
-            pos += command.originalCommands.length + 1;
+            pos += command.originalCommands.length;
             commandIdx++;
             script.add(command);
         }
