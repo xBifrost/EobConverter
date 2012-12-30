@@ -23,22 +23,24 @@ public class ConditionCommand extends EobCommand {
         register(new MiscFalseLeaf()); // 0x00
         register(new MiscTrueLeaf()); // 0x01
         register(new MiscValueLeaf()); // 0x02 - 0x7F
+        register(new MiscRollDiceLeaf()); // 0xDB
+        register(new PartyContainsClassLeaf()); // 0xDC
+        register(new PartyContainsRaceLeaf()); // 0xDD
         register(new MiscTriggerFlagLeaf()); // 0xE0
+        register(new PartyItemNameIdLeaf()); // 0xE7, 0xCF
+        register(new PartyItemUniqueNameIdLeaf()); // 0xE7, 0xD0
+        register(new PartyItemTypeLeaf()); // 0xE7, 0xE1
+        register(new PartyItemLeaf()); // 0xE7, 0xF5
+        register(new PartyItemValueLeaf()); // 0xE7, 0xF6
         register(new MazeWallSideLeaf()); // 0xE9
         register(new PartyDirectionLeaf()); // 0xED
         register(new MazeFlagLeaf()); // 0xEF
+        register(new MiscFlagLeaf()); // 0xF0
         register(new PartyInventoryCountLeaf()); // 0xF1,0xF5
         register(new PartyPositionCheckLeaf()); // 0xF1,!0xF5
         register(new MazeItemCountLeaf()); // 0xF5
         register(new MazeWallNumberLeaf()); // 0xF7
 //        register(new PartyContainsAlignmentLeaf());
-//        register(new PartyContainsClassLeaf());
-//        register(new PartyContainsRaceLeaf());
-//        register(new PartyItemLeaf());
-//        register(new PartyItemNameIdLeaf());
-//        register(new PartyItemTypeLeaf());
-//        register(new PartyItemUniqueNameIdLeaf());
-//        register(new PartyItemValueLeaf());
 //        register(new PartyVisibleLeaf());
     }
 

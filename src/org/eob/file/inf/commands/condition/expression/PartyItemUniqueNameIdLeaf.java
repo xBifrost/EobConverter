@@ -22,7 +22,7 @@ public class PartyItemUniqueNameIdLeaf extends ExpressionLeaf {
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos) {
-        if (ByteArrayUtility.getWord(levelInfData, pos) == 0xE7D0) {
+        if (ByteArrayUtility.getWord(levelInfData, pos) == 0xD0E7) {
             return new PartyItemUniqueNameIdLeaf(levelInfData, pos);
         }
         return null;

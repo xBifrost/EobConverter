@@ -17,12 +17,12 @@ public class PartyContainsClassLeaf extends ExpressionLeaf {
     }
 
     private PartyContainsClassLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 3, "boolean <- party.containsClass(byte)");
+        super(originalCommands, pos, 2, "boolean <- party.containsClass(byte)");
         classId = ByteArrayUtility.getByte(originalCommands, pos+1);
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos) {
-        if (ByteArrayUtility.getByte(levelInfData, pos) == 0xDD) {
+        if (ByteArrayUtility.getByte(levelInfData, pos) == 0xDC) {
             return new PartyContainsClassLeaf(levelInfData, pos);
         }
         return null;

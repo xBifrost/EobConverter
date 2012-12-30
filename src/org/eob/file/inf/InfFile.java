@@ -7,6 +7,7 @@ import org.eob.ItemParser;
 import org.eob.file.FileUtility;
 import org.eob.file.cps.CpsFile;
 import org.eob.model.EobCommand;
+import org.eob.model.EobTrigger;
 import org.eob.model.MonsterObject;
 
 import java.util.ArrayList;
@@ -33,9 +34,9 @@ public class InfFile {
     public final String monster2Name;
     public final byte unknown2[]; // Array size: 5
     public final List<MonsterObject> monsterObjects = new ArrayList<MonsterObject>();
-    public final int commandsCount;
     public final List<EobCommand> commands = new ArrayList<EobCommand>();
     public final List<EobCommand> script = new ArrayList<EobCommand>();
+    public final List<EobTrigger> triggers = new ArrayList<EobTrigger>();
 
     public InfFile(int levelId, byte[] levelInfDataPacked, ItemParser itemParser, boolean writeUnpacked) {
         this.levelId = levelId;
@@ -76,7 +77,7 @@ public class InfFile {
                 monsterObjects.add(newMonsterObject);
             }
         }
-        commandsCount = ByteArrayUtility.getWord(levelInfData, pos);
+        int commandsCount = ByteArrayUtility.getWord(levelInfData, pos);
         pos += 2;
         ParseCommand parseCommand = new ParseCommand();
         EobLogger.println(String.format("Command count: %d", commandsCount));
@@ -92,7 +93,7 @@ public class InfFile {
 
         EobLogger.println("script parsing...");
         int commandIdx = 0;
-        while (pos < levelInfDataPacked.length) {
+        while (pos < triggersOffset) {
             EobCommand command = parseCommand.parseScript(levelInfData, pos);
             if (command == null) {
                 EobLogger.println(String.format("Unknown command: 0x%02x (Position: 0x%04x)", ByteArrayUtility.getByte(levelInfData, pos), pos));
@@ -103,6 +104,20 @@ public class InfFile {
             script.add(command);
         }
         EobLogger.println(String.format("Script command count: %d", commandIdx));
+
+        pos = triggersOffset;
+        EobLogger.println("triggers parsing...");
+        int triggersCount = ByteArrayUtility.getWord(levelInfData, pos);
+        pos += 2;
+        for (int triggerIdx = 0; triggerIdx < triggersCount; triggerIdx++) {
+            int position = ByteArrayUtility.getWord(levelInfData, pos);
+            int flags = ByteArrayUtility.getByte(levelInfData, pos+2);
+            int address = ByteArrayUtility.getWord(levelInfData, pos+3);
+            EobTrigger trigger = new EobTrigger(position, flags, address);
+            pos += 5;
+            triggers.add(trigger);
+        }
+        EobLogger.println(String.format("Script triggers count: %d", triggersCount));
     }
 
     public byte[] getLevelInfData() {

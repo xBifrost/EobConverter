@@ -15,7 +15,7 @@ public class MiscTriggerFlagLeaf extends ExpressionLeaf {
     }
 
     private MiscTriggerFlagLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 1, "boolean <- trigger.flag");
+        super(originalCommands, pos, 1, "byte <- trigger.flag");
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos) {

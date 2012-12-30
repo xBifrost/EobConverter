@@ -31,10 +31,14 @@ public class ParseCommand {
         switch (commandId) {
             case 0xE6:
                 return EncounterCommand.parse(levelInfData, pos);
+            case 0xEA:
+                return NewItemCommand.parse(levelInfData, pos);
             case 0xEB:
                 return GiveXpCommand.parse(levelInfData, pos);
             case 0xEC:
                 return ChangeLevelCommand.parse(levelInfData, pos);
+            case 0xED:
+                return ItemConsumeCommand.parse(levelInfData, pos);
             case 0xEE:
                 return ConditionCommand.parse(levelInfData, pos);
             case 0xF1:
@@ -49,6 +53,10 @@ public class ParseCommand {
                 return MessageCommand.parse(levelInfData, pos);
             case 0xFA:
                 return new TeleportCommand(levelInfData, pos);
+            case 0xFC:
+                return new CloseDoorCommand(levelInfData, pos);
+            case 0xFD:
+                return new OpenDoorCommand(levelInfData, pos);
             case 0xFE:
                 return new ChangeWallCommand(levelInfData, pos);
             case 0xFF:

@@ -19,7 +19,7 @@ public class PartyItemLeaf extends ExpressionLeaf {
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos) {
-        if (ByteArrayUtility.getWord(levelInfData, pos) == 0xE7F5) {
+        if (ByteArrayUtility.getWord(levelInfData, pos) == 0xF5E7) {
             return new PartyItemLeaf(levelInfData, pos);
         }
         return null;
