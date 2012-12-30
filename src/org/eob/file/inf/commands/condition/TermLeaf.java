@@ -14,9 +14,9 @@ public class TermLeaf implements Term {
     public int originalPos;
     public byte[] originalCommands;
 
-    public ExpressionLeaf expressionLeafLeft;
+    public ConditionNode nodeLeft;
     public RelationOperator operator;
-    public ExpressionLeaf expressionLeafRight;
+    public ConditionNode nodeRight;
 
     private TermLeaf(RelationOperator operator) {
         this.operator = operator;

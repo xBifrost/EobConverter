@@ -83,7 +83,7 @@ public class InfFile {
         for (int commandIdx = 0; commandIdx < commandsCount; commandIdx++) {
             EobCommand command = parseCommand.parse(levelInfData, pos);
             if (command == null) {
-                EobLogger.println(String.format("Unknown command: 0x%02x", ByteArrayUtility.getByte(levelInfData, pos)));
+                EobLogger.println(String.format("Unknown command: 0x%02x (Position: 0x%04x)", ByteArrayUtility.getByte(levelInfData, pos), pos));
                 break;
             }
             pos += command.originalCommands.length;
@@ -95,7 +95,7 @@ public class InfFile {
         while (pos < levelInfDataPacked.length) {
             EobCommand command = parseCommand.parseScript(levelInfData, pos);
             if (command == null) {
-                EobLogger.println(String.format("Unknown command: 0x%02x", ByteArrayUtility.getByte(levelInfData, pos)));
+                EobLogger.println(String.format("Unknown command: 0x%02x (Position: 0x%04x)", ByteArrayUtility.getByte(levelInfData, pos), pos));
                 break;
             }
             pos += command.originalCommands.length;

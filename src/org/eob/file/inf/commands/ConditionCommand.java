@@ -22,9 +22,15 @@ public class ConditionCommand extends EobCommand {
     static {
         register(new MiscFalseLeaf()); // 0x00
         register(new MiscTrueLeaf()); // 0x01
+        register(new MiscValueLeaf()); // 0x02 - 0x7F
         register(new MiscTriggerFlagLeaf()); // 0xE0
+        register(new MazeWallSideLeaf()); // 0xE9
         register(new PartyDirectionLeaf()); // 0xED
         register(new MazeFlagLeaf()); // 0xEF
+        register(new PartyInventoryCountLeaf()); // 0xF1,0xF5
+        register(new PartyPositionCheckLeaf()); // 0xF1,!0xF5
+        register(new MazeItemCountLeaf()); // 0xF5
+        register(new MazeWallNumberLeaf()); // 0xF7
 //        register(new PartyContainsAlignmentLeaf());
 //        register(new PartyContainsClassLeaf());
 //        register(new PartyContainsRaceLeaf());
@@ -58,8 +64,8 @@ public class ConditionCommand extends EobCommand {
             for (RelationOperator relationOperator : RelationOperator.values()) {
                 if (relationOperator.eobCommandId == command) {
                     TermLeaf parse = termLeafPrototype.parse(levelInfData, pos + subPosition);
-                    parse.expressionLeafRight = (ExpressionLeaf) nodes.pop();
-                    parse.expressionLeafLeft = (ExpressionLeaf) nodes.pop();
+                    parse.nodeRight = nodes.pop();
+                    parse.nodeLeft = nodes.pop();
                     nodes.push(parse);
                     commandParsed = true;
                     subPosition += parse.originalCommandSize();
