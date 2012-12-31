@@ -3,32 +3,29 @@ package org.eob.file.inf.commands.condition.expression;
 import org.eob.ByteArrayUtility;
 import org.eob.file.inf.commands.condition.ConditionNode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: Bifrost
- * Date: 12/3/12
- * Time: 10:50 PM
+ * Date: 31.12.2012
+ * Time: 19:42
  */
-public abstract class ExpressionLeaf implements ConditionNode {
+public class ListNode implements ConditionNode {
+    public final List<ConditionNode> nodes = new ArrayList<ConditionNode>();
+
     public int originalPos;
     public byte[] originalCommands;
-    public ConditionNode parent = null;
 
-    public int expressionId;
-    public String description;
-
-    /**
-     * Constructor of the prototype;
-     */
-    public ExpressionLeaf() {
-    }
-
-    public ExpressionLeaf(byte[] levelInfData, int originalPos, int commandSize, String description) {
+    public ListNode(byte[] levelInfData, int originalPos, int commandSize) {
         this.originalPos = originalPos;
         this.originalCommands = Arrays.copyOfRange(levelInfData, originalPos, originalPos + commandSize);
-        this.expressionId = ByteArrayUtility.getByte(levelInfData, originalPos + 1);
-        this.description = description;
+    }
+
+    @Override
+    public ConditionNode parse(byte[] levelInfData, int originalPos) {
+        throw new UnsupportedOperationException("ListNode not supported parse feature.");
     }
 
     @Override

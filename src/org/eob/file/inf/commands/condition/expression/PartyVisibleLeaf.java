@@ -15,7 +15,7 @@ public class PartyVisibleLeaf extends ExpressionLeaf {
     }
 
     private PartyVisibleLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 2, "boolean <- party.isVisible");
+        super(originalCommands, pos, 1, "boolean <- party.isVisible");
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos) {

@@ -23,6 +23,7 @@ public class ConditionCommand extends EobCommand {
         register(new MiscFalseLeaf()); // 0x00
         register(new MiscTrueLeaf()); // 0x01
         register(new MiscValueLeaf()); // 0x02 - 0x7F
+        register(new PartyVisibleLeaf()); // 0xDA
         register(new MiscRollDiceLeaf()); // 0xDB
         register(new PartyContainsClassLeaf()); // 0xDC
         register(new PartyContainsRaceLeaf()); // 0xDD
@@ -38,10 +39,10 @@ public class ConditionCommand extends EobCommand {
         register(new MiscFlagLeaf()); // 0xF0
         register(new PartyInventoryCountLeaf()); // 0xF1,0xF5
         register(new PartyPositionCheckLeaf()); // 0xF1,!0xF5
+        register(new MonsterCountLeaf()); // 0xF3
         register(new MazeItemCountLeaf()); // 0xF5
         register(new MazeWallNumberLeaf()); // 0xF7
 //        register(new PartyContainsAlignmentLeaf());
-//        register(new PartyVisibleLeaf());
     }
 
     private ConditionCommand(byte[] levelInfData, int pos) {
@@ -96,9 +97,15 @@ public class ConditionCommand extends EobCommand {
             for (ConditionNode registeredExpression : registeredExpressions) {
                 ConditionNode conditionNode = registeredExpression.parse(levelInfData, pos + subPosition);
                 if (conditionNode != null) {
-                    nodes.add(conditionNode);
-                    commandParsed = true;
-                    subPosition += conditionNode.originalCommandSize();
+                    if (conditionNode instanceof ListNode) {
+                        nodes.addAll(((ListNode) conditionNode).nodes);
+                        commandParsed = true;
+                        subPosition += conditionNode.originalCommandSize();
+                    } else {
+                        nodes.add(conditionNode);
+                        commandParsed = true;
+                        subPosition += conditionNode.originalCommandSize();
+                    }
                     break;
                 }
             }

@@ -15,7 +15,7 @@ public class MiscValueLeaf extends ExpressionLeaf {
     public MiscValueLeaf() {
     }
 
-    private MiscValueLeaf(byte[] originalCommands, int pos) {
+    protected MiscValueLeaf(byte[] originalCommands, int pos) {
         super(originalCommands, pos, 1, "byte <- value");
         value = ByteArrayUtility.getByte(originalCommands, pos);
     }

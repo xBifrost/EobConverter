@@ -17,8 +17,8 @@ public class PartyContainsAlignmentLeaf extends ExpressionLeaf {
     }
 
     private PartyContainsAlignmentLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 3, "boolean <- party.containsAlignment(byte)");
-        alignmentId = ByteArrayUtility.getByte(originalCommands, pos+1);
+        super(originalCommands, pos, 2, "boolean <- party.containsAlignment(byte)");
+        alignmentId = ByteArrayUtility.getByte(originalCommands, pos + 1);
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos) {

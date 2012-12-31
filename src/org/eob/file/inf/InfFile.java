@@ -118,6 +118,7 @@ public class InfFile {
             triggers.add(trigger);
         }
         EobLogger.println(String.format("Script triggers count: %d", triggersCount));
+        EobLogger.println("");
     }
 
     public byte[] getLevelInfData() {
