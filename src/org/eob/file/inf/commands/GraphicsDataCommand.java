@@ -1,7 +1,8 @@
 package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
-import org.eob.model.EobCommand;
+import org.eob.file.inf.CommandVisitor;
+import org.eob.file.inf.EobCommand;
 
 import java.util.Arrays;
 
@@ -51,5 +52,10 @@ public class GraphicsDataCommand extends EobCommand {
             return new GraphicsDataCommand(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

@@ -1,9 +1,7 @@
 package org.eob.file.inf;
 
 import org.eob.ByteArrayUtility;
-import org.eob.EobLogger;
 import org.eob.file.inf.commands.*;
-import org.eob.model.EobCommand;
 
 /**
  * User: Bifrost

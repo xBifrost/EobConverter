@@ -44,12 +44,21 @@
           </component>
           <component id="891d6" class="javax.swing.JCheckBox" binding="debugWallCheckBox">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
               <selected value="true"/>
               <text value="Print Wall errors"/>
+            </properties>
+          </component>
+          <component id="bce00" class="javax.swing.JCheckBox" binding="scriptDebugModeCheckBox">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <text value="Script debug mode"/>
             </properties>
           </component>
         </children>

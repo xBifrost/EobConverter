@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition;
 
 import org.eob.ByteArrayUtility;
+import org.eob.file.inf.CommandVisitor;
 
 import java.util.Arrays;
 
@@ -45,5 +46,12 @@ public class TermNode implements Term{
     @Override
     public int originalCommandSize() {
         return originalCommands.length;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        termLeft.accept(visitor);
+        termRight.accept(visitor);
+        visitor.visit(this);
     }
 }

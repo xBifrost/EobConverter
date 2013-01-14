@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition;
 
 import org.eob.ByteArrayUtility;
+import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.commands.condition.expression.ExpressionLeaf;
 
 import java.util.Arrays;
@@ -46,5 +47,12 @@ public class TermLeaf implements Term {
     @Override
     public int originalCommandSize() {
         return originalCommands.length;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        nodeLeft.accept(visitor);
+        nodeRight.accept(visitor);
+        visitor.visit(this);
     }
 }

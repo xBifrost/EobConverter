@@ -1,11 +1,11 @@
-package org.eob.model;
+package org.eob.file.inf;
 
 /**
  * User: Bifrost
  * Date: 12/2/12
  * Time: 1:15 PM
  */
-public class EobCommand {
+public abstract class EobCommand implements CommandElement {
     public final int commandId;
     public final int originalPos;
     public byte[] originalCommands;

@@ -23,6 +23,7 @@ public class EobConverterForm {
     private JTextArea output;
     private JButton convertButton;
     private JCheckBox debugWallCheckBox;
+    private JCheckBox scriptDebugModeCheckBox;
 
     public JPanel getMainPanel() {
         return mainPanel;
@@ -50,6 +51,10 @@ public class EobConverterForm {
 
     public JCheckBox getDebugWallCheckBox() {
         return debugWallCheckBox;
+    }
+
+    public JCheckBox getScriptDebugModeCheckBox() {
+        return scriptDebugModeCheckBox;
     }
 
     public JTextField getItemNameField() {
@@ -140,9 +145,17 @@ public class EobConverterForm {
         debugWallCheckBox.setText("Print Wall errors");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(debugWallCheckBox, gbc);
+        scriptDebugModeCheckBox = new JCheckBox();
+        scriptDebugModeCheckBox.setText("Script debug mode");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(scriptDebugModeCheckBox, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();

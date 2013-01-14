@@ -2,7 +2,8 @@ package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
 import org.eob.enums.InSquarePositionType;
-import org.eob.model.EobCommand;
+import org.eob.file.inf.CommandVisitor;
+import org.eob.file.inf.EobCommand;
 
 import java.util.Arrays;
 
@@ -34,5 +35,10 @@ public class NewItemCommand extends EobCommand {
             return new NewItemCommand(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

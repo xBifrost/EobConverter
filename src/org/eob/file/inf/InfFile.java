@@ -1,18 +1,12 @@
 package org.eob.file.inf;
 
-import org.eob.ByteArrayUtility;
-import org.eob.EobConverter;
-import org.eob.EobLogger;
-import org.eob.ItemParser;
+import org.eob.*;
 import org.eob.file.FileUtility;
 import org.eob.file.cps.CpsFile;
-import org.eob.model.EobCommand;
-import org.eob.model.EobTrigger;
+import org.eob.file.inf.commands.*;
 import org.eob.model.MonsterObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: Bifrost
@@ -37,6 +31,7 @@ public class InfFile {
     public final List<EobCommand> commands = new ArrayList<EobCommand>();
     public final List<EobCommand> script = new ArrayList<EobCommand>();
     public final List<EobTrigger> triggers = new ArrayList<EobTrigger>();
+    public final List<EobScriptFunction> scriptFunctions = new ArrayList<EobScriptFunction>();
 
     public InfFile(int levelId, byte[] levelInfDataPacked, ItemParser itemParser, boolean writeUnpacked) {
         this.levelId = levelId;
@@ -105,20 +100,123 @@ public class InfFile {
         }
         EobLogger.println(String.format("Script command count: %d", commandIdx));
 
+        // prepare commandMap
+        Map<Integer, Integer> commandMap = new HashMap<Integer, Integer>();
+        pos = 0;
+        for (EobCommand command : script) {
+            commandMap.put(command.originalPos, pos);
+            pos++;
+        }
+
         pos = triggersOffset;
         EobLogger.println("triggers parsing...");
         int triggersCount = ByteArrayUtility.getWord(levelInfData, pos);
         pos += 2;
         for (int triggerIdx = 0; triggerIdx < triggersCount; triggerIdx++) {
             int position = ByteArrayUtility.getWord(levelInfData, pos);
-            int flags = ByteArrayUtility.getByte(levelInfData, pos+2);
-            int address = ByteArrayUtility.getWord(levelInfData, pos+3);
-            EobTrigger trigger = new EobTrigger(position, flags, address);
+            int flags = ByteArrayUtility.getByte(levelInfData, pos + 2);
+            int address = ByteArrayUtility.getWord(levelInfData, pos + 3);
+            EobTrigger trigger = new EobTrigger(triggerIdx, position, flags, address);
             pos += 5;
             triggers.add(trigger);
         }
+        Collections.sort(triggers, new Comparator<EobTrigger>() {
+            @Override
+            public int compare(EobTrigger o1, EobTrigger o2) {
+                return ((Integer) o1.addressStart).compareTo(o2.addressStart);
+            }
+        });
+        for (EobTrigger trigger : triggers) {
+            boolean counting = false;
+            for (EobCommand command : script) {
+                if (command.originalPos == trigger.addressStart) {
+                    counting = true;
+                }
+                if (counting && command instanceof ScriptEndCommand) {
+                    trigger.addressEnd = command.originalPos;
+                    break;
+                }
+            }
+        }
         EobLogger.println(String.format("Script triggers count: %d", triggersCount));
         EobLogger.println("");
+
+        EobLogger.println("script function finding...");
+        TreeMap<Integer, Integer> parsedFunctions = new TreeMap<Integer, Integer>();
+        for (EobCommand command : script) {
+            if (command instanceof CallCommand) {
+                int functionStartAdr = ((CallCommand) command).address;
+                parsedFunctions.put(functionStartAdr, -1);
+            }
+            pos++;
+        }
+        for (Integer address : parsedFunctions.keySet()) {
+            Integer value = parsedFunctions.ceilingKey(address + 1);
+            if (value == null) {
+                value = triggers.get(0).addressStart;
+            }
+            parsedFunctions.put(address, value - 1);
+        }
+
+        int functionPos = 0;
+        for (Map.Entry<Integer, Integer> entry : parsedFunctions.entrySet()) {
+            scriptFunctions.add(new EobScriptFunction("function" + functionPos, entry.getKey(), entry.getValue()));
+            functionPos++;
+        }
+
+        EobLogger.println(String.format("Functions count: %d", parsedFunctions.size()));
+        EobLogger.println("");
+
+        // Check script
+        for (EobTrigger trigger : triggers) {
+            boolean checking = false;
+            for (EobCommand command : script) {
+                if (command.originalPos == trigger.addressStart) {
+                    checking = true;
+                }
+                if (checking && command instanceof ConditionCommand) {
+                    ConditionCommand conditionCommand = (ConditionCommand) command;
+                    checkJumpPosition(trigger.addressStart, trigger.addressEnd, conditionCommand.jumpPosition);
+                }
+                if (checking && command instanceof JumpCommand) {
+                    JumpCommand jumpCommand = (JumpCommand) command;
+                    checkJumpPosition(trigger.addressStart, trigger.addressEnd, jumpCommand.address);
+                }
+                if (command.originalPos >= trigger.addressEnd) {
+                    break;
+                }
+            }
+        }
+        for (EobScriptFunction function : scriptFunctions) {
+            boolean checking = false;
+            for (EobCommand command : script) {
+                if (command.originalPos == function.addressStart) {
+                    checking = true;
+                }
+                if (checking && command instanceof ConditionCommand) {
+                    ConditionCommand conditionCommand = (ConditionCommand) command;
+                    checkJumpPosition(function.addressStart, function.addressEnd, conditionCommand.jumpPosition);
+                }
+                if (checking && command instanceof JumpCommand) {
+                    JumpCommand jumpCommand = (JumpCommand) command;
+                    checkJumpPosition(function.addressStart, function.addressEnd, jumpCommand.address);
+                }
+                if (command.originalPos >= function.addressEnd) {
+                    break;
+                }
+            }
+        }
+    }
+
+    private void checkJumpPosition(int addressStart, int addressEnd, int jumpPosition) {
+        if (jumpPosition < addressStart) {
+            EobLogger.println(String.format("[Script error] Jump to negative address! Command at address: 0x%04x", addressStart));
+            return;
+        }
+        if (jumpPosition > addressEnd) {
+            EobLogger.println(String.format("[Script error] Jump out of the script! Command at address: 0x%04x", addressStart));
+            return;
+        }
     }
 
     public byte[] getLevelInfData() {

@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.file.inf.CommandVisitor;
 
 /**
  * If itemTypeId == -1 then return count of the all items.
@@ -37,5 +38,10 @@ public class MazeItemCountLeaf extends ExpressionLeaf {
             return new MazeItemCountLeaf(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

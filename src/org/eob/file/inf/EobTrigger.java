@@ -1,4 +1,4 @@
-package org.eob.model;
+package org.eob.file.inf;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,10 +11,12 @@ import java.util.Map;
 public class EobTrigger {
     private static Map<Integer, Integer> collapseTriggerFlags = new HashMap<Integer, Integer>();
 
+    public final int triggerId;
     public final int x;
     public final int y;
     public final int flags;
-    public final int address;
+    public final int addressStart;
+    public int addressEnd = -1;
 
     static {
         collapseTriggerFlags.put(0x00, 0);
@@ -31,10 +33,11 @@ public class EobTrigger {
         collapseTriggerFlags.put(0xa8, 11);
     }
 
-    public EobTrigger(int position, int flags, int address) {
+    public EobTrigger(int triggerId, int position, int flags, int addressStart) {
+        this.triggerId = triggerId;
         this.x = (position) & 0x1f;
         this.y = (position >> 5) & 0x1f;
         this.flags = collapseTriggerFlags.get(flags);
-        this.address = address;
+        this.addressStart = addressStart;
     }
 }

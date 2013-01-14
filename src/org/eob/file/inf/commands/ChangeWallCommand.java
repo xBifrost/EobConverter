@@ -1,7 +1,9 @@
 package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
-import org.eob.model.EobCommand;
+import org.eob.enums.DirectionType;
+import org.eob.file.inf.CommandVisitor;
+import org.eob.file.inf.EobCommand;
 
 import java.util.Arrays;
 
@@ -14,7 +16,7 @@ public class ChangeWallCommand extends EobCommand {
     public final ChangeWallType subtype;
     public final int x;
     public final int y;
-    public final int side;
+    public final DirectionType side;
     public final int fromWall;
     public final int toWall;
 
@@ -28,7 +30,7 @@ public class ChangeWallCommand extends EobCommand {
                 int position = ByteArrayUtility.getWord(levelInfData, pos + 2);
                 x = (position) & 0x1f;
                 y = (position >> 5) & 0x1f;
-                side = -1;
+                side = DirectionType.Unknown;
                 toWall = ByteArrayUtility.getByte(levelInfData, pos + 4);
                 fromWall = ByteArrayUtility.getByte(levelInfData, pos + 5);
                 len = 6;
@@ -38,7 +40,7 @@ public class ChangeWallCommand extends EobCommand {
                 int position = ByteArrayUtility.getWord(levelInfData, pos + 2);
                 x = (position) & 0x1f;
                 y = (position >> 5) & 0x1f;
-                side = ByteArrayUtility.getByte(levelInfData, pos + 4);
+                side = DirectionType.getDirectionById(ByteArrayUtility.getByte(levelInfData, pos + 4));
                 toWall = ByteArrayUtility.getByte(levelInfData, pos + 5);
                 fromWall = ByteArrayUtility.getByte(levelInfData, pos + 6);
                 len = 7;
@@ -48,7 +50,7 @@ public class ChangeWallCommand extends EobCommand {
                 int position = ByteArrayUtility.getWord(levelInfData, pos + 2);
                 x = (position) & 0x1f;
                 y = (position >> 5) & 0x1f;
-                side = -1;
+                side = DirectionType.Unknown;
                 toWall = -1;
                 fromWall = -1;
                 len = 4;
@@ -58,7 +60,7 @@ public class ChangeWallCommand extends EobCommand {
                 // unknown
                 x = -1;
                 y = -1;
-                side = -1;
+                side = DirectionType.Unknown;
                 toWall = -1;
                 fromWall = -1;
                 len = 2;
@@ -73,5 +75,10 @@ public class ChangeWallCommand extends EobCommand {
             return new ChangeWallCommand(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

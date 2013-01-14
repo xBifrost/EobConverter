@@ -1,9 +1,9 @@
 package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
-import org.eob.enums.DirectionType;
 import org.eob.enums.InSquarePositionType;
-import org.eob.model.EobCommand;
+import org.eob.file.inf.CommandVisitor;
+import org.eob.file.inf.EobCommand;
 
 import java.util.Arrays;
 
@@ -19,7 +19,7 @@ public class StealSmallItemsCommand extends EobCommand {
     public final InSquarePositionType inSquarePositionType;
 
     public StealSmallItemsCommand(byte[] levelInfData, int pos) {
-        super(0xF9, pos, "Launch spell/item");
+        super(0xF9, pos, "Steal small items");
 
         int whomValue = ByteArrayUtility.getByte(levelInfData, pos + 1);
         whom = whomValue == 0xFF ? -1 : whomValue; // 0xFF -> to all
@@ -36,5 +36,10 @@ public class StealSmallItemsCommand extends EobCommand {
             return new StealSmallItemsCommand(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

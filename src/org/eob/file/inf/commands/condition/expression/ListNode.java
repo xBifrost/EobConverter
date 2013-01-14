@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.commands.condition.ConditionNode;
 
 import java.util.ArrayList;
@@ -31,5 +32,13 @@ public class ListNode implements ConditionNode {
     @Override
     public int originalCommandSize() {
         return originalCommands.length;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        for (ConditionNode node : nodes) {
+            node.accept(visitor);
+        }
+        visitor.visit(this);
     }
 }

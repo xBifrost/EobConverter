@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.file.inf.CommandVisitor;
 
 /**
  * User: Bifrost
@@ -8,7 +9,7 @@ import org.eob.ByteArrayUtility;
  * Time: 11:54 PM
  */
 public class MiscValueLeaf extends ExpressionLeaf {
-    int value;
+    public int value;
     /**
      * Constructor of the prototype;
      */
@@ -26,4 +27,9 @@ public class MiscValueLeaf extends ExpressionLeaf {
         }
         return null;
     }
- }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
+}

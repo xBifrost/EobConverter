@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.file.inf.CommandVisitor;
 
 /**
  * User: Bifrost
@@ -26,5 +27,10 @@ public class PartyContainsAlignmentLeaf extends ExpressionLeaf {
             return new PartyContainsAlignmentLeaf(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

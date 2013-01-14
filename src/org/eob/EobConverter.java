@@ -17,13 +17,14 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.8.0";
+    public final static String CONVERTER_VERSION = "0.9.0";
     private final static List<String> externalChangesList = new ArrayList<String>();
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
     private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
     private final static String LEVEL_INF_FILE = "LEVEL%d.INF";
     public final static String LEVEL_INF_UNPACKED = "LEVEL%d.INF_UNPACKED";
+    public final static String LEVEL_SCRIPT_FILE = "LEVEL%d.SCRIPT";
 
     private Settings settings = new Settings();
     private EobConverterForm eobConverterForm;
@@ -197,13 +198,14 @@ public class EobConverter {
                 try {
                     if (name.equals("--help")) {
                         EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>]");
-                        EobLogger.println("                        [-c|--console] [-d|--debug] [-di|--debug-item=<value>] [-l1|--file-per-level]");
-                        EobLogger.println("                        [-gs|--generate-default-structures] [-sw|--skip-wall-errors]");
+                        EobLogger.println("                        [-c|--console] [-d|--debug] [-ds|debug-script] [-di|--debug-item=<value>]");
+                        EobLogger.println("                        [-l1|--file-per-level] [-gs|--generate-default-structures] [-sw|--skip-wall-errors]");
                         EobLogger.println("");
                         EobLogger.println("List of commands:");
                         EobLogger.println("   src-path                    Source path. (default=\".\")");
                         EobLogger.println("   dst-path                    Destination path. (default=\".\")");
                         EobLogger.println("   debug                       Show debug info.");
+                        EobLogger.println("   debug-script                Show script debug info.");
                         EobLogger.println("   debug-item                  Show debug info only for items contains <value> string. (default=\"\")");
                         EobLogger.println("   skip-wall-errors            Skip showing wall errors (default=show)");
                         EobLogger.println("   levels                      Convert all levels in range: <from,to>. (default=1;99)");
@@ -217,6 +219,8 @@ public class EobConverter {
                         settings.to = Integer.parseInt(range[1]);
                     } else if (name.equals("--debug") || name.equals("-d")) {
                         settings.debug = true;
+                    } else if (name.equals("--debug-script") || name.equals("-ds")) {
+                        settings.scriptDebug = true;
                     } else if (name.equals("--console") || name.equals("-c")) {
                         settings.console = true;
                     } else if (name.equals("--src-path") || name.equals("-sp")) {
@@ -254,7 +258,7 @@ public class EobConverter {
         itemParser.parseFile(settings.debugShowOnlyItemName);
 
         GrimrockExport grimrockExport = new GrimrockExport(settings.dstPath, externalChangesList, itemParser, settings.to, settings.generateDefaultStructures,
-                                                           settings.debug, settings.debugWalls);
+                settings.debug, settings.scriptDebug, settings.debugWalls);
 
         for (int levelId = settings.from; levelId <= settings.to; levelId++) {
             byte[] levelMazFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
@@ -289,6 +293,7 @@ public class EobConverter {
             eobConverterForm.getSrcPathField().setText(settings.srcPath);
             eobConverterForm.getDstPathField().setText(settings.dstPath);
             eobConverterForm.getDebugModeCheckBox().setSelected(settings.debug);
+            eobConverterForm.getScriptDebugModeCheckBox().setSelected(settings.scriptDebug);
             eobConverterForm.getDebugWallCheckBox().setSelected(settings.debugWalls);
             eobConverterForm.getItemNameField().setText(settings.debugShowOnlyItemName);
             eobConverterForm.getFromLevelField().setText(settings.from.toString());
@@ -338,6 +343,7 @@ public class EobConverter {
         settings.srcPath = eobConverterForm.getSrcPathField().getText();
         settings.dstPath = eobConverterForm.getDstPathField().getText();
         settings.debug = eobConverterForm.getDebugModeCheckBox().isSelected();
+        settings.scriptDebug = eobConverterForm.getScriptDebugModeCheckBox().isSelected();
         settings.debugWalls = eobConverterForm.getDebugWallCheckBox().isSelected();
         settings.debugShowOnlyItemName = eobConverterForm.getItemNameField().getText();
         try {
@@ -366,10 +372,11 @@ public class EobConverter {
         public Integer to = 99;
         public String debugShowOnlyItemName = "";
         public boolean debug = false;
+        public boolean scriptDebug = false;
         public boolean debugWalls = true;
         public boolean createFilePerLevel = false;
         public boolean generateDefaultStructures = false;
         public boolean console = false;
-        public boolean writeUnpackedInf = true;
+        public boolean writeUnpackedInf = false;
     }
 }

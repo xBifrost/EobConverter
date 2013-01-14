@@ -2,9 +2,10 @@ package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
 import org.eob.EobLogger;
+import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.commands.condition.*;
 import org.eob.file.inf.commands.condition.expression.*;
-import org.eob.model.EobCommand;
+import org.eob.file.inf.EobCommand;
 
 import java.util.*;
 
@@ -140,5 +141,10 @@ public class ConditionCommand extends EobCommand {
     public static void register(ExpressionLeaf node) {
         registeredExpressions.add(node);
     }
-}
 
+    @Override
+    public void accept(CommandVisitor visitor) {
+        condition.accept(visitor);
+        visitor.visit(this);
+    }
+}

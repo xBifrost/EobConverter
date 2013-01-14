@@ -11,6 +11,7 @@ import java.util.List;
  * Time: 9:36 PM
  */
 public enum DirectionType {
+    Unknown(-1),
     North(0),
     East(1),
     South(2),
@@ -30,6 +31,6 @@ public enum DirectionType {
         }
 
         EobLogger.println("Unsupported direction:" + posId);
-        return North;
+        return Unknown;
     }
 }

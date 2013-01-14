@@ -1,7 +1,8 @@
 package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
-import org.eob.model.EobCommand;
+import org.eob.file.inf.CommandVisitor;
+import org.eob.file.inf.EobCommand;
 
 import java.util.Arrays;
 
@@ -18,7 +19,7 @@ public class TeleportCommand extends EobCommand {
     public final int destY;
 
     public TeleportCommand(byte[] levelInfData, int pos) {
-        super(0xFA, pos, "Change level");
+        super(0xFA, pos, "Teleport");
 
         teleportType = TeleportType.valueOf(ByteArrayUtility.getByte(levelInfData, pos + 1));
         int position = ByteArrayUtility.getWord(levelInfData, pos + 2);
@@ -35,5 +36,10 @@ public class TeleportCommand extends EobCommand {
             return new TeleportCommand(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

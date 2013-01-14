@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.file.inf.CommandVisitor;
 
 /**
  * User: Bifrost
@@ -29,4 +30,9 @@ public class PartyInventoryCountLeaf extends ExpressionLeaf {
         }
         return null;
     }
- }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
+}

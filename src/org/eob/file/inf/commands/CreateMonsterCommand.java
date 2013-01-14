@@ -3,8 +3,8 @@ package org.eob.file.inf.commands;
 import org.eob.ByteArrayUtility;
 import org.eob.enums.DirectionType;
 import org.eob.enums.InSquarePositionType;
-import org.eob.model.EobCommand;
-import org.eob.model.ItemObject;
+import org.eob.file.inf.CommandVisitor;
+import org.eob.file.inf.EobCommand;
 
 import java.util.Arrays;
 
@@ -52,5 +52,10 @@ public class CreateMonsterCommand extends EobCommand {
             return new CreateMonsterCommand(levelInfData, pos);
         }
         return null;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
     }
 }

@@ -5,6 +5,9 @@ import org.eob.enums.InSquarePositionType;
 import org.eob.enums.ItemSlotType;
 import org.eob.enums.WallType;
 import org.eob.export.MonsterGroup;
+import org.eob.file.inf.EobCommand;
+import org.eob.file.inf.EobScriptFunction;
+import org.eob.file.inf.EobTrigger;
 import org.eob.file.inf.InfFile;
 import org.eob.model.*;
 
@@ -37,6 +40,7 @@ public class GrimrockExport {
     private int maxLevel;
     private boolean generateDefaultStructures;
     private boolean debug;
+    private boolean scriptDebug;
     private boolean debugWalls;
     private String dstPath;
 
@@ -68,16 +72,17 @@ public class GrimrockExport {
     );
 
     Map<String, String> defaultMonsters = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock monsters
-    Map<String, String> defaultItems = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock itemss
+    Map<String, String> defaultItems = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock items
     Map<String, GrimrockWall> grimrockWalls = new LinkedHashMap<String, GrimrockWall>();
 
     public GrimrockExport(String dstPath, List<String> externalChangesList, ItemParser itemParser, int maxLevel, boolean generateDefaultStructures,
-                          boolean debug, boolean debugWalls) {
+                          boolean debug, boolean scriptDebug, boolean debugWalls) {
         this.dstPath = dstPath;
         this.itemParser = itemParser;
         this.maxLevel = maxLevel;
         this.generateDefaultStructures = generateDefaultStructures;
         this.debug = debug;
+        this.scriptDebug = scriptDebug;
         this.debugWalls = debugWalls;
         prepareExternalChanges(externalChangesList);
         generateDefaultStructuresFromGrimrock();
@@ -961,6 +966,22 @@ public class GrimrockExport {
         for (List<MonsterObject> monsterObjects : monstersInSquare.values()) {
             spawnMonsters(monsterObjects, out);
         }
+
+        int row = 1;
+        Map<Integer, Integer> positionMap = new LinkedHashMap<Integer, Integer>();
+        for (EobCommand command : infFile.script) {
+            positionMap.put(command.originalPos, row);
+            row++;
+        }
+
+        CommandPrintVisitor visitor = new CommandPrintVisitor(String.format(EobConverter.LEVEL_SCRIPT_FILE, levelParser.levelId), positionMap, debug, scriptDebug);
+        for (EobScriptFunction function : infFile.scriptFunctions) {
+            visitor.parseFunction(function, infFile.script);
+        }
+        for (EobTrigger trigger : infFile.triggers) {
+            visitor.parseTrigger(trigger, infFile.script);
+        }
+        visitor.close();
     }
 
     private void spawnWall(LevelParser levelParser, PrintWriter out, int x, int y, Wall wall, int facing, String text, String direction) {
