@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 
 /**
@@ -19,7 +20,7 @@ public class MiscTriggerFlagLeaf extends ExpressionLeaf {
         super(originalCommands, pos, 1, "byte <- trigger.flag");
     }
 
-    public ExpressionLeaf parse(byte[] levelInfData, int pos) {
+    public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getByte(levelInfData, pos) == 0xE0) {
             return new MiscTriggerFlagLeaf(levelInfData, pos);
         }

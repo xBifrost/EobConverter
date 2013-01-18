@@ -1,5 +1,7 @@
 package org.eob.enums;
 
+import org.eob.EobLogger;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,5 +32,16 @@ public enum ClassType {
         }
 
         return result;
+    }
+
+    public static ClassType getClassById(int eobClass) {
+        for (ClassType ClassType : values()) {
+            if (ClassType.classValue == eobClass) {
+                return ClassType;
+            }
+        }
+
+        EobLogger.println("Unsupported class:" + eobClass);
+        return null;
     }
 }

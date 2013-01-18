@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 
 /**
@@ -19,7 +20,7 @@ public class PartyItemValueLeaf extends ExpressionLeaf {
         super(originalCommands, pos, 2, "object <- party.item.value");
     }
 
-    public ExpressionLeaf parse(byte[] levelInfData, int pos) {
+    public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getWord(levelInfData, pos) == 0xF6E7) {
             return new PartyItemValueLeaf(levelInfData, pos);
         }

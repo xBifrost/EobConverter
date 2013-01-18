@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.EobLogger;
 import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.commands.condition.*;
@@ -46,7 +47,7 @@ public class ConditionCommand extends EobCommand {
 //        register(new PartyContainsAlignmentLeaf());
     }
 
-    private ConditionCommand(byte[] levelInfData, int pos) {
+    private ConditionCommand(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         super(0xEE, pos, "Condition");
 
         int subPosition = 1;
@@ -67,7 +68,7 @@ public class ConditionCommand extends EobCommand {
             // Term commands
             for (RelationOperator relationOperator : RelationOperator.values()) {
                 if (relationOperator.eobCommandId == command) {
-                    TermLeaf parse = termLeafPrototype.parse(levelInfData, pos + subPosition);
+                    TermLeaf parse = termLeafPrototype.parse(levelInfData, pos + subPosition, eobGlobalData);
                     parse.nodeRight = nodes.pop();
                     parse.nodeLeft = nodes.pop();
                     nodes.push(parse);
@@ -81,7 +82,7 @@ public class ConditionCommand extends EobCommand {
             }
             for (ConditionalOperator conditionalOperator : ConditionalOperator.values()) {
                 if (conditionalOperator.eobCommandId == command) {
-                    TermNode parse = termNodePrototype.parse(levelInfData, pos + subPosition);
+                    TermNode parse = termNodePrototype.parse(levelInfData, pos + subPosition, eobGlobalData);
                     parse.termRight = (Term) nodes.pop();
                     parse.termLeft = (Term) nodes.pop();
                     nodes.push(parse);
@@ -96,7 +97,7 @@ public class ConditionCommand extends EobCommand {
 
             // Expression commands
             for (ConditionNode registeredExpression : registeredExpressions) {
-                ConditionNode conditionNode = registeredExpression.parse(levelInfData, pos + subPosition);
+                ConditionNode conditionNode = registeredExpression.parse(levelInfData, pos + subPosition, eobGlobalData);
                 if (conditionNode != null) {
                     if (conditionNode instanceof ListNode) {
                         nodes.addAll(((ListNode) conditionNode).nodes);
@@ -127,10 +128,10 @@ public class ConditionCommand extends EobCommand {
         originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + subPosition);
     }
 
-    public static ConditionCommand parse(byte[] levelInfData, int pos) {
+    public static ConditionCommand parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         try {
             if (ByteArrayUtility.getByte(levelInfData, pos) == 0xEE) {
-                return new ConditionCommand(levelInfData, pos);
+                return new ConditionCommand(levelInfData, pos, eobGlobalData);
             }
         } catch (Exception e) {
             return null;

@@ -1,10 +1,9 @@
 package org.eob.model;
 
+import org.eob.EobGlobalData;
 import org.eob.EobLogger;
 import org.eob.enums.InSquarePositionType;
 import org.eob.file.dat.ItemTypeDatFile;
-
-import java.util.Map;
 
 /**
  * User: Bifrost
@@ -26,6 +25,7 @@ public class ItemObject {
      * Byte 13 - Item sub type (scrolls, potions, wand,...)
      */
     final public byte[] orig;
+    final public int itemIndex;
 
     final public Item item;
     final public Boolean identified;
@@ -35,10 +35,11 @@ public class ItemObject {
     final public long objectId;
     final public int level;
 
-    public ItemObject(byte[] orig, ItemTypeDatFile itemTypeList) {
+    public ItemObject(int itemIndex, byte[] orig, ItemTypeDatFile itemTypeList, EobGlobalData eobGlobalData) {
+        this.itemIndex = itemIndex;
         this.orig = orig;
 
-        item = Item.getById(
+        item = eobGlobalData.getItemOrCreateNew(
                 (long) (orig[0] & 0xFF),
                 orig[1] != 1 ? (long) (orig[1] & 0xFF) : (long) (orig[0] & 0xFF),
                 (orig[2] & 0x80) == 0x80,

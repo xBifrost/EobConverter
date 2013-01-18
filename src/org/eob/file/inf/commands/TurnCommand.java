@@ -2,6 +2,7 @@ package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
 import org.eob.enums.DirectionType;
+import org.eob.enums.TurnType;
 import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.EobCommand;
 
@@ -13,14 +14,14 @@ import java.util.Arrays;
  * Time: 12:49
  */
 public class TurnCommand extends EobCommand {
+    public final TurnGroupType turnGroupType;
     public final TurnType turnType;
-    public final DirectionType directionType;
 
     public TurnCommand(byte[] levelInfData, int pos) {
         super(0xE8, pos, "Turn");
 
-        turnType = TurnType.valueOf(ByteArrayUtility.getByte(levelInfData, pos + 1));
-        directionType = DirectionType.getDirectionById(ByteArrayUtility.getByte(levelInfData, pos + 2));
+        turnGroupType = TurnGroupType.valueOf(ByteArrayUtility.getByte(levelInfData, pos + 1));
+        turnType = TurnType.getTurnById(ByteArrayUtility.getByte(levelInfData, pos + 2));
         this.originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + 3);
     }
 

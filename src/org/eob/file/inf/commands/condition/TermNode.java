@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class TermNode implements Term{
     }
 
     @Override
-    public TermNode parse(byte[] levelInfData, int pos) {
+    public TermNode parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         int command = ByteArrayUtility.getByte(levelInfData, pos);
         for (ConditionalOperator conditionalOperator : ConditionalOperator.values()) {
             if (conditionalOperator.eobCommandId == command) {

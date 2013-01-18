@@ -9,6 +9,23 @@ import org.eob.model.MonsterObject;
 import java.util.*;
 
 /**
+ * Triger flag:
+ * 0 - on click
+ * 1 - on enter
+ * 3 - on push/insert item
+ * 4 - on enter / on put item
+ * 5 - on pick up
+ * 6 - on atack
+ * 7 - on put in
+ * 8 - on plate change (party, item)
+ * 9 - on flying item / on flying spell
+ * 10 - on enter / on flying item
+ * 11 - on change level
+ * <p/>
+ * triger.flag:
+ * 1 - party
+ * 4 - item
+ * <p/>
  * User: Bifrost
  * Date: 10/28/12
  * Time: 10:53 PM
@@ -33,7 +50,7 @@ public class InfFile {
     public final List<EobTrigger> triggers = new ArrayList<EobTrigger>();
     public final List<EobScriptFunction> scriptFunctions = new ArrayList<EobScriptFunction>();
 
-    public InfFile(int levelId, byte[] levelInfDataPacked, ItemParser itemParser, boolean writeUnpacked) {
+    public InfFile(int levelId, byte[] levelInfDataPacked, EobGlobalData eobGlobalData, boolean writeUnpacked) {
         this.levelId = levelId;
         this.levelInfData = new CpsFile(levelInfDataPacked).getData();
 
@@ -67,7 +84,7 @@ public class InfFile {
         for (int monsterIdx = 0; monsterIdx < 30; monsterIdx++) {
             byte[] monster = Arrays.copyOfRange(levelInfData, pos, pos + 14);
             pos += 14;
-            MonsterObject newMonsterObject = new MonsterObject(this.levelId, monster, itemParser);
+            MonsterObject newMonsterObject = new MonsterObject(this.levelId, monster, eobGlobalData);
             if (newMonsterObject.index > 0) {
                 monsterObjects.add(newMonsterObject);
             }
@@ -89,7 +106,7 @@ public class InfFile {
         EobLogger.println("script parsing...");
         int commandIdx = 0;
         while (pos < triggersOffset) {
-            EobCommand command = parseCommand.parseScript(levelInfData, pos);
+            EobCommand command = parseCommand.parseScript(levelId, levelInfData, pos, eobGlobalData);
             if (command == null) {
                 EobLogger.println(String.format("Unknown command: 0x%02x (Position: 0x%04x)", ByteArrayUtility.getByte(levelInfData, pos), pos));
                 break;

@@ -1,6 +1,7 @@
 package org.eob.file.inf;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.commands.*;
 
 /**
@@ -24,7 +25,7 @@ public class ParseCommand {
         return null;
     }
 
-    public EobCommand parseScript(byte[] levelInfData, int pos) {
+    public EobCommand parseScript(int level, byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         int commandId = ByteArrayUtility.getByte(levelInfData, pos);
         switch (commandId) {
             case 0xE6:
@@ -34,17 +35,17 @@ public class ParseCommand {
             case 0xE8:
                 return TurnCommand.parse(levelInfData, pos);
             case 0xE9:
-                return LauncherCommand.parse(levelInfData, pos);
+                return LauncherCommand.parse(levelInfData, pos, eobGlobalData);
             case 0xEA:
-                return NewItemCommand.parse(levelInfData, pos);
+                return NewItemCommand.parse(levelInfData, pos, eobGlobalData);
             case 0xEB:
                 return GiveXpCommand.parse(levelInfData, pos);
             case 0xEC:
                 return ChangeLevelCommand.parse(levelInfData, pos);
             case 0xED:
-                return ItemConsumeCommand.parse(levelInfData, pos);
+                return ItemConsumeCommand.parse(levelInfData, pos, eobGlobalData);
             case 0xEE:
-                return ConditionCommand.parse(levelInfData, pos);
+                return ConditionCommand.parse(levelInfData, pos, eobGlobalData);
             case 0xEF:
                 return CallCommand.parse(levelInfData, pos);
             case 0xF0:
@@ -66,17 +67,17 @@ public class ParseCommand {
             case 0xF9:
                 return StealSmallItemsCommand.parse(levelInfData, pos);
             case 0xFA:
-                return new TeleportCommand(levelInfData, pos);
+                return TeleportCommand.parse(levelInfData, pos);
             case 0xFB:
-                return new CreateMonsterCommand(levelInfData, pos);
+                return CreateMonsterCommand.parse(levelInfData, pos, eobGlobalData);
             case 0xFC:
-                return new CloseDoorCommand(levelInfData, pos);
+                return CloseDoorCommand.parse(levelInfData, pos);
             case 0xFD:
-                return new OpenDoorCommand(levelInfData, pos);
+                return OpenDoorCommand.parse(levelInfData, pos);
             case 0xFE:
-                return new ChangeWallCommand(levelInfData, pos);
+                return ChangeWallCommand.parse(level, levelInfData, pos, eobGlobalData);
             case 0xFF:
-                return new SetWallCommand(levelInfData, pos);
+                return SetWallCommand.parse(level, levelInfData, pos, eobGlobalData);
         }
 
         return null;

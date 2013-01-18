@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 
 /**
@@ -26,7 +27,7 @@ public class MiscRollDiceLeaf extends ExpressionLeaf {
         base = ByteArrayUtility.getByte(originalCommands, pos + 3);
     }
 
-    public ExpressionLeaf parse(byte[] levelInfData, int pos) {
+    public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getByte(levelInfData, pos) == 0xDB) {
             return new MiscRollDiceLeaf(levelInfData, pos);
         }

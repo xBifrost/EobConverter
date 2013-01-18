@@ -1,5 +1,6 @@
 package org.eob.file.inf.commands.condition;
 
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandElement;
 
 /**
@@ -8,7 +9,7 @@ import org.eob.file.inf.CommandElement;
  * Time: 10:08 PM
  */
 public interface ConditionNode extends CommandElement {
-    ConditionNode parse(byte[] levelInfData, int pos);
+    ConditionNode parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData);
 
     int originalCommandSize();
 }

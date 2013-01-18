@@ -9,8 +9,8 @@ import java.util.Map;
  * Time: 11:44 PM
  */
 public class ItemName {
-    Long id;
-    String name;
+    public Long id;
+    public String name;
 
     public static Map<Long, ItemName> itemNames = new LinkedHashMap<Long, ItemName>();
 

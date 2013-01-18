@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.commands.condition.ConditionNode;
 
@@ -40,7 +41,7 @@ public class MonsterCountLeaf extends ExpressionLeaf {
         }
     }
 
-    public ConditionNode parse(byte[] levelInfData, int pos) {
+    public ConditionNode parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getByte(levelInfData, pos) == 0xF3) {
             if (ByteArrayUtility.getByte(levelInfData, pos + 1) == 0xFF) {
                 return new MonsterCountLeaf(levelInfData, pos, 4);

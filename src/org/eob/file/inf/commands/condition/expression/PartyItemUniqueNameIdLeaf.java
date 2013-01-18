@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 
 /**
@@ -22,7 +23,7 @@ public class PartyItemUniqueNameIdLeaf extends ExpressionLeaf {
         nameId = ByteArrayUtility.getByte(originalCommands, pos+2);
     }
 
-    public ExpressionLeaf parse(byte[] levelInfData, int pos) {
+    public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getWord(levelInfData, pos) == 0xD0E7) {
             return new PartyItemUniqueNameIdLeaf(levelInfData, pos);
         }

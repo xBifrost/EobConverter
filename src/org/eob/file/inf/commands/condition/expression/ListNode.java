@@ -1,6 +1,6 @@
 package org.eob.file.inf.commands.condition.expression;
 
-import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.commands.condition.ConditionNode;
 
@@ -25,7 +25,7 @@ public class ListNode implements ConditionNode {
     }
 
     @Override
-    public ConditionNode parse(byte[] levelInfData, int originalPos) {
+    public ConditionNode parse(byte[] levelInfData, int originalPos, EobGlobalData eobGlobalData) {
         throw new UnsupportedOperationException("ListNode not supported parse feature.");
     }
 

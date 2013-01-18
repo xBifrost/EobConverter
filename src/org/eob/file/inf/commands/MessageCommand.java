@@ -29,7 +29,8 @@ public class MessageCommand extends EobCommand {
         int colorId = ByteArrayUtility.getByte(levelInfData, pos + subPosition);
         subPosition += 2;
 
-        int[] vgaColors = {0, 6, 5, 3, 2, 4, 9, 15, 11, 14, 13, 3, 10, 4, 7, 1};
+//        int[] vgaColors = {0, 6, 5, 3, 2, 4, 9, 15, 11, 14, 13, 3, 10, 4, 7, 1};
+        int[] vgaColors = {0, 7, 3, 2, 7, 14, 12, 7, 7, 7, 7, 7, 7, 7, 7, 15};
         vgaColor = VgaColorType.valueOf(vgaColors[colorId]);
         originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + subPosition);
     }

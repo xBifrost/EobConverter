@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
+import org.eob.enums.DirectionType;
 import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.EobCommand;
 
@@ -16,7 +17,7 @@ public class ChangeLevelCommand extends EobCommand {
     public final int level;
     public final int x;
     public final int y;
-    public final int direction;
+    public final DirectionType direction;
 
     public ChangeLevelCommand(byte[] levelInfData, int pos) {
         super(0xEC, pos, "Change level");
@@ -28,14 +29,14 @@ public class ChangeLevelCommand extends EobCommand {
                 int position = ByteArrayUtility.getWord(levelInfData, pos + 3);
                 x = (position) & 0x1f;
                 y = (position >> 5) & 0x1f;
-                direction = ByteArrayUtility.getByte(levelInfData, pos + 5);
+                direction = DirectionType.getDirectionById(ByteArrayUtility.getByte(levelInfData, pos + 5));
                 this.originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + 6);
                 break;
             }
             default:
             case InLevel: {
                 level = -1;
-                direction = ByteArrayUtility.getByte(levelInfData, pos + 2);
+                direction = DirectionType.getDirectionById(ByteArrayUtility.getByte(levelInfData, pos + 2));
                 int position = ByteArrayUtility.getWord(levelInfData, pos + 3);
                 x = (position) & 0x1f;
                 y = (position >> 5) & 0x1f;

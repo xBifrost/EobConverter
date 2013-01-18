@@ -1,7 +1,9 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
+import org.eob.model.ItemType;
 
 /**
  * User: Bifrost
@@ -9,7 +11,7 @@ import org.eob.file.inf.CommandVisitor;
  * Time: 16:30
  */
 public class PartyInventoryCountLeaf extends ExpressionLeaf {
-    public int itemType;
+    public ItemType itemType;
     public int flags;
 
     /**
@@ -18,15 +20,15 @@ public class PartyInventoryCountLeaf extends ExpressionLeaf {
     public PartyInventoryCountLeaf() {
     }
 
-    private PartyInventoryCountLeaf(byte[] originalCommands, int pos) {
+    private PartyInventoryCountLeaf(byte[] originalCommands, int pos, EobGlobalData eobGlobalData) {
         super(originalCommands, pos, 5, "int <- party.inventory.count(type, flags)");
-        itemType = ByteArrayUtility.getWord(originalCommands, pos + 2);
+        itemType = eobGlobalData.itemTypeDatFile.getById(ByteArrayUtility.getWord(originalCommands, pos + 2));
         flags = ByteArrayUtility.getWord(originalCommands, pos + 4);
     }
 
-    public ExpressionLeaf parse(byte[] levelInfData, int pos) {
+    public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getWord(levelInfData, pos) == 0xF5F1) {
-            return new PartyInventoryCountLeaf(levelInfData, pos);
+            return new PartyInventoryCountLeaf(levelInfData, pos, eobGlobalData);
         }
         return null;
     }

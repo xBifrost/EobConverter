@@ -18,9 +18,7 @@ public class Item {
     public final SubItemType itemSubType;
     public final Long initialCountValue;
 
-    public static final List<Item> registeredItems = new ArrayList<Item>();
-
-    private Item(String notIdentifiedName, String identifiedName, Boolean glowMagic, Boolean cursed, Long imageId, ItemType itemType, SubItemType itemSubType, Long initialCountValue) {
+    public Item(String notIdentifiedName, String identifiedName, Boolean glowMagic, Boolean cursed, Long imageId, ItemType itemType, SubItemType itemSubType, Long initialCountValue) {
         this.notIdentifiedName = notIdentifiedName;
         this.identifiedName = identifiedName;
         this.glowMagic = glowMagic;
@@ -29,20 +27,6 @@ public class Item {
         this.itemType = itemType;
         this.itemSubType = itemSubType;
         this.initialCountValue = initialCountValue;
-    }
-
-    public static Item getById(Long notIdentifiedNameId, Long identifiedNameId, Boolean glowMagic, Boolean cursed, Long imageId, ItemType itemType, int itemSubType, Long countValue) {
-        Item newItem = new Item(ItemName.itemNames.get(notIdentifiedNameId).name, ItemName.itemNames.get(identifiedNameId).name,
-                glowMagic, cursed, imageId, itemType, SubItemType.getSubItemById(itemType, itemSubType), countValue);
-
-        for (Item registeredItem : registeredItems) {
-            if (registeredItem.equals(newItem)) {
-                return registeredItem;
-            }
-        }
-
-        registeredItems.add(newItem);
-        return newItem;
     }
 
     public String getDescription(boolean isIdentified) {

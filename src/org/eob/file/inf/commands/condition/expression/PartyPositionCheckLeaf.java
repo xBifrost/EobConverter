@@ -1,6 +1,7 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
 
 /**
@@ -25,7 +26,7 @@ public class PartyPositionCheckLeaf extends ExpressionLeaf {
         y = (position >> 5) & 0x1f;
     }
 
-    public ExpressionLeaf parse(byte[] levelInfData, int pos) {
+    public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getByte(levelInfData, pos) == 0xF1 && ByteArrayUtility.getWord(levelInfData, pos) != 0xF5F1) {
             return new PartyPositionCheckLeaf(levelInfData, pos);
         }

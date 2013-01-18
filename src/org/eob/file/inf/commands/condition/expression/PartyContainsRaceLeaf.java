@@ -1,6 +1,8 @@
 package org.eob.file.inf.commands.condition.expression;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
+import org.eob.enums.RaceType;
 import org.eob.file.inf.CommandVisitor;
 
 /**
@@ -9,7 +11,7 @@ import org.eob.file.inf.CommandVisitor;
  * Time: 11:54 PM
  */
 public class PartyContainsRaceLeaf extends ExpressionLeaf {
-    public int raceId;
+    public RaceType race;
 
     /**
      * Constructor of the prototype;
@@ -19,10 +21,10 @@ public class PartyContainsRaceLeaf extends ExpressionLeaf {
 
     private PartyContainsRaceLeaf(byte[] originalCommands, int pos) {
         super(originalCommands, pos, 2, "boolean <- party.containsRace(byte)");
-        raceId = ByteArrayUtility.getByte(originalCommands, pos+1);
+        race = RaceType.getRaceById(ByteArrayUtility.getByte(originalCommands, pos + 1));
     }
 
-    public ExpressionLeaf parse(byte[] levelInfData, int pos) {
+    public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getByte(levelInfData, pos) == 0xDD) {
             return new PartyContainsRaceLeaf(levelInfData, pos);
         }

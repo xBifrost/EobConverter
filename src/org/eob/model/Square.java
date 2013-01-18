@@ -1,5 +1,6 @@
 package org.eob.model;
 
+import org.eob.EobGlobalData;
 import org.eob.EobLogger;
 import org.eob.enums.WallType;
 
@@ -18,13 +19,13 @@ public class Square {
     public final Wall south;
     public final Wall west;
 
-    public Square(int x, int y, byte northId, byte eastId, byte southId, byte westId, int levelId) {
+    public Square(int x, int y, byte northId, byte eastId, byte southId, byte westId, int levelId, EobGlobalData eobGlobalData) {
         this.x = x;
         this.y = y;
-        north = getWall(northId, levelId);
-        east = getWall(eastId, levelId);
-        south = getWall(southId, levelId);
-        west = getWall(westId, levelId);
+        north = getWall(northId, levelId, eobGlobalData);
+        east = getWall(eastId, levelId, eobGlobalData);
+        south = getWall(southId, levelId, eobGlobalData);
+        west = getWall(westId, levelId, eobGlobalData);
 
     }
 
@@ -42,7 +43,7 @@ public class Square {
             usedWalls.add(east);
             usedWalls.add(west);
             if (!east.equals(west) && debug) {
-                EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", E:" + east.name() + ", W:" + west.name() + "] ");
+                EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", E:" + east.internalName + ", W:" + west.internalName + "] ");
             }
             return east;
         }
@@ -50,7 +51,7 @@ public class Square {
             usedWalls.add(north);
             usedWalls.add(south);
             if (!north.equals(south) && debug) {
-                EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", N:" + north.name() + ", S:" + south.name() + "] ");
+                EobLogger.println("Door haven't the same wall type on both sides! [x:" + x + ", y:" + y + ", N:" + north.internalName + ", S:" + south.internalName + "] ");
             }
             return north;
         }
@@ -75,9 +76,9 @@ public class Square {
         return 0;
     }
 
-    private Wall getWall(byte b, int levelId) {
+    private Wall getWall(byte b, int levelId, EobGlobalData eobGlobalData) {
         int wallId = b & 0x000000FF;
-        return Wall.getById(wallId, levelId);
+        return eobGlobalData.getWallById(wallId, levelId);
     }
 
     public void checkWalls() {

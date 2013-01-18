@@ -1,9 +1,12 @@
 package org.eob.file.inf.commands;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.enums.InSquarePositionType;
 import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.EobCommand;
+import org.eob.model.ItemObject;
+import org.eob.model.ItemType;
 
 import java.util.Arrays;
 
@@ -13,16 +16,16 @@ import java.util.Arrays;
  * Time: 19:45
  */
 public class NewItemCommand extends EobCommand {
-    public final int itemTypeId;
+    public final ItemObject itemObject;
     public final int x;
     public final int y;
     public final InSquarePositionType inSquarePosition;
 
 
-    public NewItemCommand(byte[] levelInfData, int pos) {
+    public NewItemCommand(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         super(0xEA, pos, "New item");
 
-        itemTypeId = ByteArrayUtility.getWord(levelInfData, pos + 1);
+        itemObject = eobGlobalData.itemParser.getItemByIndex(ByteArrayUtility.getWord(levelInfData, pos + 1));
         int position = ByteArrayUtility.getWord(levelInfData, pos + 3);
         x = (position) & 0x1f;
         y = (position >> 5) & 0x1f;
@@ -30,9 +33,9 @@ public class NewItemCommand extends EobCommand {
         this.originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + 6);
     }
 
-    public static NewItemCommand parse(byte[] levelInfData, int pos) {
+    public static NewItemCommand parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         if (ByteArrayUtility.getByte(levelInfData, pos) == 0xEA) {
-            return new NewItemCommand(levelInfData, pos);
+            return new NewItemCommand(levelInfData, pos, eobGlobalData);
         }
         return null;
     }

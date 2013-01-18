@@ -18,9 +18,7 @@ public class SubItemType {
     public final String info;
     public final DescriptionMergeType descriptionMergeType;
 
-    private static Map<ItemType, Map<Long, SubItemType>> subItems = new HashMap<ItemType, Map<Long, SubItemType>>();
-
-    static final SubItemType NotSubtype = new SubItemType(0, null, "", "", "");
+    public static final SubItemType NotSubtype = new SubItemType(0, null, "", "", "");
 
     public SubItemType(int id, ItemType itemType, String elementType, String description, DescriptionMergeType descriptionMergeType, String info) {
         this.id = id;
@@ -29,34 +27,9 @@ public class SubItemType {
         this.description = description;
         this.descriptionMergeType = descriptionMergeType;
         this.info = info;
-
-        if (itemType == null) {
-            return;
-        }
-
-        Map<Long, SubItemType> subItemTypeMap = subItems.get(itemType);
-        if (subItemTypeMap == null) {
-            subItemTypeMap = new LinkedHashMap<Long, SubItemType>();
-            subItems.put(itemType, subItemTypeMap);
-        }
-        subItemTypeMap.put((long) id, this);
     }
 
     public SubItemType(int id, ItemType itemType, String elementType, String description, String info) {
         this(id, itemType, elementType, description, DescriptionMergeType.SuffixWithOf, info);
-    }
-
-    public static SubItemType getSubItemById(ItemType itemType, int id) {
-        if (id == 0) {
-            return NotSubtype;
-        }
-
-        Map<Long, SubItemType> typeMap = subItems.get(itemType);
-        SubItemType subItemType = typeMap != null ? typeMap.get((long) id) : null;
-        if (subItemType == null) {
-            subItemType = new SubItemType(id, itemType, "unknown_" + id, "Unknown " + id, "");
-            EobLogger.println("Unknown sub type of item type. (Item type: " + itemType.elementType + ", SubType: " + id + ")");
-        }
-        return subItemType;
     }
 }

@@ -1,6 +1,7 @@
 package org.eob.model;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.ItemParser;
 import org.eob.enums.DirectionType;
 import org.eob.enums.InSquarePositionType;
@@ -26,7 +27,7 @@ public class MonsterObject {
     public final ItemObject pocketItem; // 100% chance to drop this item
 
 
-    public MonsterObject(int levelId, byte[] monsterData, ItemParser itemParser) {
+    public MonsterObject(int levelId, byte[] monsterData, EobGlobalData eobGlobalData) {
         this.levelId = levelId;
         int pos = 0;
         index = ByteArrayUtility.getByte(monsterData, pos);
@@ -43,7 +44,7 @@ public class MonsterObject {
         pos++;
         direction = DirectionType.getDirectionById(ByteArrayUtility.getByte(monsterData, pos));
         pos++;
-        monster = Monster.getById(ByteArrayUtility.getByte(monsterData, pos));
+        monster = eobGlobalData.getMonsterById(ByteArrayUtility.getByte(monsterData, pos));
         pos++;
         imageId = ByteArrayUtility.getByte(monsterData, pos);
         pos++;
@@ -54,7 +55,7 @@ public class MonsterObject {
 
         int weaponIndex = ByteArrayUtility.getWord(monsterData, pos);
         if (weaponIndex != 0) {
-            pocketItem50 = itemParser.getItemByIndex(weaponIndex);
+            pocketItem50 = eobGlobalData.itemParser.getItemByIndex(weaponIndex);
         } else {
             pocketItem50 = null;
         }
@@ -62,7 +63,7 @@ public class MonsterObject {
 
         int itemIndex = ByteArrayUtility.getWord(monsterData, pos);
         if (itemIndex != 0) {
-            pocketItem = itemParser.getItemByIndex(itemIndex);
+            pocketItem = eobGlobalData.itemParser.getItemByIndex(itemIndex);
         } else {
             pocketItem = null;
         }

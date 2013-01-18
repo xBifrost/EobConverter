@@ -17,14 +17,16 @@ import java.util.*;
  */
 public class LevelParser {
     private final byte[] levelData;
+    private EobGlobalData eobGlobalData;
     public final int width;
     public final int height;
     public final int levelId;
     public final Square[][] level;
 
-    public LevelParser(int levelId, byte[] levelData) {
+    public LevelParser(int levelId, byte[] levelData, EobGlobalData eobGlobalData) {
         this.levelId = levelId;
         this.levelData = levelData;
+        this.eobGlobalData = eobGlobalData;
         width = ByteArrayUtility.getWord(levelData, 0);
         height = ByteArrayUtility.getWord(levelData, 2);
         level = new Square[width][height];
@@ -44,7 +46,7 @@ public class LevelParser {
                         levelData[6 + (y * width + x) * sizePerSquare + 1],
                         levelData[6 + (y * width + x) * sizePerSquare + 2],
                         levelData[6 + (y * width + x) * sizePerSquare + 3],
-                        levelId);
+                        levelId, eobGlobalData);
                 level[x][y].checkWalls();
             }
         }

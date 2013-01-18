@@ -1,8 +1,8 @@
 package org.eob.file.inf.commands.condition;
 
 import org.eob.ByteArrayUtility;
+import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
-import org.eob.file.inf.commands.condition.expression.ExpressionLeaf;
 
 import java.util.Arrays;
 
@@ -30,7 +30,7 @@ public class TermLeaf implements Term {
     }
 
     @Override
-    public TermLeaf parse(byte[] levelInfData, int pos) {
+    public TermLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
         int command = ByteArrayUtility.getByte(levelInfData, pos);
         for (RelationOperator relationOperator : RelationOperator.values()) {
             if (relationOperator.eobCommandId == command) {

@@ -17,7 +17,7 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.9.0";
+    public final static String CONVERTER_VERSION = "0.9.5";
     private final static List<String> externalChangesList = new ArrayList<String>();
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
@@ -246,31 +246,32 @@ public class EobConverter {
     private void convert() {
         initExternalChanges();
 
+        EobGlobalData eobGlobalData = new EobGlobalData();
+
         EobFiles eobFiles = new EobFiles(settings.srcPath);
-        ItemTypeDatFile itemTypeDatFile = new ItemTypeDatFile(eobFiles.getFile(ITEM_TYPE_FILE));
-        Eob1Settings.init(itemTypeDatFile);
+        eobGlobalData.itemTypeDatFile = new ItemTypeDatFile(eobFiles.getFile(ITEM_TYPE_FILE));
+        Eob1Settings.init(eobGlobalData);
 
         if (settings.debug) {
-            itemTypeDatFile.printItemTypes();
+            eobGlobalData.itemTypeDatFile.printItemTypes();
         }
 
-        ItemParser itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), itemTypeDatFile, settings.debug);
-        itemParser.parseFile(settings.debugShowOnlyItemName);
+        eobGlobalData.itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), eobGlobalData, settings.debug);
+        eobGlobalData.itemParser.parseFile(settings.debugShowOnlyItemName);
 
-        GrimrockExport grimrockExport = new GrimrockExport(settings.dstPath, externalChangesList, itemParser, settings.to, settings.generateDefaultStructures,
-                settings.debug, settings.scriptDebug, settings.debugWalls);
+        GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, settings, eobGlobalData);
 
         for (int levelId = settings.from; levelId <= settings.to; levelId++) {
             byte[] levelMazFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
             if (levelMazFile != null) {
-                LevelParser levelParser = new LevelParser(levelId, levelMazFile);
+                LevelParser levelParser = new LevelParser(levelId, levelMazFile, eobGlobalData);
                 levelParser.parse();
                 grimrockExport.addLevel(levelParser);
             }
 
             byte[] levelInfFile = eobFiles.getFile(String.format(LEVEL_INF_FILE, levelId));
             if (levelInfFile != null) {
-                InfFile infFile = new InfFile(levelId, levelInfFile, itemParser, settings.writeUnpackedInf);
+                InfFile infFile = new InfFile(levelId, levelInfFile, eobGlobalData, settings.writeUnpackedInf);
                 grimrockExport.addLevelInfo(infFile);
             }
         }
@@ -278,7 +279,8 @@ public class EobConverter {
         grimrockExport.exportIntoGrimrock(settings.createFilePerLevel);
 
         EobLogger.println("Summary:");
-        EobLogger.println("Exported " + itemParser.getItemsCount() + " items of " + itemTypeDatFile.itemTypeList.size() + " different types (" + itemTypeDatFile.getUnknownItemsCount() + " are unknown)");
+        EobLogger.println("Exported " + eobGlobalData.itemParser.getItemsCount() + " items of " +
+                eobGlobalData.itemTypeDatFile.itemTypeList.size() + " different types (" + eobGlobalData.itemTypeDatFile.getUnknownItemsCount() + " are unknown)");
     }
 
     private void execute() {
@@ -363,20 +365,5 @@ public class EobConverter {
     public static void main(String[] args) {
         EobConverter converter = new EobConverter(args);
         converter.execute();
-    }
-
-    private static class Settings {
-        public String srcPath = ".";
-        public String dstPath = ".";
-        public Integer from = 1;
-        public Integer to = 99;
-        public String debugShowOnlyItemName = "";
-        public boolean debug = false;
-        public boolean scriptDebug = false;
-        public boolean debugWalls = true;
-        public boolean createFilePerLevel = false;
-        public boolean generateDefaultStructures = false;
-        public boolean console = false;
-        public boolean writeUnpackedInf = false;
     }
 }
