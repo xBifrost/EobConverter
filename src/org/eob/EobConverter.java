@@ -17,7 +17,7 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.9.5";
+    public final static String CONVERTER_VERSION = "0.9.6";
     private final static List<String> externalChangesList = new ArrayList<String>();
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
@@ -200,6 +200,7 @@ public class EobConverter {
                         EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>]");
                         EobLogger.println("                        [-c|--console] [-d|--debug] [-ds|debug-script] [-di|--debug-item=<value>]");
                         EobLogger.println("                        [-l1|--file-per-level] [-gs|--generate-default-structures] [-sw|--skip-wall-errors]");
+                        EobLogger.println("                        [-inf|--write_unpacked-inf] [-es|--export-scripts] [-as|--add-scripts]");
                         EobLogger.println("");
                         EobLogger.println("List of commands:");
                         EobLogger.println("   src-path                    Source path. (default=\".\")");
@@ -211,12 +212,16 @@ public class EobConverter {
                         EobLogger.println("   levels                      Convert all levels in range: <from,to>. (default=1;99)");
                         EobLogger.println("   file-per-level              Store each level in separate file.");
                         EobLogger.println("   generate-default-structures Generate default structures.");
+                        EobLogger.println("   write_unpacked-inf          Write unpacked inf files.");
+                        EobLogger.println("   export-scripts              Export EoB scripts into the files.");
+                        EobLogger.println("   add-scripts                 Add EoB script into the lua as comment.");
+                        EobLogger.println("                               Functions are added into the lua script at position [0,0].");
                         EobLogger.println("");
                         return;
                     } else if (name.equals("--levels") || name.equals("-l")) {
                         String[] range = value.split(";");
-                        settings.from = Integer.parseInt(range[0]);
-                        settings.to = Integer.parseInt(range[1]);
+                        settings.from = Math.max(1, Math.min(99, Integer.parseInt(range[0])));
+                        settings.to = Math.max(settings.from, Math.min(99, Integer.parseInt(range[1])));
                     } else if (name.equals("--debug") || name.equals("-d")) {
                         settings.debug = true;
                     } else if (name.equals("--debug-script") || name.equals("-ds")) {
@@ -235,6 +240,12 @@ public class EobConverter {
                         settings.generateDefaultStructures = true;
                     } else if (name.equals("--skip-wall-errors") || name.equals("-sw")) {
                         settings.debugWalls = false;
+                    } else if (name.equals("--write_unpacked-inf") || name.equals("-inf")) {
+                        settings.writeUnpackedInf = true;
+                    } else if (name.equals("--export-scripts") || name.equals("-es")) {
+                        settings.exportEobScripts = true;
+                    } else if (name.equals("--add-scripts") || name.equals("-as")) {
+                        settings.addEobScriptIntoLua = true;
                     }
                 } catch (IllegalArgumentException exception) {
                     EobLogger.println("Value " + value + " is not a number. Parameter " + name + " is ignored.");
@@ -302,6 +313,9 @@ public class EobConverter {
             eobConverterForm.getToLevelField().setText(settings.to.toString());
             eobConverterForm.getGenerateDefaultStructuresCheckBox().setSelected(settings.generateDefaultStructures);
             eobConverterForm.getCreateLevelInSeparateCheckBox().setSelected(settings.createFilePerLevel);
+            eobConverterForm.getWriteUnpackedInfFilesCheckBox().setSelected(settings.writeUnpackedInf);
+            eobConverterForm.getExportEobScriptsCheckBox().setSelected(settings.exportEobScripts);
+            eobConverterForm.getAddEobScriptIntoLuaCheckBox().setSelected(settings.addEobScriptIntoLua);
             eobConverterForm.getConvertButton().addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -349,17 +363,20 @@ public class EobConverter {
         settings.debugWalls = eobConverterForm.getDebugWallCheckBox().isSelected();
         settings.debugShowOnlyItemName = eobConverterForm.getItemNameField().getText();
         try {
-            settings.from = Integer.parseInt(eobConverterForm.getFromLevelField().getText());
+            settings.from = Math.max(1, Math.min(99, Integer.parseInt(eobConverterForm.getFromLevelField().getText())));
         } finally {
             settings.from = 1;
         }
         try {
-            settings.to = Integer.parseInt(eobConverterForm.getToLevelField().getText());
+            settings.to = Math.max(settings.from, Math.min(99, Integer.parseInt(eobConverterForm.getToLevelField().getText())));
         } finally {
             settings.to = 99;
         }
         settings.generateDefaultStructures = eobConverterForm.getGenerateDefaultStructuresCheckBox().isSelected();
         settings.createFilePerLevel = eobConverterForm.getCreateLevelInSeparateCheckBox().isSelected();
+        settings.writeUnpackedInf = eobConverterForm.getWriteUnpackedInfFilesCheckBox().isSelected();
+        settings.exportEobScripts = eobConverterForm.getExportEobScriptsCheckBox().isSelected();
+        settings.addEobScriptIntoLua = eobConverterForm.getAddEobScriptIntoLuaCheckBox().isSelected();
     }
 
     public static void main(String[] args) {

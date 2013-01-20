@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.eob.gui.EobConverterForm">
   <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="528" height="697"/>
+      <xy x="20" y="20" width="618" height="697"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -59,6 +59,15 @@
             </constraints>
             <properties>
               <text value="Script debug mode"/>
+            </properties>
+          </component>
+          <component id="909f5" class="javax.swing.JCheckBox" binding="addEoBScriptIntoLuaCheckBox">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Add EoB script into the lua as comment (functions are added into the lua script at position [0,0])"/>
             </properties>
           </component>
         </children>
@@ -217,6 +226,24 @@
               <gridbag top="0" left="3" bottom="0" right="0" weightx="1.0" weighty="1.0"/>
             </constraints>
             <properties/>
+          </component>
+          <component id="32e86" class="javax.swing.JCheckBox" binding="writeUnpackedInfFilesCheckBox" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Write unpacked Inf files"/>
+            </properties>
+          </component>
+          <component id="a1676" class="javax.swing.JCheckBox" binding="exportEobScriptsCheckBox">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Export EoB scripts into the files"/>
+            </properties>
           </component>
         </children>
       </grid>

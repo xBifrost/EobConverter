@@ -18,4 +18,7 @@ public class Settings {
     public boolean generateDefaultStructures = false;
     public boolean console = false;
     public boolean writeUnpackedInf = false;
+    public boolean exportEobScripts = false;
+    public boolean addEobScriptIntoLua = false;
+
 }

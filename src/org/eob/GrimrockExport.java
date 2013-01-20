@@ -11,6 +11,7 @@ import org.eob.file.inf.EobTrigger;
 import org.eob.file.inf.InfFile;
 import org.eob.model.*;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -305,11 +306,11 @@ public class GrimrockExport {
         unusedExternalChanges.clear();
         unusedExternalChanges.addAll(externalChanges.keySet());
 
-        exportItems(eobGlobalData.itemParser, settings.dstPath + "/" + ITEM_FILE, settings.to);
+        exportItems(eobGlobalData.itemParser, settings.dstPath + "/" + ITEM_FILE);
         exportMonsters(levelsInfo.values(), settings.dstPath + "/" + MONSTER_FILE);
         exportObjects(settings.dstPath + "/" + OBJECTS_FILE);
 
-        if (!createFilePerLevel) {
+        if (createFilePerLevel) {
             for (Long levelId : levels.keySet()) {
                 try {
                     FileWriter outFile = new FileWriter(String.format(settings.dstPath + "/" + LEVEL_FILE, levelId));
@@ -379,7 +380,7 @@ public class GrimrockExport {
     //--- Items Export ---
     //--------------------
 
-    private void exportItems(ItemParser itemParser, String fileName, int maxLevel) {
+    private void exportItems(ItemParser itemParser, String fileName) {
         try {
             PrintWriter out = new PrintWriter(fileName);
 
@@ -387,26 +388,25 @@ public class GrimrockExport {
             out.println();
 
 
-            // Get max level
-            Set<ItemObject> items = itemParser.getItemSet();
             Map<Long, Set<Item>> itemsByLevel = new TreeMap<Long, Set<Item>>();
 
-            for (int level = 1; level < maxLevel; level++) {
+            for (int level = settings.from; level <= settings.to; level++) {
                 Set<ItemObject> levelItemObjects = new HashSet<ItemObject>();
                 Set<Item> levelItems = new LinkedHashSet<Item>();
-                for (ItemObject item : items) {
+                for (ItemObject item : itemParser.getItemSet()) {
                     if (item.level == level) {
                         levelItems.add(item.item);
                         levelItemObjects.add(item);
                     }
                 }
-                items.removeAll(levelItemObjects);
                 itemsByLevel.put((long) level, levelItems);
             }
 
             Set<Item> levelItems = new LinkedHashSet<Item>();
-            for (ItemObject item : items) {
-                levelItems.add(item.item);
+            for (ItemObject item : itemParser.getItemSet()) {
+                if (item.level == 0 || item.level > 99) {
+                    levelItems.add(item.item);
+                }
             }
             itemsByLevel.put(0L, levelItems);
 
@@ -538,6 +538,9 @@ public class GrimrockExport {
             Map<String, String> alreadyDefinedMonsterGroups = new HashMap<String, String>();
 
             for (InfFile infFile : values) {
+                if (infFile.levelId < settings.from || infFile.levelId > settings.to) {
+                    continue;
+                }
                 out.println("----------------");
                 out.println(String.format("--- Level %02d ---", infFile.levelId));
                 out.println("----------------");
@@ -650,7 +653,7 @@ public class GrimrockExport {
 
                 alreadyDefinedMonsterGroups.put(monsterGroupId, monsterName);
             } else {
-                monsterName = monsterGroup.monsterObject.monster.monsterName + (monsters.size() < 2 ? "" : monsters.size());
+                monsterName = monsterGroup.monsterObject.monster.monsterName;
             }
 
         } else {
@@ -968,17 +971,68 @@ public class GrimrockExport {
             scriptFunctionMap.put(function.addressStart, function);
         }
 
+        // Export eob scripts
         VisitorGlobalData visitorGlobalData = new VisitorGlobalData(positionMap, scriptFunctionMap, eobGlobalData);
+        if (settings.exportEobScripts) {
+            PrintWriter output = null;
+            try {
+                String levelScriptFile = String.format(settings.dstPath + "/" + EobConverter.LEVEL_SCRIPT_FILE, levelParser.levelId);
+                if (settings.debug) {
+                    EobLogger.println("Writing text file with name: " + levelScriptFile + " ...");
+                }
+                FileWriter outFile = new FileWriter(levelScriptFile);
+                output = new PrintWriter(outFile);
 
-        CommandPrintVisitor visitor = new CommandPrintVisitor(String.format(EobConverter.LEVEL_SCRIPT_FILE, levelParser.levelId),
-                visitorGlobalData, settings.debug, settings.scriptDebug);
-        for (EobScriptFunction function : infFile.scriptFunctions) {
-            visitor.parseFunction(function, infFile.script);
+                CommandPrintVisitor visitor = new CommandPrintVisitor(output, visitorGlobalData, settings.scriptDebug, "\"", "\n");
+                for (EobScriptFunction function : infFile.scriptFunctions) {
+                    visitor.parseFunction(function, infFile.script);
+                }
+                for (EobTrigger trigger : infFile.triggers) {
+                    visitor.parseTrigger(trigger, infFile.script);
+                }
+            } catch (FileNotFoundException ex) {
+                EobLogger.println("File not found.");
+            } catch (IOException ex) {
+                EobLogger.println(ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                if (output != null) {
+                    output.close();
+                }
+            }
         }
-        for (EobTrigger trigger : infFile.triggers) {
-            visitor.parseTrigger(trigger, infFile.script);
+
+        // Prepare lua scripts
+        if (settings.addEobScriptIntoLua) {
+            CommandPrintVisitor visitor = new CommandPrintVisitor(out, visitorGlobalData, settings.scriptDebug, "\\\"", "\\\n");
+            EobTrigger trigger00 = null;
+            for (EobTrigger trigger : infFile.triggers) {
+                if (trigger.x == 0 && trigger.y == 0) {
+                    trigger00 = trigger;
+                }
+            }
+            if (trigger00 != null || infFile.scriptFunctions.size() > 0) {
+                out.println(String.format("spawn(\"script_entity\", 0, 0, 1, \"script_entity_%s_0_0\")", levelParser.levelId));
+                out.println("\t:setSource(\"--[[\\");
+                for (EobScriptFunction function : infFile.scriptFunctions) {
+                    visitor.parseFunction(function, infFile.script);
+                }
+                if (trigger00 != null) {
+                    visitor.parseTrigger(trigger00, infFile.script);
+                }
+                out.println("--]]\")");
+            }
+
+            for (EobTrigger trigger : infFile.triggers) {
+                if (trigger.x != 0 || trigger.y != 0) {
+                    String levelText = levelParser.levelId + "_" + trigger.x + "_" + trigger.y;
+                    out.println(String.format("spawn(\"script_entity\", %d, %d, 1, \"script_entity_%s\")", trigger.x, trigger.y, levelText));
+                    out.println("\t:setSource(\"--[[\\");
+                    visitor.parseTrigger(trigger, infFile.script);
+                    out.println("--]]\")");
+                }
+            }
         }
-        visitor.close();
     }
 
     private void spawnWall(LevelParser levelParser, PrintWriter out, int x, int y, Wall wall, int facing, String text, String direction) {

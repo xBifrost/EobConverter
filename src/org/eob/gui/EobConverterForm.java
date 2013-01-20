@@ -24,6 +24,9 @@ public class EobConverterForm {
     private JButton convertButton;
     private JCheckBox debugWallCheckBox;
     private JCheckBox scriptDebugModeCheckBox;
+    private JCheckBox writeUnpackedInfFilesCheckBox;
+    private JCheckBox exportEobScriptsCheckBox;
+    private JCheckBox addEoBScriptIntoLuaCheckBox;
 
     public JPanel getMainPanel() {
         return mainPanel;
@@ -79,6 +82,18 @@ public class EobConverterForm {
 
     public JButton getConvertButton() {
         return convertButton;
+    }
+
+    public JCheckBox getWriteUnpackedInfFilesCheckBox() {
+        return writeUnpackedInfFilesCheckBox;
+    }
+
+    public JCheckBox getExportEobScriptsCheckBox() {
+        return exportEobScriptsCheckBox;
+    }
+
+    public JCheckBox getAddEobScriptIntoLuaCheckBox() {
+        return addEoBScriptIntoLuaCheckBox;
     }
 
     public JTextArea getOutput() {
@@ -156,6 +171,14 @@ public class EobConverterForm {
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(scriptDebugModeCheckBox, gbc);
+        addEoBScriptIntoLuaCheckBox = new JCheckBox();
+        addEoBScriptIntoLuaCheckBox.setText("Add EoB script into the lua as comment (functions are added into the lua script at position [0,0])");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(addEoBScriptIntoLuaCheckBox, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -306,6 +329,22 @@ public class EobConverterForm {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 3, 0, 0);
         panel4.add(toLevelField, gbc);
+        writeUnpackedInfFilesCheckBox = new JCheckBox();
+        writeUnpackedInfFilesCheckBox.setText("Write unpacked Inf files");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel4.add(writeUnpackedInfFilesCheckBox, gbc);
+        exportEobScriptsCheckBox = new JCheckBox();
+        exportEobScriptsCheckBox.setText("Export EoB scripts into the files");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel4.add(exportEobScriptsCheckBox, gbc);
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();

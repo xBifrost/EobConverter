@@ -8,10 +8,7 @@ import org.eob.file.inf.commands.condition.TermLeaf;
 import org.eob.file.inf.commands.condition.TermNode;
 import org.eob.file.inf.commands.condition.expression.*;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.List;
 import java.util.Stack;
 
@@ -21,10 +18,13 @@ import java.util.Stack;
  * Time: 23:12
  */
 public class CommandPrintVisitor implements CommandVisitor {
-    private OutputStreamWriter output = null;
+    private PrintWriter output = null;
     private Stack<String> outputStack = new Stack<String>();
     private VisitorGlobalData visitorGlobalData;
     private int spaces = 0;
+
+    private final String endOfLine;
+    private final String quotes;
 
     private Stack<ConditionInfo> conditionEndPosStack = new Stack<ConditionInfo>();
     private boolean scriptDebug;
@@ -39,85 +39,63 @@ public class CommandPrintVisitor implements CommandVisitor {
         }
     }
 
-    public CommandPrintVisitor(String levelScriptFile, VisitorGlobalData visitorGlobalData, boolean debug, boolean scriptDebug) {
+    public CommandPrintVisitor(PrintWriter output, VisitorGlobalData visitorGlobalData, boolean scriptDebug, String quotes, String endOfLine) {
         this.visitorGlobalData = visitorGlobalData;
         this.scriptDebug = scriptDebug;
-        if (debug) {
-            EobLogger.println("Writing text file with name: " + levelScriptFile + " ...");
-        }
-        try {
-            output = new OutputStreamWriter(new FileOutputStream(levelScriptFile));
-        } catch (FileNotFoundException ex) {
-            EobLogger.println("File not found.");
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        this.output = output;
+        this.quotes = quotes;
+        this.endOfLine = endOfLine;
     }
 
     public void parseTrigger(EobTrigger trigger, List<EobCommand> script) {
-        writeToOutput(String.format("Trigger %d at [%d, %d] on %s {\n", trigger.triggerId, trigger.x, trigger.y, translate(trigger.flags)));
+        writeToOutput(String.format("Trigger %d at [%d, %d] on %s {" + endOfLine, trigger.triggerId, trigger.x, trigger.y, translate(trigger.flags)));
         spaces = 4;
 
         conditionEndPosStack = new Stack<ConditionInfo>();
         for (int pos = visitorGlobalData.positionMap.get(trigger.addressStart) - 1; pos < visitorGlobalData.positionMap.get(trigger.addressEnd); pos++) {
             script.get(pos).accept(this);
         }
-        writeToOutput("}\n\n");
+        writeToOutput("}" + endOfLine + endOfLine);
     }
 
     public void parseFunction(EobScriptFunction function, List<EobCommand> script) {
-        writeToOutput(String.format("Function %s() {\n", function.functionName));
+        writeToOutput(String.format("Function %s() {" + endOfLine, function.functionName));
         spaces = 4;
 
         conditionEndPosStack = new Stack<ConditionInfo>();
         for (int pos = visitorGlobalData.positionMap.get(function.addressStart) - 1; pos < visitorGlobalData.positionMap.get(function.addressEnd); pos++) {
             script.get(pos).accept(this);
         }
-        writeToOutput("}\n\n");
-    }
-
-    public void close() {
-        if (output != null) {
-            try {
-                output.close();
-            } catch (IOException ex) {
-                EobLogger.println(ex.getMessage());
-                ex.printStackTrace();
-            }
-        }
+        writeToOutput("}" + endOfLine + endOfLine);
     }
 
     public void writeToOutput(String text) {
-        try {
+        if (output != null) {
             output.write(text);
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
         }
     }
 
-    private void formatLine(EobCommand command) throws IOException {
+    private void formatLine(EobCommand command) {
         if (checkStructure(command)) {
             showLineNumber(command, false);
             if (spaces > 0) {
-                output.write(String.format("%" + spaces + "s", ""));
+                writeToOutput(String.format("%" + spaces + "s", ""));
             }
         }
     }
 
-    private void showLineNumber(EobCommand command, boolean spacesOnly) throws IOException {
+    private void showLineNumber(EobCommand command, boolean spacesOnly) {
         if (scriptDebug) {
             long digits = (long) Math.ceil(Math.log10(visitorGlobalData.positionMap.size() + 1));
             if (spacesOnly) {
-                output.write(String.format("%" + digits + "s ", ""));
+                writeToOutput(String.format("%" + digits + "s ", ""));
             } else {
-                output.write(String.format("%" + digits + "d ", visitorGlobalData.positionMap.get(command.originalPos)));
+                writeToOutput(String.format("%" + digits + "d ", visitorGlobalData.positionMap.get(command.originalPos)));
             }
         }
     }
 
-    private boolean checkStructure(EobCommand command) throws IOException {
+    private boolean checkStructure(EobCommand command) {
         boolean showNextLineStructure = true;
 
         // Check the end of the IF command
@@ -126,9 +104,9 @@ public class CommandPrintVisitor implements CommandVisitor {
             spaces -= 4;
             showLineNumber(command, true);
             if (spaces > 0) {
-                output.write(String.format("%" + spaces + "s}\n", ""));
+                writeToOutput(String.format("%" + spaces + "s}" + endOfLine, ""));
             } else {
-                output.write("}\n");
+                writeToOutput("}" + endOfLine);
             }
         }
 
@@ -140,9 +118,9 @@ public class CommandPrintVisitor implements CommandVisitor {
                 showLineNumber(command, false);
                 if (spaces > 0) {
                     if (spaces > 4) {
-                        output.write(String.format("%" + (spaces - 4) + "s} else {%s", "", scriptDebug ? " // " : "\n"));
+                        writeToOutput(String.format("%" + (spaces - 4) + "s} else {%s", "", scriptDebug ? " // " : endOfLine));
                     } else {
-                        output.write("} else {" + (scriptDebug ? " // " : "\n"));
+                        writeToOutput("} else {" + (scriptDebug ? " // " : endOfLine));
                     }
                     showNextLineStructure = false;
                 }
@@ -170,448 +148,313 @@ public class CommandPrintVisitor implements CommandVisitor {
 
     @Override
     public void visit(DamageCommand damageCommand) {
-        try {
-            formatLine(damageCommand);
-            output.write(String.format("party.damage(%d, %dD%d + %d)\n", damageCommand.whom, damageCommand.rolls, damageCommand.sides, damageCommand.base));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(damageCommand);
+        writeToOutput(String.format("party.damage(%d, %dD%d + %d)" + endOfLine, damageCommand.whom, damageCommand.rolls, damageCommand.sides, damageCommand.base));
     }
 
     @Override
     public void visit(LauncherCommand launcherCommand) {
-        try {
-            formatLine(launcherCommand);
-            switch (launcherCommand.launcherType) {
-                case Spell:
-                    output.write(String.format("spell.launch(%d, %d, %d, %s, %s) // spellId, x, y, position, direction\n",
-                            launcherCommand.spellId, launcherCommand.x, launcherCommand.y, launcherCommand.inSquarePositionType.name(), launcherCommand.direction.name()));
-                    break;
-                case Item:
-                    output.write(String.format("item.launch(Item.%s, %d, %d, %s, %s) // itemId, x, y, position, direction (name: \"%s\"%s)\n",
-                            launcherCommand.itemObject.item.getElementType(true), launcherCommand.x, launcherCommand.y,
-                            launcherCommand.inSquarePositionType.name(), launcherCommand.direction.name(),
-                            launcherCommand.itemObject.item.getDescription(true),
-                            scriptDebug ? ", id: " + launcherCommand.itemObject.itemIndex : ""));
-                    break;
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(launcherCommand);
+        switch (launcherCommand.launcherType) {
+            case Spell:
+                writeToOutput(String.format("spell.launch(%d, %d, %d, %s, %s) // spellId, x, y, position, direction" + endOfLine,
+                        launcherCommand.spellId, launcherCommand.x, launcherCommand.y, launcherCommand.inSquarePositionType.name(), launcherCommand.direction.name()));
+                break;
+            case Item:
+                writeToOutput(String.format("item.launch(Item.%s, %d, %d, %s, %s) // itemId, x, y, position, direction (name: " + quotes + "%s" + quotes + "%s)" + endOfLine,
+                        launcherCommand.itemObject.item.getElementType(true), launcherCommand.x, launcherCommand.y,
+                        launcherCommand.inSquarePositionType.name(), launcherCommand.direction.name(),
+                        launcherCommand.itemObject.item.getDescription(true),
+                        scriptDebug ? ", id: " + launcherCommand.itemObject.itemIndex : ""));
+                break;
         }
     }
 
     @Override
     public void visit(GiveXpCommand giveXpCommand) {
-        try {
-            formatLine(giveXpCommand);
-            output.write(String.format("experience.add(%s, %d)\n",
-                    giveXpCommand.giveXpType.name(), giveXpCommand.experience));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(giveXpCommand);
+        writeToOutput(String.format("experience.add(%s, %d)" + endOfLine,
+                giveXpCommand.giveXpType.name(), giveXpCommand.experience));
     }
 
     @Override
     public void visit(ScriptEndCommand scriptEndCommand) {
-        try {
-            formatLine(scriptEndCommand);
-            if (scriptDebug) {
-                output.write("end\n");
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(scriptEndCommand);
+        if (scriptDebug) {
+            writeToOutput("end" + endOfLine);
         }
     }
 
     @Override
     public void visit(IdentifyAllItemsCommand identifyAllItemsCommand) {
-        try {
-            formatLine(identifyAllItemsCommand);
-            output.write(String.format("item.identifyAllAt(%d, %d)\n", identifyAllItemsCommand.x, identifyAllItemsCommand.y));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(identifyAllItemsCommand);
+        writeToOutput(String.format("item.identifyAllAt(%d, %d)" + endOfLine, identifyAllItemsCommand.x, identifyAllItemsCommand.y));
     }
 
     @Override
     public void visit(StealSmallItemsCommand stealSmallItemsCommand) {
-        try {
-            formatLine(stealSmallItemsCommand);
-            output.write(String.format("item.steal(%d, %d, %d, %s) // whoomId, x, y, position\n",
-                    stealSmallItemsCommand.whom, stealSmallItemsCommand.x, stealSmallItemsCommand.y, stealSmallItemsCommand.inSquarePositionType.name()));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(stealSmallItemsCommand);
+        writeToOutput(String.format("item.steal(%d, %d, %d, %s) // whoomId, x, y, position" + endOfLine,
+                stealSmallItemsCommand.whom, stealSmallItemsCommand.x, stealSmallItemsCommand.y, stealSmallItemsCommand.inSquarePositionType.name()));
     }
 
     @Override
     public void visit(TeleportCommand teleportCommand) {
-        try {
-            formatLine(teleportCommand);
-            output.write(String.format("teleport.teleport(%s, %d, %d, %d, %d) // type, srcX, srcY, dstX, dstY\n",
-                    teleportCommand.teleportType.name(), teleportCommand.sourceX, teleportCommand.sourceY,
-                    teleportCommand.destX, teleportCommand.destY));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(teleportCommand);
+        writeToOutput(String.format("teleport.teleport(%s, %d, %d, %d, %d) // type, srcX, srcY, dstX, dstY" + endOfLine,
+                teleportCommand.teleportType.name(), teleportCommand.sourceX, teleportCommand.sourceY,
+                teleportCommand.destX, teleportCommand.destY));
     }
 
     @Override
     public void visit(JumpCommand jumpCommand) {
-        try {
-            formatLine(jumpCommand);
-            if (scriptDebug) {
-                output.write(String.format("jump %d\n", visitorGlobalData.positionMap.get(jumpCommand.address)));
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(jumpCommand);
+        if (scriptDebug) {
+            writeToOutput(String.format("jump %d" + endOfLine, visitorGlobalData.positionMap.get(jumpCommand.address)));
         }
     }
 
     @Override
     public void visit(ReturnCommand returnCommand) {
-        try {
-            formatLine(returnCommand);
-            output.write("return\n");
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(returnCommand);
+        writeToOutput("return" + endOfLine);
     }
 
     @Override
     public void visit(CallCommand callCommand) {
-        try {
-            formatLine(callCommand);
-            if (scriptDebug) {
-                output.write(String.format("%s() // call(%d) \n",
-                        visitorGlobalData.scriptFunctionMap.get(callCommand.address).functionName,
-                        visitorGlobalData.positionMap.get(callCommand.address)));
-            } else {
-                output.write(String.format("%s()\n", visitorGlobalData.scriptFunctionMap.get(callCommand.address).functionName));
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(callCommand);
+        if (scriptDebug) {
+            writeToOutput(String.format("%s() // call(%d) " + endOfLine,
+                    visitorGlobalData.scriptFunctionMap.get(callCommand.address).functionName,
+                    visitorGlobalData.positionMap.get(callCommand.address)));
+        } else {
+            writeToOutput(String.format("%s()" + endOfLine, visitorGlobalData.scriptFunctionMap.get(callCommand.address).functionName));
         }
     }
 
     @Override
     public void visit(CreateMonsterCommand createMonsterCommand) {
-        try {
-            formatLine(createMonsterCommand);
-            int item50Index = createMonsterCommand.pocketItem50.itemIndex;
-            int itemIndex = createMonsterCommand.pocketItem.itemIndex;
-            String item50Desc = item50Index == 0 ? "" : createMonsterCommand.pocketItem50.item.getDescription(true);
-            String itemDesc = itemIndex == 0 ? "" : createMonsterCommand.pocketItem.item.getDescription(true);
+        formatLine(createMonsterCommand);
+        int item50Index = createMonsterCommand.pocketItem50.itemIndex;
+        int itemIndex = createMonsterCommand.pocketItem.itemIndex;
+        String item50Desc = item50Index == 0 ? "" : createMonsterCommand.pocketItem50.item.getDescription(true);
+        String itemDesc = itemIndex == 0 ? "" : createMonsterCommand.pocketItem.item.getDescription(true);
 
-            output.write(String.format("monster.create(%d, %d, %d, %d, %s, %s, Monster.%s, %d, %d, %s, Item.%s, Item.%s) // unknown, moveTime, x, y, position, direction, monster%s, imageId, phase, pause, item50%% (name: %s), item (name: %s)\n",
-                    createMonsterCommand.unknown, createMonsterCommand.moveTime, createMonsterCommand.x, createMonsterCommand.y,
-                    createMonsterCommand.inSquarePositionType.name(), createMonsterCommand.direction.name(), createMonsterCommand.monsterType.monsterName, createMonsterCommand.imageId,
-                    createMonsterCommand.phase, createMonsterCommand.pause ? "true" : "false",
-                    item50Index == 0 ? "none" : createMonsterCommand.pocketItem50.item.getElementType(true),
-                    itemIndex == 0 ? "none" : createMonsterCommand.pocketItem.item.getElementType(true),
-                    scriptDebug ? " (id: " + createMonsterCommand.monsterType.monsterId + ")" : "",
-                    scriptDebug ? "\"" + item50Desc + "\", id: " + item50Index : "\"" + item50Desc + "\"",
-                    scriptDebug ? "\"" + itemDesc + "\", id: " + itemIndex : "\"" + itemDesc + "\""));
+        writeToOutput(String.format("monster.create(%d, %d, %d, %d, %s, %s, Monster.%s, %d, %d, %s, Item.%s, Item.%s) // unknown, moveTime, x, y, position, direction, monster%s, imageId, phase, pause, item50%% (name: %s), item (name: %s)" + endOfLine,
+                createMonsterCommand.unknown, createMonsterCommand.moveTime, createMonsterCommand.x, createMonsterCommand.y,
+                createMonsterCommand.inSquarePositionType.name(), createMonsterCommand.direction.name(), createMonsterCommand.monsterType.monsterName, createMonsterCommand.imageId,
+                createMonsterCommand.phase, createMonsterCommand.pause ? "true" : "false",
+                item50Index == 0 ? "none" : createMonsterCommand.pocketItem50.item.getElementType(true),
+                itemIndex == 0 ? "none" : createMonsterCommand.pocketItem.item.getElementType(true),
+                scriptDebug ? " (id: " + createMonsterCommand.monsterType.monsterId + ")" : "",
+                scriptDebug ? quotes + item50Desc + quotes + ", id: " + item50Index : quotes + item50Desc + quotes,
+                scriptDebug ? quotes + itemDesc + quotes + ", id: " + itemIndex : quotes + itemDesc + quotes));
 
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
     }
 
     @Override
     public void visit(EncounterCommand encounterCommand) {
-        try {
-            formatLine(encounterCommand);
-            output.write(String.format("callEncounter(%d)\n", encounterCommand.encounterId));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(encounterCommand);
+        writeToOutput(String.format("callEncounter(%d)" + endOfLine, encounterCommand.encounterId));
     }
 
     @Override
     public void visit(ClearFlagCommand clearFlagCommand) {
-        try {
-            formatLine(clearFlagCommand);
-            switch (clearFlagCommand.flagType) {
-                case Maze:
-                    output.write(String.format("maze.clearFlag(%s)\n", clearFlagCommand.flag));
-                    break;
-                case Global:
-                    output.write(String.format("global.clearFlag(%s)\n", clearFlagCommand.flag));
-                    break;
-                case Monster:
-                    output.write(String.format("monster.clearFlag(%d,%s)\n", clearFlagCommand.monsterId, clearFlagCommand.flag));
-                    break;
-                case Event:
-                    output.write("callClearEvent?()\n");
-                    break;
-                case Party:
-                    output.write("party.callClearEvent?(FUNC_SETVAL, PARTY_SAVEREST, 0)\n");
-                    break;
-                default:
-                    output.write("??? unknown command\n");
-                    break;
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(clearFlagCommand);
+        switch (clearFlagCommand.flagType) {
+            case Maze:
+                writeToOutput(String.format("maze.clearFlag(%s)" + endOfLine, clearFlagCommand.flag));
+                break;
+            case Global:
+                writeToOutput(String.format("global.clearFlag(%s)" + endOfLine, clearFlagCommand.flag));
+                break;
+            case Monster:
+                writeToOutput(String.format("monster.clearFlag(%d,%s)" + endOfLine, clearFlagCommand.monsterId, clearFlagCommand.flag));
+                break;
+            case Event:
+                writeToOutput("callClearEvent?()" + endOfLine);
+                break;
+            case Party:
+                writeToOutput("party.callClearEvent?(FUNC_SETVAL, PARTY_SAVEREST, 0)" + endOfLine);
+                break;
+            default:
+                writeToOutput("??? unknown command" + endOfLine);
+                break;
         }
     }
 
     @Override
     public void visit(TurnCommand turnCommand) {
-        try {
-            formatLine(turnCommand);
-            switch (turnCommand.turnGroupType) {
-                default:
-                case Unknown:
-                    output.write(String.format("???.turn(Turn.%s)\n", turnCommand.turnType.name()));
-                    break;
-                case Party:
-                    output.write(String.format("party.turn(Turn.%s)\n", turnCommand.turnType.name()));
-                    break;
-                case Item:
-                    output.write(String.format("item.turn(Turn.%s)\n", turnCommand.turnType.name()));
-                    break;
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(turnCommand);
+        switch (turnCommand.turnGroupType) {
+            default:
+            case Unknown:
+                writeToOutput(String.format("???.turn(Turn.%s)" + endOfLine, turnCommand.turnType.name()));
+                break;
+            case Party:
+                writeToOutput(String.format("party.turn(Turn.%s)" + endOfLine, turnCommand.turnType.name()));
+                break;
+            case Item:
+                writeToOutput(String.format("item.turn(Turn.%s)" + endOfLine, turnCommand.turnType.name()));
+                break;
         }
     }
 
     @Override
     public void visit(ChangeWallCommand changeWallCommand) {
-        try {
-            formatLine(changeWallCommand);
-            switch (changeWallCommand.subtype) {
-                case CompleteBlock:
-                    output.write(String.format("wall.changeBlock(%d, %d, Wall.%s, Wall.%s) // x, y, fromWallId, toWallId%s\n",
-                            changeWallCommand.x, changeWallCommand.y,
-                            changeWallCommand.fromWall.internalName, changeWallCommand.toWall.internalName,
-                            scriptDebug ? " (formWallId: " + changeWallCommand.fromWall.wallId + ", toWallId: " + changeWallCommand.toWall.wallId + ")" : ""));
-                    break;
-                case OneWall:
-                    output.write(String.format("wall.changeWall(%d, %d, %s, Wall.%s, Wall.%s) // x, y, side, fromWallId, toWallId%s\n",
-                            changeWallCommand.x, changeWallCommand.y, changeWallCommand.side.name(),
-                            changeWallCommand.fromWall.internalName, changeWallCommand.toWall.internalName,
-                            scriptDebug ? " (formWallId: " + changeWallCommand.fromWall.wallId + ", toWallId: " + changeWallCommand.toWall.wallId + ")" : ""));
-                    break;
-                case OpenDoor:
-                    output.write(String.format("door.open(%d, %d)\n", changeWallCommand.x, changeWallCommand.y));
-                    break;
-                default:
-                    output.write("??? unknown command\n");
-                    break;
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(changeWallCommand);
+        switch (changeWallCommand.subtype) {
+            case CompleteBlock:
+                writeToOutput(String.format("wall.changeBlock(%d, %d, Wall.%s, Wall.%s) // x, y, fromWallId, toWallId%s" + endOfLine,
+                        changeWallCommand.x, changeWallCommand.y,
+                        changeWallCommand.fromWall.internalName, changeWallCommand.toWall.internalName,
+                        scriptDebug ? " (formWallId: " + changeWallCommand.fromWall.wallId + ", toWallId: " + changeWallCommand.toWall.wallId + ")" : ""));
+                break;
+            case OneWall:
+                writeToOutput(String.format("wall.changeWall(%d, %d, %s, Wall.%s, Wall.%s) // x, y, side, fromWallId, toWallId%s" + endOfLine,
+                        changeWallCommand.x, changeWallCommand.y, changeWallCommand.side.name(),
+                        changeWallCommand.fromWall.internalName, changeWallCommand.toWall.internalName,
+                        scriptDebug ? " (formWallId: " + changeWallCommand.fromWall.wallId + ", toWallId: " + changeWallCommand.toWall.wallId + ")" : ""));
+                break;
+            case OpenDoor:
+                writeToOutput(String.format("door.open(%d, %d)" + endOfLine, changeWallCommand.x, changeWallCommand.y));
+                break;
+            default:
+                writeToOutput("??? unknown command" + endOfLine);
+                break;
         }
     }
 
     @Override
     public void visit(NewItemCommand newItemCommand) {
-        try {
-            formatLine(newItemCommand);
-            output.write(String.format("item.create(%d, %d, %s, Item.%s) // x, y, position, elementType (name: \"%s\"%s)\n",
-                    newItemCommand.x, newItemCommand.y, newItemCommand.inSquarePosition.name(),
-                    newItemCommand.itemObject.item.getElementType(true), newItemCommand.itemObject.item.getDescription(true),
-                    scriptDebug ? ", id: " + newItemCommand.itemObject.itemIndex : ""));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(newItemCommand);
+        writeToOutput(String.format("item.create(%d, %d, %s, Item.%s) // x, y, position, elementType (name: " + quotes + "%s" + quotes + "%s)" + endOfLine,
+                newItemCommand.x, newItemCommand.y, newItemCommand.inSquarePosition.name(),
+                newItemCommand.itemObject.item.getElementType(true), newItemCommand.itemObject.item.getDescription(true),
+                scriptDebug ? ", id: " + newItemCommand.itemObject.itemIndex : ""));
     }
 
     @Override
     public void visit(SoundCommand soundCommand) {
-        try {
-            formatLine(soundCommand);
-            output.write(String.format("play.sound(%d, %d)\n", soundCommand.soundId, soundCommand.soundPosition));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(soundCommand);
+        writeToOutput(String.format("play.sound(%d, %d)" + endOfLine, soundCommand.soundId, soundCommand.soundPosition));
     }
 
     @Override
     public void visit(OpenDoorCommand openDoorCommand) {
-        try {
-            formatLine(openDoorCommand);
-            output.write(String.format("door.open(%d, %d)\n", openDoorCommand.x, openDoorCommand.y));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(openDoorCommand);
+        writeToOutput(String.format("door.open(%d, %d)" + endOfLine, openDoorCommand.x, openDoorCommand.y));
     }
 
     @Override
     public void visit(CloseDoorCommand closeDoorCommand) {
-        try {
-            formatLine(closeDoorCommand);
-            output.write(String.format("door.close(%d, %d)\n", closeDoorCommand.x, closeDoorCommand.y));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(closeDoorCommand);
+        writeToOutput(String.format("door.close(%d, %d)" + endOfLine, closeDoorCommand.x, closeDoorCommand.y));
     }
 
     @Override
     public void visit(SetWallCommand setWallCommand) {
-        try {
-            formatLine(setWallCommand);
-            switch (setWallCommand.subtype) {
-                case CompleteBlock:
-                    output.write(String.format("wall.setBlock(%d, %d, Wall.%s) // x, y, wallId%s\n",
-                            setWallCommand.x, setWallCommand.y, setWallCommand.wall.internalName,
-                            scriptDebug ? " (id: " + setWallCommand.wall.wallId + ")" : ""));
-                    break;
-                case OneWall:
-                    output.write(String.format("wall.setWall(%d, %d, %s, Wall.%s) // x, y, direction, wallId%s\n",
-                            setWallCommand.x, setWallCommand.y, setWallCommand.direction.name(), setWallCommand.wall.internalName,
-                            scriptDebug ? " (id: " + setWallCommand.wall.wallId + ")" : ""));
-                    break;
-                case PartyFacing:
-                    // Direction?
-                    output.write(String.format("party.setFacing(%d)\n", setWallCommand.partyFacing));
-                    break;
-                default:
-                    output.write("??? unknown command\n");
-                    break;
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(setWallCommand);
+        switch (setWallCommand.subtype) {
+            case CompleteBlock:
+                writeToOutput(String.format("wall.setBlock(%d, %d, Wall.%s) // x, y, wallId%s" + endOfLine,
+                        setWallCommand.x, setWallCommand.y, setWallCommand.wall.internalName,
+                        scriptDebug ? " (id: " + setWallCommand.wall.wallId + ")" : ""));
+                break;
+            case OneWall:
+                writeToOutput(String.format("wall.setWall(%d, %d, %s, Wall.%s) // x, y, direction, wallId%s" + endOfLine,
+                        setWallCommand.x, setWallCommand.y, setWallCommand.direction.name(), setWallCommand.wall.internalName,
+                        scriptDebug ? " (id: " + setWallCommand.wall.wallId + ")" : ""));
+                break;
+            case PartyFacing:
+                // Direction?
+                writeToOutput(String.format("party.setFacing(%d)" + endOfLine, setWallCommand.partyFacing));
+                break;
+            default:
+                writeToOutput("??? unknown command" + endOfLine);
+                break;
         }
     }
 
     @Override
     public void visit(SetFlagCommand setFlagCommand) {
-        try {
-            formatLine(setFlagCommand);
-            switch (setFlagCommand.flagType) {
-                case Maze:
-                    output.write(String.format("maze.setFlag(%s)\n", setFlagCommand.flag));
-                    break;
-                case Global:
-                    output.write(String.format("global.setFlag(%s)\n", setFlagCommand.flag));
-                    break;
-                case Monster:
-                    output.write(String.format("monster.setFlag(%d,%s)\n", setFlagCommand.monsterId, setFlagCommand.flag));
-                    break;
-                case Event:
-                    output.write("callSetEvent?()\n");
-                    break;
-                case Party:
-                    output.write("party.callSetEvent(FUNC_SETVAL, PARTY_SAVEREST, 0)\n");
-                    break;
-                default:
-                    output.write("??? unknown command\n");
-                    break;
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(setFlagCommand);
+        switch (setFlagCommand.flagType) {
+            case Maze:
+                writeToOutput(String.format("maze.setFlag(%s)" + endOfLine, setFlagCommand.flag));
+                break;
+            case Global:
+                writeToOutput(String.format("global.setFlag(%s)" + endOfLine, setFlagCommand.flag));
+                break;
+            case Monster:
+                writeToOutput(String.format("monster.setFlag(%d,%s)" + endOfLine, setFlagCommand.monsterId, setFlagCommand.flag));
+                break;
+            case Event:
+                writeToOutput("callSetEvent?()" + endOfLine);
+                break;
+            case Party:
+                writeToOutput("party.callSetEvent(FUNC_SETVAL, PARTY_SAVEREST, 0)" + endOfLine);
+                break;
+            default:
+                writeToOutput("??? unknown command" + endOfLine);
+                break;
         }
     }
 
     @Override
     public void visit(MessageCommand messageCommand) {
-        try {
-            formatLine(messageCommand);
-            output.write(String.format("show(\"%s\", Color.%s)\n", messageCommand.message, messageCommand.vgaColor.name()));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(messageCommand);
+        writeToOutput(String.format("show(" + quotes + "%s" + quotes + ", Color.%s)" + endOfLine, messageCommand.message, messageCommand.vgaColor.name()));
     }
 
     @Override
     public void visit(ConditionCommand conditionCommand) {
-        try {
-            formatLine(conditionCommand);
-            if (scriptDebug) {
-                output.write(String.format("if (%s) { // if not: jump %d\n",
-                        outputStack.pop(), visitorGlobalData.positionMap.get(conditionCommand.jumpPosition)));
-            } else {
-                output.write(String.format("if (%s) {\n", outputStack.pop()));
-            }
-            conditionEndPosStack.push(new ConditionInfo(conditionCommand.jumpPosition, false));
-            spaces += 4;
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(conditionCommand);
+        if (scriptDebug) {
+            writeToOutput(String.format("if (%s) { // if not: jump %d" + endOfLine,
+                    outputStack.pop(), visitorGlobalData.positionMap.get(conditionCommand.jumpPosition)));
+        } else {
+            writeToOutput(String.format("if (%s) {" + endOfLine, outputStack.pop()));
         }
+        conditionEndPosStack.push(new ConditionInfo(conditionCommand.jumpPosition, false));
+        spaces += 4;
     }
 
     @Override
     public void visit(ChangeLevelCommand changeLevelCommand) {
-        try {
-            formatLine(changeLevelCommand);
-            switch (changeLevelCommand.changeLevelType) {
-                case ChangeLevel:
-                    output.write(String.format("level.change(%d, %d, %d, %s) // level, x, y, direction\n",
-                            changeLevelCommand.level, changeLevelCommand.x, changeLevelCommand.y, changeLevelCommand.direction.name()));
-                    break;
-                case InLevel:
-                    output.write(String.format("level.teleport(%d, %d, %s) // x, y, direction\n",
-                            changeLevelCommand.x, changeLevelCommand.y, changeLevelCommand.direction.name()));
-                    break;
-                default:
-                    output.write("??? unknown command\n");
-                    break;
-            }
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
+        formatLine(changeLevelCommand);
+        switch (changeLevelCommand.changeLevelType) {
+            case ChangeLevel:
+                writeToOutput(String.format("level.change(%d, %d, %d, %s) // level, x, y, direction" + endOfLine,
+                        changeLevelCommand.level, changeLevelCommand.x, changeLevelCommand.y, changeLevelCommand.direction.name()));
+                break;
+            case InLevel:
+                writeToOutput(String.format("level.teleport(%d, %d, %s) // x, y, direction" + endOfLine,
+                        changeLevelCommand.x, changeLevelCommand.y, changeLevelCommand.direction.name()));
+                break;
+            default:
+                writeToOutput("??? unknown command" + endOfLine);
+                break;
         }
     }
 
     @Override
     public void visit(GraphicsDataCommand graphicsDataCommand) {
-        try {
-            output.write("Unsupported script command: graphicsData\n");
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        writeToOutput("Unsupported script command: graphicsData" + endOfLine);
     }
 
     @Override
     public void visit(ItemConsumeCommand itemConsumeCommand) {
-        try {
-            formatLine(itemConsumeCommand);
-            output.write(String.format("item.consume(%s, %d, %d, ItemType.%s) // type, x, y, itemtype%s\n",
-                    itemConsumeCommand.itemConsumeType.name(), itemConsumeCommand.x, itemConsumeCommand.y,
-                    itemConsumeCommand.itemType.elementType,
-                    scriptDebug ? " (id: " + itemConsumeCommand.itemType.itemTypeId + ")" : ""));
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        formatLine(itemConsumeCommand);
+        writeToOutput(String.format("item.consume(%s, %d, %d, ItemType.%s) // type, x, y, itemtype%s" + endOfLine,
+                itemConsumeCommand.itemConsumeType.name(), itemConsumeCommand.x, itemConsumeCommand.y,
+                itemConsumeCommand.itemType.elementType,
+                scriptDebug ? " (id: " + itemConsumeCommand.itemType.itemTypeId + ")" : ""));
     }
 
     @Override
     public void visit(WallMappingCommand wallMappingCommand) {
-        try {
-            output.write("Unsupported script command: wallMapping\n");
-        } catch (IOException ex) {
-            EobLogger.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+        writeToOutput("Unsupported script command: wallMapping" + endOfLine);
     }
 
     //--------------------
@@ -804,7 +647,7 @@ public class CommandPrintVisitor implements CommandVisitor {
                 return "Enter, PutItem";
             case OnPickUp:
                 return "PickUpItem";
-            case OnAttack:
+            case OnEnterOrPickUp:
                 return "Attack";
             case OnPutOrPickUpItem:
                 return "PutItem, PickUpItem";
@@ -812,10 +655,10 @@ public class CommandPrintVisitor implements CommandVisitor {
                 return "Enter, Leave, PutItem, PickUpItem";
             case OnFlyingObject:
                 return "FlyingObject";
-            case OnEnterOrOnFlyingObject:
+            case OnEnterOrFlyingObject:
                 return "Enter, FlyingObject";
-            case OnTryChangeLevel:
-                return "TryChangeLevel";
+            case OnEnterOrPutItemOrFlyingObject:
+                return "Enter, PutItem, FlyingObject";
         }
         return "??";
     }

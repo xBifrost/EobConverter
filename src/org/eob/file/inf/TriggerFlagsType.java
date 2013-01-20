@@ -19,12 +19,12 @@ public enum TriggerFlagsType {
     OnPutItem(TriggerFlagType.OnPutItem),
     OnEnterOrPutItem(TriggerFlagType.OnEnter, TriggerFlagType.OnPutItem),
     OnPickUp(TriggerFlagType.OnPickUp),
-    OnAttack(TriggerFlagType.OnEnter, TriggerFlagType.OnPickUp),
+    OnEnterOrPickUp(TriggerFlagType.OnEnter, TriggerFlagType.OnPickUp),
     OnPutOrPickUpItem(TriggerFlagType.OnPutItem, TriggerFlagType.OnPickUp),
     OnEnterLeavePutPickUp(TriggerFlagType.OnEnter, TriggerFlagType.OnLeave, TriggerFlagType.OnPutItem, TriggerFlagType.OnPickUp),
     OnFlyingObject(TriggerFlagType.OnFlyingObject),
-    OnEnterOrOnFlyingObject(TriggerFlagType.OnEnter, TriggerFlagType.OnFlyingObject),
-    OnTryChangeLevel(TriggerFlagType.OnEnter, TriggerFlagType.OnPutItem, TriggerFlagType.OnFlyingObject);
+    OnEnterOrFlyingObject(TriggerFlagType.OnEnter, TriggerFlagType.OnFlyingObject),
+    OnEnterOrPutItemOrFlyingObject(TriggerFlagType.OnEnter, TriggerFlagType.OnPutItem, TriggerFlagType.OnFlyingObject);
 
     public final int triggerFlagsTypeId;
 
