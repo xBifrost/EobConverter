@@ -26,7 +26,11 @@ public class EobConverterForm {
     private JCheckBox scriptDebugModeCheckBox;
     private JCheckBox writeUnpackedInfFilesCheckBox;
     private JCheckBox exportEobScriptsCheckBox;
-    private JCheckBox addEoBScriptIntoLuaCheckBox;
+    private JCheckBox addEobScriptIntoLuaCheckBox;
+    private JCheckBox printItemsCheckBox;
+    private JCheckBox printItemTypesCheckBox;
+    private JTextField extChangesPathField;
+    private JButton extChangesPathChooser;
 
     public JPanel getMainPanel() {
         return mainPanel;
@@ -46,6 +50,14 @@ public class EobConverterForm {
 
     public JButton getDstPathChooser() {
         return dstPathChooser;
+    }
+
+    public JTextField getExtChangesPathField() {
+        return extChangesPathField;
+    }
+
+    public JButton getExtChangesPathChooser() {
+        return extChangesPathChooser;
     }
 
     public JCheckBox getDebugModeCheckBox() {
@@ -93,7 +105,15 @@ public class EobConverterForm {
     }
 
     public JCheckBox getAddEobScriptIntoLuaCheckBox() {
-        return addEoBScriptIntoLuaCheckBox;
+        return addEobScriptIntoLuaCheckBox;
+    }
+
+    public JCheckBox getPrintItemsCheckBox() {
+        return printItemsCheckBox;
+    }
+
+    public JCheckBox getPrintItemTypesCheckBox() {
+        return printItemTypesCheckBox;
     }
 
     public JTextArea getOutput() {
@@ -129,26 +149,18 @@ public class EobConverterForm {
         gbc.insets = new Insets(3, 3, 0, 3);
         mainPanel.add(panel1, gbc);
         panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Debug"));
-        debugModeCheckBox = new JCheckBox();
-        debugModeCheckBox.setText("Debug mode");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel1.add(debugModeCheckBox, gbc);
         final JLabel label1 = new JLabel();
         label1.setText("Item name contain: ");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = 2;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(label1, gbc);
         itemNameField = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
-        gbc.gridy = 0;
+        gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -160,25 +172,48 @@ public class EobConverterForm {
         debugWallCheckBox.setText("Print Wall errors");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(debugWallCheckBox, gbc);
-        scriptDebugModeCheckBox = new JCheckBox();
-        scriptDebugModeCheckBox.setText("Script debug mode");
+        addEobScriptIntoLuaCheckBox = new JCheckBox();
+        addEobScriptIntoLuaCheckBox.setText("Add EoB script into the lua as comment (functions are added into the lua script at position [0,0])");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(addEobScriptIntoLuaCheckBox, gbc);
+        printItemsCheckBox = new JCheckBox();
+        printItemsCheckBox.setText("Print items");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(printItemsCheckBox, gbc);
+        debugModeCheckBox = new JCheckBox();
+        debugModeCheckBox.setText("Debug mode");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(debugModeCheckBox, gbc);
+        printItemTypesCheckBox = new JCheckBox();
+        printItemTypesCheckBox.setText("Print item types");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(printItemTypesCheckBox, gbc);
+        scriptDebugModeCheckBox = new JCheckBox();
+        scriptDebugModeCheckBox.setText("Script debug mode");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(scriptDebugModeCheckBox, gbc);
-        addEoBScriptIntoLuaCheckBox = new JCheckBox();
-        addEoBScriptIntoLuaCheckBox.setText("Add EoB script into the lua as comment (functions are added into the lua script at position [0,0])");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel1.add(addEoBScriptIntoLuaCheckBox, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -247,6 +282,35 @@ public class EobConverterForm {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 5, 0, 0);
         panel2.add(dstPathChooser, gbc);
+        final JLabel label4 = new JLabel();
+        label4.setText("External changes path:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 5, 0, 0);
+        panel2.add(label4, gbc);
+        extChangesPathField = new JTextField();
+        extChangesPathField.setEditable(true);
+        extChangesPathField.setEnabled(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 3, 0, 0);
+        panel2.add(extChangesPathField, gbc);
+        extChangesPathChooser = new JButton();
+        extChangesPathChooser.setText("...");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 5, 0, 0);
+        panel2.add(extChangesPathChooser, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new BorderLayout(0, 0));
         gbc = new GridBagConstraints();
@@ -291,15 +355,15 @@ public class EobConverterForm {
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         panel4.add(generateDefaultStructuresCheckBox, gbc);
-        final JLabel label4 = new JLabel();
-        label4.setText("From level:");
+        final JLabel label5 = new JLabel();
+        label5.setText("From level:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 5, 0, 0);
-        panel4.add(label4, gbc);
+        panel4.add(label5, gbc);
         fromLevelField = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
@@ -310,15 +374,15 @@ public class EobConverterForm {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 3, 0, 0);
         panel4.add(fromLevelField, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("To level:");
+        final JLabel label6 = new JLabel();
+        label6.setText("To level:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 5, 0, 0);
-        panel4.add(label5, gbc);
+        panel4.add(label6, gbc);
         toLevelField = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;

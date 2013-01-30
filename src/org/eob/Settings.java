@@ -8,9 +8,12 @@ package org.eob;
 public class Settings {
     public String srcPath = ".";
     public String dstPath = ".";
+    public String extChangesPath = "";
     public Integer from = 1;
     public Integer to = 99;
-    public String debugShowOnlyItemName = "";
+    public boolean showItemTypes = false;
+    public boolean showItems = false;
+    public String showOnlyItemName = "";
     public boolean debug = false;
     public boolean scriptDebug = false;
     public boolean debugWalls = true;

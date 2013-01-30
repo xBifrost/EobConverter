@@ -18,15 +18,17 @@ import java.util.*;
 public class LevelParser {
     private final byte[] levelData;
     private EobGlobalData eobGlobalData;
+    private Settings settings;
     public final int width;
     public final int height;
     public final int levelId;
     public final Square[][] level;
 
-    public LevelParser(int levelId, byte[] levelData, EobGlobalData eobGlobalData) {
+    public LevelParser(int levelId, byte[] levelData, EobGlobalData eobGlobalData, Settings settings) {
         this.levelId = levelId;
         this.levelData = levelData;
         this.eobGlobalData = eobGlobalData;
+        this.settings = settings;
         width = ByteArrayUtility.getWord(levelData, 0);
         height = ByteArrayUtility.getWord(levelData, 2);
         level = new Square[width][height];
@@ -48,6 +50,18 @@ public class LevelParser {
                         levelData[6 + (y * width + x) * sizePerSquare + 3],
                         levelId, eobGlobalData);
                 level[x][y].checkWalls();
+            }
+        }
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                level[x][y].createAssets(level, eobGlobalData, settings);
+            }
+        }
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                level[x][y].externalAssetChange(levelId, level, eobGlobalData, settings);
             }
         }
     }

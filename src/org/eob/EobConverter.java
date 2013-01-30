@@ -1,5 +1,6 @@
 package org.eob;
 
+import org.eob.external.ExternalChangesParser;
 import org.eob.file.EobFiles;
 import org.eob.file.dat.ItemTypeDatFile;
 import org.eob.file.inf.InfFile;
@@ -8,8 +9,9 @@ import org.eob.gui.EobConverterForm;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * User: Bifrost
@@ -17,8 +19,7 @@ import java.util.List;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.9.6";
-    private final static List<String> externalChangesList = new ArrayList<String>();
+    public final static String CONVERTER_VERSION = "0.9.8";
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
     private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
@@ -29,166 +30,6 @@ public class EobConverter {
     private Settings settings = new Settings();
     private EobConverterForm eobConverterForm;
 
-    private static void initExternalChanges() {
-        externalChangesList.add("W eob_sewers_door_metal_1_2_3");
-        externalChangesList.add("W eob_sewers_door_metal_1_17_23");
-        externalChangesList.add("S eob_sewers_door_metal_1_16_11");
-        externalChangesList.add("S eob_sewers_door_metal_1_19_18");
-
-        externalChangesList.add("S eob_sewers_portcullis_throwable_2_7_4");
-        externalChangesList.add("S eob_sewers_door_metal_2_28_5");
-        externalChangesList.add("W eob_sewers_door_metal_2_20_18");
-        externalChangesList.add("S eob_sewers_door_metal_2_19_21");
-        externalChangesList.add("W eob_sewers_door_metal_2_21_23");
-        externalChangesList.add("W eob_sewers_door_metal_2_5_20");
-        externalChangesList.add("W eob_sewers_door_metal_2_5_22");
-        externalChangesList.add("W eob_sewers_door_metal_2_5_24");
-        externalChangesList.add("W eob_sewers_portcullis_throwable_2_23_16");
-
-        externalChangesList.add("R eob_sewers_ladder_up_3_9_18_W");
-        externalChangesList.add("S eob_sewers_door_metal_3_30_8");
-        externalChangesList.add("W eob_sewers_door_metal_3_23_10");
-        externalChangesList.add("S eob_sewers_door_metal_3_17_11");
-        externalChangesList.add("W eob_sewers_door_metal_3_26_14");
-        externalChangesList.add("S eob_sewers_door_metal_3_9_18");
-        externalChangesList.add("S eob_sewers_door_metal_3_11_18");
-        externalChangesList.add("S eob_sewers_door_metal_3_18_18");
-        externalChangesList.add("W eob_sewers_door_metal_3_4_20");
-
-        externalChangesList.add("W eob_ruins_door_stone_4_18_1");
-        externalChangesList.add("S eob_ruins_net_4_30_4");
-        externalChangesList.add("W eob_ruins_door_stone_4_2_7");
-        externalChangesList.add("S eob_ruins_door_stone_4_3_8");
-        externalChangesList.add("W eob_ruins_door_stone_4_20_6");
-        externalChangesList.add("W eob_ruins_door_stone_4_20_8");
-        externalChangesList.add("W eob_ruins_door_stone_4_20_10");
-        externalChangesList.add("W eob_ruins_door_stone_4_20_12");
-        externalChangesList.add("S eob_ruins_net_torn_4_28_18");
-        externalChangesList.add("S eob_ruins_door_stone_4_16_22");
-        externalChangesList.add("W eob_ruins_net_torn_4_17_28");
-        externalChangesList.add("W eob_ruins_net_4_17_30");
-        externalChangesList.add("S eob_ruins_door_stone_4_8_25");
-        externalChangesList.add("W eob_ruins_net_4_21_24");
-        externalChangesList.add("S eob_ruins_net_4_29_27");
-        externalChangesList.add("W eob_ruins_door_stone_4_25_19");
-
-        externalChangesList.add("W eob_ruins_door_stone_5_28_2");
-        externalChangesList.add("S eob_ruins_door_stone_5_1_9");
-        externalChangesList.add("S eob_ruins_door_stone_5_4_9");
-        externalChangesList.add("S eob_ruins_door_stone_5_23_19");
-        externalChangesList.add("S eob_ruins_door_stone_5_13_18");
-        externalChangesList.add("S eob_ruins_door_stone_5_10_18");
-        externalChangesList.add("S eob_ruins_door_stone_5_7_18");
-        externalChangesList.add("W eob_ruins_door_stone_5_24_27");
-        externalChangesList.add("W eob_ruins_door_stone_5_17_29");
-
-        externalChangesList.add("W eob_ruins_door_stone_6_10_3");
-        externalChangesList.add("S eob_ruins_door_stone_6_5_9");
-        externalChangesList.add("S eob_ruins_door_stone_6_29_11");
-        externalChangesList.add("S eob_ruins_door_stone_6_19_23");
-
-        externalChangesList.add("W eob_drow_door_7_24_2");
-        externalChangesList.add("W eob_drow_door_7_28_4");
-        externalChangesList.add("W eob_drow_door_7_29_7");
-        externalChangesList.add("W eob_drow_door_7_29_9");
-        externalChangesList.add("W eob_drow_door_7_13_7");
-        externalChangesList.add("W eob_drow_door_7_29_25");
-        externalChangesList.add("W eob_drow_door_7_14_20");
-        externalChangesList.add("W eob_drow_door_7_13_10");
-        externalChangesList.add("S eob_drow_door_7_20_19");
-        externalChangesList.add("S eob_drow_door_7_27_24");
-        externalChangesList.add("S eob_drow_door_7_25_24");
-        externalChangesList.add("S eob_drow_door_7_19_24");
-        externalChangesList.add("S eob_drow_door_7_17_24");
-        externalChangesList.add("S eob_drow_door_7_10_29");
-        externalChangesList.add("S eob_drow_door_7_4_29");
-        externalChangesList.add("S eob_drow_door_7_25_16");
-
-        externalChangesList.add("S eob_drow_door_8_30_26");
-        externalChangesList.add("S eob_drow_door_8_21_16");
-        externalChangesList.add("S eob_drow_door_8_21_22");
-        externalChangesList.add("W eob_drow_door_8_5_30");
-        externalChangesList.add("W eob_drow_door_8_7_24");
-
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_7_8_S");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_8_8_S");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_9_8_S");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_10_8_S");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_11_8_S");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_6_9_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_7_9_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_8_9_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_9_9_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_10_9_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_8_9_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_9_9_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_10_9_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_11_9_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_12_9_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_7_14_N");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_8_14_N");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_9_14_N");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_10_14_N");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_11_14_N");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_6_13_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_7_13_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_8_13_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_9_13_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_10_13_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_8_13_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_9_13_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_10_13_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_11_13_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_12_13_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_14_8_S");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_13_9_E");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_15_9_W");
-        externalChangesList.add("R eob_drow_dart_firing_pad_9_16_11_W");
-        externalChangesList.add("F 9_16_11_W prison_secret_door"); // todo: add new wall type - Solid wall
-        externalChangesList.add("S eob_drow_door_9_25_2");
-        externalChangesList.add("S eob_drow_door_9_22_2");
-        externalChangesList.add("S eob_drow_door_9_22_9");
-        externalChangesList.add("S eob_drow_door_9_18_9");
-        externalChangesList.add("S eob_drow_door_9_16_14");
-        externalChangesList.add("S eob_drow_door_9_16_19");
-        externalChangesList.add("W eob_drow_door_9_28_3");
-        externalChangesList.add("W eob_drow_door_9_28_7");
-        externalChangesList.add("W eob_drow_door_9_28_16");
-        externalChangesList.add("W eob_drow_door_9_28_26");
-
-        externalChangesList.add("W eob_hive_door_10_20_16");
-        externalChangesList.add("S eob_hive_door_10_8_19");
-        externalChangesList.add("S eob_hive_door_10_20_18");
-        externalChangesList.add("S eob_hive_door_10_22_18");
-        externalChangesList.add("S eob_hive_door_10_19_25");
-        externalChangesList.add("S eob_hive_door_10_21_25");
-        externalChangesList.add("S eob_hive_door_10_23_25");
-
-        externalChangesList.add("W eob_hive_door_11_3_2");
-        externalChangesList.add("W eob_hive_door_11_4_5");
-        externalChangesList.add("W eob_hive_door_11_4_13");
-        externalChangesList.add("W eob_hive_door_11_7_11");
-        externalChangesList.add("W eob_hive_door_11_25_21");
-        externalChangesList.add("W eob_hive_door_11_11_22");
-        externalChangesList.add("W eob_hive_door_11_18_24");
-        externalChangesList.add("W eob_hive_door_11_18_28");
-        externalChangesList.add("S eob_hive_door_11_10_2");
-        externalChangesList.add("S eob_hive_door_11_21_3");
-        externalChangesList.add("S eob_hive_door_11_23_3");
-        externalChangesList.add("S eob_hive_door_11_30_13");
-        externalChangesList.add("S eob_hive_door_11_14_18");
-        externalChangesList.add("S eob_hive_door_11_30_20");
-        externalChangesList.add("S eob_hive_door_11_14_28");
-
-        externalChangesList.add("W eob_sanctum_door_12_18_15");
-        externalChangesList.add("W eob_sanctum_door_12_23_7");
-        externalChangesList.add("W eob_sanctum_door_12_2_15");
-        externalChangesList.add("W eob_sanctum_door_12_23_15");
-        externalChangesList.add("W eob_sanctum_door_12_20_11");
-        externalChangesList.add("S eob_sanctum_door_12_21_6");
-        externalChangesList.add("S eob_sanctum_door_12_23_3");
-    }
-
     public EobConverter(String[] args) {
         for (String arg : args) {
             if (arg.charAt(0) == '-') {
@@ -197,17 +38,21 @@ public class EobConverter {
                 String value = pos >= 0 ? arg.substring(pos + 1) : "";
                 try {
                     if (name.equals("--help")) {
-                        EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>]");
-                        EobLogger.println("                        [-c|--console] [-d|--debug] [-ds|debug-script] [-di|--debug-item=<value>]");
+                        EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>] [-ep|--ext-path=<value>]");
+                        EobLogger.println("                        [-c|--console] [-d|--debug] [-ds|debug-script] [-dt|--debug-show-item-type]");
+                        EobLogger.println("                        [-di|--debug-show-item] [-din|--debug-item-name=<value>]");
                         EobLogger.println("                        [-l1|--file-per-level] [-gs|--generate-default-structures] [-sw|--skip-wall-errors]");
                         EobLogger.println("                        [-inf|--write_unpacked-inf] [-es|--export-scripts] [-as|--add-scripts]");
                         EobLogger.println("");
                         EobLogger.println("List of commands:");
                         EobLogger.println("   src-path                    Source path. (default=\".\")");
                         EobLogger.println("   dst-path                    Destination path. (default=\".\")");
+                        EobLogger.println("   ext-path                    External changes path. (default=\"\")");
                         EobLogger.println("   debug                       Show debug info.");
                         EobLogger.println("   debug-script                Show script debug info.");
-                        EobLogger.println("   debug-item                  Show debug info only for items contains <value> string. (default=\"\")");
+                        EobLogger.println("   debug-show-item-type        Show item types.");
+                        EobLogger.println("   debug-show-item             Show items");
+                        EobLogger.println("   debug-item-name             Show debug info only for items contains <value> string. (default=\"\")");
                         EobLogger.println("   skip-wall-errors            Skip showing wall errors (default=show)");
                         EobLogger.println("   levels                      Convert all levels in range: <from,to>. (default=1;99)");
                         EobLogger.println("   file-per-level              Store each level in separate file.");
@@ -232,8 +77,15 @@ public class EobConverter {
                         settings.srcPath = value;
                     } else if (name.equals("--dst-path") || name.equals("-dp")) {
                         settings.dstPath = value;
-                    } else if (name.equals("--debug-item") || name.equals("-di")) {
-                        settings.debugShowOnlyItemName = value;
+                    } else if (name.equals("--ext-path") || name.equals("-ep")) {
+                        settings.extChangesPath = value;
+                    } else if (name.equals("--debug-show-item-type") || name.equals("-dt")) {
+                        settings.showItemTypes = true;
+                    } else if (name.equals("--debug-show-item") || name.equals("-di")) {
+                        settings.showItems = true;
+                    } else if (name.equals("--debug-item-name") || name.equals("-din")) {
+                        settings.showItems = true;
+                        settings.showOnlyItemName = value;
                     } else if (name.equals("--file-per-level") || name.equals("-l1")) {
                         settings.createFilePerLevel = true;
                     } else if (name.equals("--generate-default-structures") || name.equals("-gs")) {
@@ -255,27 +107,40 @@ public class EobConverter {
     }
 
     private void convert() {
-        initExternalChanges();
-
+        ExternalChangesParser externalChangesParser = new ExternalChangesParser();
         EobGlobalData eobGlobalData = new EobGlobalData();
 
+        InputStream eob1RepairStream = ExternalChangesParser.class.getClassLoader().getResourceAsStream("org/eob/repairEob1.dat");
+        InputStream externalChangesStream = null;
+        try {
+            externalChangesStream = settings.extChangesPath.trim().length() == 0 ?
+                    ExternalChangesParser.class.getClassLoader().getResourceAsStream("org/eob/externalChangesEob1.dat") :
+                    new FileInputStream(settings.extChangesPath);
+        } catch (FileNotFoundException e) {
+            EobLogger.println("File '" + settings.extChangesPath + "'was not found!");
+        }
+
+        eobGlobalData.externalChangeCommands = externalChangesParser.parseFile(eob1RepairStream);
+        if (externalChangesStream != null) {
+            eobGlobalData.externalChangeCommands.addAll(externalChangesParser.parseFile(externalChangesStream));
+        }
         EobFiles eobFiles = new EobFiles(settings.srcPath);
         eobGlobalData.itemTypeDatFile = new ItemTypeDatFile(eobFiles.getFile(ITEM_TYPE_FILE));
         Eob1Settings.init(eobGlobalData);
 
-        if (settings.debug) {
+        if (settings.showItemTypes) {
             eobGlobalData.itemTypeDatFile.printItemTypes();
         }
 
-        eobGlobalData.itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), eobGlobalData, settings.debug);
-        eobGlobalData.itemParser.parseFile(settings.debugShowOnlyItemName);
+        eobGlobalData.itemParser = new ItemParser(eobFiles.getFile(ITEMS_FILE), eobGlobalData, settings);
+        eobGlobalData.itemParser.parseFile();
 
-        GrimrockExport grimrockExport = new GrimrockExport(externalChangesList, settings, eobGlobalData);
+        GrimrockExport grimrockExport = new GrimrockExport(eobGlobalData.externalChangeCommands, settings, eobGlobalData);
 
         for (int levelId = settings.from; levelId <= settings.to; levelId++) {
             byte[] levelMazFile = eobFiles.getFile(String.format(LEVEL_MAZ_FILE, levelId));
             if (levelMazFile != null) {
-                LevelParser levelParser = new LevelParser(levelId, levelMazFile, eobGlobalData);
+                LevelParser levelParser = new LevelParser(levelId, levelMazFile, eobGlobalData, settings);
                 levelParser.parse();
                 grimrockExport.addLevel(levelParser);
             }
@@ -305,10 +170,11 @@ public class EobConverter {
 
             eobConverterForm.getSrcPathField().setText(settings.srcPath);
             eobConverterForm.getDstPathField().setText(settings.dstPath);
+            eobConverterForm.getExtChangesPathField().setText(settings.extChangesPath);
             eobConverterForm.getDebugModeCheckBox().setSelected(settings.debug);
             eobConverterForm.getScriptDebugModeCheckBox().setSelected(settings.scriptDebug);
             eobConverterForm.getDebugWallCheckBox().setSelected(settings.debugWalls);
-            eobConverterForm.getItemNameField().setText(settings.debugShowOnlyItemName);
+            eobConverterForm.getItemNameField().setText(settings.showOnlyItemName);
             eobConverterForm.getFromLevelField().setText(settings.from.toString());
             eobConverterForm.getToLevelField().setText(settings.to.toString());
             eobConverterForm.getGenerateDefaultStructuresCheckBox().setSelected(settings.generateDefaultStructures);
@@ -316,6 +182,8 @@ public class EobConverter {
             eobConverterForm.getWriteUnpackedInfFilesCheckBox().setSelected(settings.writeUnpackedInf);
             eobConverterForm.getExportEobScriptsCheckBox().setSelected(settings.exportEobScripts);
             eobConverterForm.getAddEobScriptIntoLuaCheckBox().setSelected(settings.addEobScriptIntoLua);
+            eobConverterForm.getPrintItemTypesCheckBox().setSelected(settings.showItemTypes);
+            eobConverterForm.getPrintItemsCheckBox().setSelected(settings.showItems);
             eobConverterForm.getConvertButton().addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -344,9 +212,19 @@ public class EobConverter {
                     }
                 }
             });
+            eobConverterForm.getExtChangesPathChooser().addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser fileChooser = new JFileChooser(eobConverterForm.getExtChangesPathField().getText());
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    if (fileChooser.showOpenDialog(settingsFrame) == JFileChooser.APPROVE_OPTION) {
+                        eobConverterForm.getExtChangesPathField().setText(fileChooser.getSelectedFile().getPath());
+                    }
+                }
+            });
             EobLogger.output = eobConverterForm.getOutput();
 
-            settingsFrame.setMinimumSize(new Dimension(600, 500));
+            settingsFrame.setMinimumSize(new Dimension(600, 600));
             settingsFrame.pack();
             settingsFrame.setLocationRelativeTo(null);
             settingsFrame.setVisible(true);
@@ -358,18 +236,19 @@ public class EobConverter {
     private void fillSettings() {
         settings.srcPath = eobConverterForm.getSrcPathField().getText();
         settings.dstPath = eobConverterForm.getDstPathField().getText();
+        settings.extChangesPath = eobConverterForm.getExtChangesPathField().getText();
         settings.debug = eobConverterForm.getDebugModeCheckBox().isSelected();
         settings.scriptDebug = eobConverterForm.getScriptDebugModeCheckBox().isSelected();
         settings.debugWalls = eobConverterForm.getDebugWallCheckBox().isSelected();
-        settings.debugShowOnlyItemName = eobConverterForm.getItemNameField().getText();
+        settings.showOnlyItemName = eobConverterForm.getItemNameField().getText();
         try {
             settings.from = Math.max(1, Math.min(99, Integer.parseInt(eobConverterForm.getFromLevelField().getText())));
-        } finally {
+        } catch (NumberFormatException e) {
             settings.from = 1;
         }
         try {
             settings.to = Math.max(settings.from, Math.min(99, Integer.parseInt(eobConverterForm.getToLevelField().getText())));
-        } finally {
+        } catch (NumberFormatException e) {
             settings.to = 99;
         }
         settings.generateDefaultStructures = eobConverterForm.getGenerateDefaultStructuresCheckBox().isSelected();
@@ -377,6 +256,8 @@ public class EobConverter {
         settings.writeUnpackedInf = eobConverterForm.getWriteUnpackedInfFilesCheckBox().isSelected();
         settings.exportEobScripts = eobConverterForm.getExportEobScriptsCheckBox().isSelected();
         settings.addEobScriptIntoLua = eobConverterForm.getAddEobScriptIntoLuaCheckBox().isSelected();
+        settings.showItemTypes = eobConverterForm.getPrintItemTypesCheckBox().isSelected();
+        settings.showItems = eobConverterForm.getPrintItemsCheckBox().isSelected();
     }
 
     public static void main(String[] args) {

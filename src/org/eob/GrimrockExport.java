@@ -1,10 +1,8 @@
 package org.eob;
 
-import org.eob.enums.GameSupportType;
-import org.eob.enums.InSquarePositionType;
-import org.eob.enums.ItemSlotType;
-import org.eob.enums.WallType;
+import org.eob.enums.*;
 import org.eob.export.MonsterGroup;
+import org.eob.external.*;
 import org.eob.file.inf.EobCommand;
 import org.eob.file.inf.EobScriptFunction;
 import org.eob.file.inf.EobTrigger;
@@ -40,9 +38,7 @@ public class GrimrockExport {
     private final Settings settings;
     private final EobGlobalData eobGlobalData;
 
-    private final Map<String, String> externalChanges = new LinkedHashMap<String, String>();
-    private final Map<String, String> externalElementName = new LinkedHashMap<String, String>();
-    private final Set<String> unusedExternalChanges = new LinkedHashSet<String>();
+    private final Map<String, Set<ExternalChangeCommand>> externalChangeCommands = new LinkedHashMap<String, Set<ExternalChangeCommand>>();
 
     // Map of the already defined monster groups
     private final Map<String, String> monstersByPosition = new HashMap<String, String>();
@@ -71,11 +67,60 @@ public class GrimrockExport {
     Map<String, String> defaultItems = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock items
     Map<String, GrimrockWall> grimrockWalls = new LinkedHashMap<String, GrimrockWall>();
 
-    public GrimrockExport(List<String> externalChangesList, Settings settings, EobGlobalData eobGlobalData) {
+    public GrimrockExport(List<ExternalChangeCommand> externalChangesList, Settings settings, EobGlobalData eobGlobalData) {
         this.settings = settings;
         this.eobGlobalData = eobGlobalData;
         prepareExternalChanges(externalChangesList);
         generateDefaultStructuresFromGrimrock();
+        setRevertNameMap(eobGlobalData);
+        initInternalNameOfExternalCommands(eobGlobalData);
+    }
+
+    private void setRevertNameMap(EobGlobalData eobGlobalData) {
+        // Add walls
+        for (GrimrockWall grimrockWall : grimrockWalls.values()) {
+            eobGlobalData.assetNamesMap.put(grimrockWall.internalName, grimrockWall.grimrockType);
+            Set<String> reverseNames = eobGlobalData.assetReverseNamesMap.get(grimrockWall.grimrockType);
+            if (reverseNames == null) {
+                reverseNames = new HashSet<String>();
+                eobGlobalData.assetReverseNamesMap.put(grimrockWall.grimrockType, reverseNames);
+            }
+            reverseNames.add(grimrockWall.internalName);
+        }
+
+        // Add items
+        // todo
+
+        // Add monsters
+        // todo
+    }
+
+    private void initInternalNameOfExternalCommands(EobGlobalData eobGlobalData) {
+        for (Set<ExternalChangeCommand> changeCommands : externalChangeCommands.values()) {
+            for (ExternalChangeCommand changeCommand : changeCommands) {
+                if (changeCommand instanceof AssetCommand) {
+                    AssetCommand assetCommand = (AssetCommand) changeCommand;
+                    String originalName = assetCommand.getOriginalName();
+                    int pos = originalName.lastIndexOf('_');
+                    if (eobGlobalData.assetReverseNamesMap.containsKey(originalName.substring(0, pos))) {
+                        assetCommand.setInternalNames(eobGlobalData.assetReverseNamesMap.get(originalName.substring(0, pos)));
+                    } else {
+                        EobLogger.println(String.format("Asset with exported name %s is not correct!", originalName.substring(0, pos)));
+                        assetCommand.setInternalNames(new HashSet<String>(Arrays.asList(originalName.substring(0, pos))));
+                    }
+                    try {
+                        if (originalName.substring(pos + 1).equals("?")) {
+                            assetCommand.setAssetId(-1L);
+                        } else {
+                            assetCommand.setAssetId(Long.parseLong(originalName.substring(pos + 1)));
+                        }
+                    } catch (NumberFormatException e) {
+                        EobLogger.println(String.format("Asset with name %s is not correct!", originalName));
+                        assetCommand.setAssetId(0L);
+                    }
+                }
+            }
+        }
     }
 
     private void generateDefaultStructuresFromGrimrock() {
@@ -151,6 +196,8 @@ public class GrimrockExport {
         GrimrockWall.addWall(grimrockWalls, "All", "Blockages", "emptyMonsterBlock", "blocker", "eob_blocker", "");
         GrimrockWall.addWall(grimrockWalls, "All", "Teleporters", "teleporter", "teleporter", "eob_teleporter", "");
 
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorWithOneButton", "dungeon_door_metal", "eob_sewers_door_metal_one", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorPortcullisWithOneButton", "dungeon_door_portcullis", "eob_sewers_door_portcullis_one", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorWithButton", "dungeon_door_metal", "eob_sewers_door_metal", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoor", "dungeon_door_metal", "eob_sewers_door_metal", "");
         GrimrockWall.addWall(grimrockWalls, "Sewers", "Doors", "sewersDoorOpened", "dungeon_door_metal", "eob_sewers_door_metal", "\t:setDoorState(\"open\")");
@@ -187,6 +234,7 @@ public class GrimrockExport {
         GrimrockWall.addWall(grimrockWalls, "Sewers", "Blockages", "sewersCaveIn", "dungeon_cave_in", "eob_sewers_cave_in", "");
         GrimrockWall.addWall(grimrockWalls, "Sewers", "Portals", "sewersWallPortalInactive", "temple_glass_wall_2", "eob_sewers_portal_inactive", ""); // Level 2 - debug area left by developers
 
+        GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoorWithOneButton", "temple_door_metal", "eob_ruins_door_stone_one", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoorWithButton", "temple_door_metal", "eob_ruins_door_stone", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoor", "temple_door_metal", "eob_ruins_door_stone", "");
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Doors", "ruinsDoorStacked", "temple_door_metal", "eob_ruins_door_stone_stacked", "");
@@ -215,6 +263,8 @@ public class GrimrockExport {
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Portals", "ruinsWallPortalLevelScepter", "temple_glass_wall_2", "eob_ruins_portal_scepter", ""); // Level 6 - Stone Scepter
         GrimrockWall.addWall(grimrockWalls, "Ruins", "Portals", "ruinsWallPortalLevelAmulet", "temple_glass_wall_2", "eob_ruins_portal_amulet", ""); // Level 4 - Stone Amulet
 
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Doors", "drowDoorWithOneButton", "prison_door_metal", "eob_drow_door_one", "\t:addPullChain()");
+        GrimrockWall.addWall(grimrockWalls, "Drow", "Walls", "drowWall", "prison_secret_door", "eob_drow_wall", "");
         GrimrockWall.addWall(grimrockWalls, "Drow", "Doors", "drowDoorWithButton", "prison_door_metal", "eob_drow_door", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Drow", "Doors", "drowDoor", "prison_door_metal", "eob_drow_door", "");
         GrimrockWall.addWall(grimrockWalls, "Drow", "Floor", "drowEmptyPit", "prison_pit", "eob_drow_pit", "");
@@ -248,6 +298,7 @@ public class GrimrockExport {
         GrimrockWall.addWall(grimrockWalls, "Drow", "Portals", "drowWallPortalLevelGem", "temple_glass_wall_2", "eob_drow_portal_gem", ""); // Level 7 -  Gem
 
         // Hive levels
+        GrimrockWall.addWall(grimrockWalls, "Hive", "Doors", "hiveDoorWithOneButton", "dungeon_door_metal", "eob_hive_door_one", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Hive", "Doors", "hiveDoorWithButton", "dungeon_door_metal", "eob_hive_door", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Hive", "Doors", "hiveDoor", "prison_door_metal", "eob_hive_door", "");
         GrimrockWall.addWall(grimrockWalls, "Hive", "Floor", "hiveEmptyPit", "dungeon_pit", "eob_hive_pit", "");
@@ -274,6 +325,7 @@ public class GrimrockExport {
         GrimrockWall.addWall(grimrockWalls, "Hive", "Portals", "hiveWallPortalLevelRing", "temple_glass_wall_2", "eob_hive_portal_ring", ""); // Level 10 - Stone Ring
 
         // Sanctum levels
+        GrimrockWall.addWall(grimrockWalls, "Sanctum", "Doors", "sanctumDoorWithOneButton", "temple_door_metal", "eob_sanctum_door_one", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Sanctum", "Doors", "sanctumDoorWithButton", "temple_door_metal", "eob_sanctum_door", "\t:addPullChain()");
         GrimrockWall.addWall(grimrockWalls, "Sanctum", "Doors", "sanctumDoor", "temple_door_metal", "eob_sanctum_door", "");
         GrimrockWall.addWall(grimrockWalls, "Sanctum", "Floor", "sanctumPressurePlate", "temple_pressure_plate", "eob_sanctum_pressure_plate", "\t:setTriggeredByParty(true)\n\t:setTriggeredByMonster(true)\n\t:setTriggeredByItem(true)");
@@ -303,9 +355,6 @@ public class GrimrockExport {
     }
 
     public void exportIntoGrimrock(boolean createFilePerLevel) {
-        unusedExternalChanges.clear();
-        unusedExternalChanges.addAll(externalChanges.keySet());
-
         exportItems(eobGlobalData.itemParser, settings.dstPath + "/" + ITEM_FILE);
         exportMonsters(levelsInfo.values(), settings.dstPath + "/" + MONSTER_FILE);
         exportObjects(settings.dstPath + "/" + OBJECTS_FILE);
@@ -337,41 +386,18 @@ public class GrimrockExport {
                 e.printStackTrace();
             }
         }
-
-        if (unusedExternalChanges.size() > 0) {
-            EobLogger.println("[WARNING] Next external changes was not used: ");
-            for (String unusedExternalChange : unusedExternalChanges) {
-                EobLogger.println(unusedExternalChange);
-            }
-        }
     }
 
-    private int getFacing(InSquarePositionType inSquarePositionType) {
-        switch (inSquarePositionType) {
-            default:
-                EobLogger.println("[Error]: Unsupported Grimrock position: " + inSquarePositionType.name());
-            case North:
-            case NW:
-                return 0;
-            case East:
-            case NE:
-                return 1;
-            case South:
-            case SE:
-                return 2;
-            case West:
-            case SW:
-                return 3;
-        }
-    }
-
-    private void prepareExternalChanges(List<String> externalChangesList) {
-        for (String change : externalChangesList) {
-            String[] words = change.split(" ");
-            externalChanges.put(words[1], words[0]);
-            if (words.length > 2) {
-                externalElementName.put(words[1], words[2]);
+    private void prepareExternalChanges(List<ExternalChangeCommand> externalChangesList) {
+        for (ExternalChangeCommand changeCommand : externalChangesList) {
+            String blockPositionKey = changeCommand.level + "_" + changeCommand.x + "_" + changeCommand.y;
+            Set<ExternalChangeCommand> commands = externalChangeCommands.get(blockPositionKey);
+            if (commands == null) {
+                commands = new HashSet<ExternalChangeCommand>();
+                externalChangeCommands.put(blockPositionKey, commands);
             }
+
+            commands.add(changeCommand);
         }
     }
 
@@ -433,7 +459,7 @@ public class GrimrockExport {
         String elementType = namePrefix + item.item.getElementType(item.identified);
         String elementName = getNextNameByIndex(itemNameNextIndex, elementType);
 
-        String itemString = String.format("spawn(\"%s\", %d, %d, %d, \"%s\")", elementType, item.x, item.y, getFacing(item.inSquarePosition), elementName);
+        String itemString = String.format("spawn(\"%s\", %d, %d, %d, \"%s\")", elementType, item.x, item.y, item.inSquarePosition.itemPosition, elementName);
         if (settings.debug) {
             if (item.item.itemType.unknownType) {
                 itemString += String.format(" -- %s type=%s subtype=%s", item.item.getDescription(item.identified), item.item.itemType.itemTypeId, item.item.itemSubType.id);
@@ -850,89 +876,12 @@ public class GrimrockExport {
         }
         out.println("]])");
 
-        // Write walls
+        // Write assets
         for (int y = 0; y < levelParser.height; y++) {
             for (int x = 0; x < levelParser.width; x++) {
                 Square square = levelParser.level[x][y];
-
-                Set<Wall> usedWalls = new HashSet<Wall>();
-
-                // Special walls
-                if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_N"))) {
-                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_N");
-                    spawnWall(levelParser, out, x, y, square.north, 0, "Wall", "N");
-                }
-                if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_E"))) {
-                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_E");
-                    spawnWall(levelParser, out, x, y, square.east, 1, "Wall", "E");
-                }
-                if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_S"))) {
-                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_S");
-                    spawnWall(levelParser, out, x, y, square.south, 2, "Wall", "S");
-                }
-                if ("F".equals(externalChanges.get(levelParser.levelId + "_" + x + "_" + y + "_W"))) {
-                    unusedExternalChanges.remove(levelParser.levelId + "_" + x + "_" + y + "_W");
-                    spawnWall(levelParser, out, x, y, square.west, 3, "Wall", "W");
-                }
-
-                // Doors
-                Wall squareType = square.getDoor(usedWalls, settings.debugWalls);
-                if (squareType != null) {
-                    spawnWall(levelParser, out, x, y, squareType, square.getDoorFacing(), "Door", square.getDoorFacing() == 1 ? "EW" : "NS");
-                }
-
-                // In Square
-                squareType = square.getInSquare(usedWalls);
-                if (squareType != null) {
-                    int facing = 0;
-                    if ((x < levelParser.level.length - 1) && !levelParser.level[x + 1][y].isSolidBlock()) {
-                        facing = 3;
-                    }
-                    if (x > 0 && !levelParser.level[x - 1][y].isSolidBlock()) {
-                        facing = 1;
-                    }
-                    if (y > 0 && !levelParser.level[x][y - 1].isSolidBlock()) {
-                        facing = 2;
-                    }
-                    spawnWall(levelParser, out, x, y, squareType, facing, "InSquare", "?");
-
-                }
-
-                if (square.north.gameSupportType.contains(GameSupportType.Grimrock) && !usedWalls.contains(square.north) &&
-                        (!square.north.wallType.equals(WallType.Wall) || (square.north.wallType.equals(WallType.Wall) && !levelParser.level[x][y - 1].isSolidBlock()))) {
-                    if (square.north.wallType.equals(WallType.SquarePart)) {
-                        spawnWall(levelParser, out, x, y, square.north, 2, "Wall", "N");
-                    } else {
-                        spawnWall(levelParser, out, x, y - 1, square.north, 2, "Wall", "S");
-                    }
-                    spawnPossibleItemsIntoAlcove(out, square.north.containCompartment, levelParser.levelId, x, y);
-                }
-                if (square.east.gameSupportType.contains(GameSupportType.Grimrock) && !usedWalls.contains(square.east) &&
-                        (!square.east.wallType.equals(WallType.Wall) || (square.east.wallType.equals(WallType.Wall) && !levelParser.level[x + 1][y].isSolidBlock()))) {
-                    if (square.east.wallType.equals(WallType.SquarePart)) {
-                        spawnWall(levelParser, out, x, y, square.east, 3, "Wall", "E");
-                    } else {
-                        spawnWall(levelParser, out, x + 1, y, square.east, 3, "Wall", "W");
-                    }
-                    spawnPossibleItemsIntoAlcove(out, square.east.containCompartment, levelParser.levelId, x, y);
-                }
-                if (square.south.gameSupportType.contains(GameSupportType.Grimrock) && !usedWalls.contains(square.south) &&
-                        (!square.south.wallType.equals(WallType.Wall) || (square.south.wallType.equals(WallType.Wall) && !levelParser.level[x][y + 1].isSolidBlock()))) {
-                    if (square.south.wallType.equals(WallType.SquarePart)) {
-                        spawnWall(levelParser, out, x, y, square.south, 0, "Wall", "S");
-                    } else {
-                        spawnWall(levelParser, out, x, y + 1, square.south, 0, "Wall", "N");
-                    }
-                    spawnPossibleItemsIntoAlcove(out, square.south.containCompartment, levelParser.levelId, x, y);
-                }
-                if (square.west.gameSupportType.contains(GameSupportType.Grimrock) && !usedWalls.contains(square.west) &&
-                        (!square.west.wallType.equals(WallType.Wall) || (square.west.wallType.equals(WallType.Wall) && !levelParser.level[x - 1][y].isSolidBlock()))) {
-                    if (square.west.wallType.equals(WallType.SquarePart)) {
-                        spawnWall(levelParser, out, x, y, square.west, 1, "Wall", "W");
-                    } else {
-                        spawnWall(levelParser, out, x - 1, y, square.west, 1, "Wall", "E");
-                    }
-                    spawnPossibleItemsIntoAlcove(out, square.west.containCompartment, levelParser.levelId, x, y);
+                for (Asset asset : square.assets) {
+                    spawnAsset(out, asset);
                 }
             }
         }
@@ -1035,50 +984,35 @@ public class GrimrockExport {
         }
     }
 
-    private void spawnWall(LevelParser levelParser, PrintWriter out, int x, int y, Wall wall, int facing, String text, String direction) {
-        if (!wall.internalName.equals("")) {
-            GrimrockWall grimrockWall = grimrockWalls.get(wall.internalName);
-            if (grimrockWall == null) {
-                EobLogger.println("[ERROR] Wall " + wall.internalName + " haven't Grimrock wall equivalent!");
-                return;
-            }
+    private void spawnAsset(PrintWriter out, Asset asset) {
+        GrimrockWall grimrockWall = grimrockWalls.get(asset.internalName);
+        if (grimrockWall == null) {
+            EobLogger.println("[ERROR] Wall " + asset.internalName + " haven't Grimrock wall equivalent!");
+            return;
+        }
 
-            String positionName = levelParser.levelId + "_" + x + "_" + y;
-            String name = grimrockWall.grimrockType + "_" + positionName;
-            if (direction.equals("N") || direction.equals("E") || direction.equals("S") || direction.equals("W")) {
-                name += "_" + direction;
-                positionName += "_" + direction;
-            }
+        String name = grimrockWall.grimrockType + "_" + asset.id;
+        int facing = convertDirectionToFaces(asset.directionType);
 
-            String externalFilledWall = externalChanges.get(positionName);
-            if (externalFilledWall != null && externalFilledWall.equals("F")) {
-                unusedExternalChanges.remove(positionName);
-                if (wall.wallType.isSolid()) {
-                    String elementName = externalElementName.get(positionName);
-                    out.println("spawn(\"" + (elementName == null ? "???" : elementName) + "\", " + x + ", " + y + ", " + facing + ", \"wall_" + positionName + "\")");
-                }
-            }
+        out.println("spawn(\"" + grimrockWall.grimrockType + "\", " + asset.x + ", " + asset.y + ", " + facing + ", \"" + name + "\")");
+        if (!grimrockWall.grimrockProperties.equals("")) {
+            out.println(grimrockWall.grimrockProperties);
+        }
+    }
 
-
-            String externalChange = externalChanges.get(name);
-            if (externalChange != null) {
-                if (externalChange.equals("R")) {
-                    unusedExternalChanges.remove(name);
-                    return;
-                }
-
-                if (wall.wallType.equals(WallType.DoorPart)) {
-                    unusedExternalChanges.remove(name);
-                    facing = getFacing(InSquarePositionType.valueByString(externalChange));
-                }
-            }
-
-            out.println("spawn(\"" + grimrockWall.grimrockType + "\", " + x + ", " + y + ", " + facing + ", \"" + name + "\")");
-            if (!grimrockWall.grimrockProperties.equals("")) {
-                out.println(grimrockWall.grimrockProperties);
-            }
-        } else {
-            EobLogger.println(text + " type haven't defined elementType: " + wall.internalName + " [" + x + "," + y + "," + direction + "] ");
+    private int convertDirectionToFaces(DirectionType directionType) {
+        switch (directionType) {
+            default:
+            case Unchanged:
+            case Unknown:
+            case North:
+                return 0;
+            case East:
+                return 1;
+            case South:
+                return 2;
+            case West:
+                return 3;
         }
     }
 

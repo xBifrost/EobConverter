@@ -1,0 +1,149 @@
+// Possible command:
+//  changeDirection(level, x, y, assetName, newDirection)
+//      - Change direction of any asset (except monster and item for now)
+//      Examples: changeDirection(1, 2, 3, eob_sewers_door_metal_?, W)
+//                changeDirection(4, 5, 6, eob_ruins_door_stone_4, N)
+//
+//  changePosition(level, x, y, assetName, newX, newY)
+//      - Change position of any asset (except monster and item for now)
+//      Examples: changePosition(3, 26, 14, eob_sewers_door_metal_one_?, 25, 14)
+//                changePosition(4, 25, 26, eob_ruins_door_stone_17, 24, 26)
+//
+//  removeAsset(level, x, y, assetName)
+//      - Remove any asset (except monster and item for now)
+//      Examples: removeAsset(9, 8, 8, eob_drow_dart_firing_pad_?)
+//                removeAsset(9, 18, 23, eob_drow_dart_firing_pad_17)
+//
+//  addAsset(level, x, y, internalName, inSquarePosition, direction)
+//      - add new asset into dungeon
+//      Examples: addAsset(9, 16, 11, drowWall, W, W)
+//
+// Parameters descriptions:
+//  level = <1, 9>
+//  x = <0, 31>
+//  y = <0, 31>
+//  direction = {N, E, S, W}
+//  inSquarePosition = {N, E, S, W, NW, NE, SW, SE, EW, NS, C, A}
+//      - N, E, S, W        = Wall - North, East, South, West
+//      - NW, NE, SW, SE, C = On floor - NorthWest, NorthEast, SouthWest, SouthEast, Center
+//      - EW, NS            = Door position - EastWest, NorthSouth
+//      - A                 = Alcove
+//  assetName = assetType_id (Description: unique identifier of the asset in Grimrock dungeon editor)
+//     - assetType = Grimrock asset (Example: eob_sewers_door_metal, eob_ruins_door_stone,...)
+//     - id = ? (Description: any value)
+//          = <1, ...)
+//  internalName = list of the possible names will be added later
+//
+
+changeDirection(1, 2, 3, eob_sewers_door_metal_?, W)
+changeDirection(1, 17, 23, eob_sewers_door_metal_?, W)
+changeDirection(1, 16, 11, eob_sewers_door_metal_?, S)
+changeDirection(1, 19, 18, eob_sewers_door_metal_?, S)
+
+changeDirection(2, 7, 4, eob_sewers_portcullis_throwable_?, S)
+changeDirection(2, 28, 5, eob_sewers_door_metal_?, S)
+changeDirection(2, 20, 18, eob_sewers_door_metal_?, W)
+changeDirection(2, 19, 21, eob_sewers_door_metal_?, S)
+changeDirection(2, 21, 23, eob_sewers_door_metal_?, W)
+changeDirection(2, 23, 16, eob_sewers_portcullis_throwable_?, W)
+
+changeDirection(3, 30, 8, eob_sewers_door_metal_?, S)
+changeDirection(3, 23, 10, eob_sewers_door_metal_?, W)
+changeDirection(3, 17, 11, eob_sewers_door_metal_?, S)
+changePosition(3, 26, 14, eob_sewers_door_metal_one_?, 25, 14)
+changeDirection(3, 9, 18, eob_sewers_door_metal_?, S)
+changeDirection(3, 11, 18, eob_sewers_door_metal_?, S)
+changeDirection(3, 18, 18, eob_sewers_door_metal_?, S)
+changeDirection(3, 4, 20, eob_sewers_door_metal_?, W)
+
+changeDirection(4, 18, 1, eob_ruins_door_stone_?, W)
+changeDirection(4, 30, 4, eob_ruins_net_?, S)
+changeDirection(4, 2, 7, eob_ruins_door_stone_?, W)
+changeDirection(4, 3, 8, eob_ruins_door_stone_?, S)
+changeDirection(4, 20, 6, eob_ruins_door_stone_?, W)
+changeDirection(4, 20, 8, eob_ruins_door_stone_?, W)
+changeDirection(4, 20, 10, eob_ruins_door_stone_?, W)
+changeDirection(4, 20, 12, eob_ruins_door_stone_?, W)
+changeDirection(4, 28, 18, eob_ruins_net_torn_?, S)
+changeDirection(4, 16, 22, eob_ruins_door_stone_?, S)
+changeDirection(4, 17, 28, eob_ruins_net_torn_?, W)
+changeDirection(4, 17, 30, eob_ruins_net_?, W)
+changeDirection(4, 8, 25, eob_ruins_door_stone_?, S)
+changeDirection(4, 21, 24, eob_ruins_net_?, W)
+changeDirection(4, 29, 27, eob_ruins_net_?, S)
+changeDirection(4, 25, 19, eob_ruins_door_stone_?, W)
+
+changeDirection(5, 28, 2, eob_ruins_door_stone_?, W)
+changeDirection(5, 1, 9, eob_ruins_door_stone_?, S)
+changeDirection(5, 4, 9, eob_ruins_door_stone_?, S)
+changeDirection(5, 23, 19, eob_ruins_door_stone_?, S)
+changeDirection(5, 13, 18, eob_ruins_door_stone_?, S)
+changeDirection(5, 10, 18, eob_ruins_door_stone_?, S)
+changeDirection(5, 7, 18, eob_ruins_door_stone_?, S)
+changeDirection(5, 24, 27, eob_ruins_door_stone_?, W)
+changeDirection(5, 17, 29, eob_ruins_door_stone_?, W)
+
+changeDirection(6, 10, 3, eob_ruins_door_stone_?, W)
+changeDirection(6, 5, 9, eob_ruins_door_stone_?, S)
+changeDirection(6, 29, 11, eob_ruins_door_stone_?, S)
+
+changeDirection(7, 24, 2, eob_drow_door_?, W)
+changeDirection(7, 28, 4, eob_drow_door_?, W)
+changeDirection(7, 29, 7, eob_drow_door_?, W)
+changeDirection(7, 29, 9, eob_drow_door_?, W)
+changePosition(7, 13, 7, eob_drow_door_one_?, 12, 7)
+changeDirection(7, 29, 25, eob_drow_door_?, W)
+changeDirection(7, 14, 20, eob_drow_door_?, W)
+changeDirection(7, 13, 10, eob_drow_door_?, W)
+changeDirection(7, 27, 24, eob_drow_door_?, S)
+changeDirection(7, 25, 24, eob_drow_door_?, S)
+changeDirection(7, 19, 24, eob_drow_door_?, S)
+changeDirection(7, 17, 24, eob_drow_door_?, S)
+changeDirection(7, 10, 29, eob_drow_door_?, S)
+changeDirection(7, 4, 29, eob_drow_door_?, S)
+changeDirection(7, 25, 16, eob_drow_door_?, S)
+
+changeDirection(8, 30, 26, eob_drow_door_?, S)
+changeDirection(8, 5, 30, eob_drow_door_?, W)
+changeDirection(8, 7, 24, eob_drow_door_?, W)
+
+changeDirection(9, 25, 2, eob_drow_door_?, S)
+changeDirection(9, 22, 2, eob_drow_door_?, S)
+changeDirection(9, 22, 9, eob_drow_door_?, S)
+changeDirection(9, 18, 9, eob_drow_door_?, S)
+changeDirection(9, 16, 14, eob_drow_door_?, S)
+changeDirection(9, 28, 3, eob_drow_door_?, W)
+changeDirection(9, 28, 7, eob_drow_door_?, W)
+changePosition(9, 28, 16, eob_drow_door_one_?, 27, 16)
+changeDirection(9, 28, 26, eob_drow_door_?, W)
+
+changeDirection(10, 20, 16, eob_hive_door_?, W)
+changeDirection(10, 8, 19, eob_hive_door_?, S)
+changeDirection(10, 20, 18, eob_hive_door_?, S)
+changeDirection(10, 22, 18, eob_hive_door_?, S)
+changeDirection(10, 19, 25, eob_hive_door_?, S)
+changeDirection(10, 21, 25, eob_hive_door_?, S)
+changeDirection(10, 23, 25, eob_hive_door_?, S)
+
+changeDirection(11, 3, 2, eob_hive_door_?, W)
+changeDirection(11, 4, 5, eob_hive_door_?, W)
+changeDirection(11, 4, 13, eob_hive_door_?, W)
+changeDirection(11, 7, 11, eob_hive_door_?, W)
+changeDirection(11, 25, 21, eob_hive_door_?, W)
+changeDirection(11, 11, 22, eob_hive_door_?, W)
+changeDirection(11, 18, 24, eob_hive_door_?, W)
+changeDirection(11, 18, 28, eob_hive_door_?, W)
+changeDirection(11, 10, 2, eob_hive_door_?, S)
+changeDirection(11, 21, 3, eob_hive_door_?, S)
+changeDirection(11, 23, 3, eob_hive_door_?, S)
+changeDirection(11, 30, 13, eob_hive_door_?, S)
+changeDirection(11, 14, 18, eob_hive_door_?, S)
+changeDirection(11, 30, 20, eob_hive_door_?, S)
+changeDirection(11, 14, 28, eob_hive_door_?, S)
+
+changeDirection(12, 18, 15, eob_sanctum_door_?, W)
+changeDirection(12, 23, 7, eob_sanctum_door_?, W)
+changeDirection(12, 2, 15, eob_sanctum_door_?, W)
+changeDirection(12, 23, 15, eob_sanctum_door_?, W)
+changeDirection(12, 21, 6, eob_sanctum_door_?, S)
+changeDirection(12, 23, 3, eob_sanctum_door_?, S)

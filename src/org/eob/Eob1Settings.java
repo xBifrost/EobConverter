@@ -8,6 +8,9 @@ import org.eob.model.SubItemType;
 import org.eob.model.Wall;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Bifrost
@@ -325,6 +328,16 @@ public class Eob1Settings {
         //-------------
         // --- Wall ---
         //-------------
+
+        // Wall conversion
+        eobGlobalData.wallConversion.put(Arrays.asList("sewersDoorWithButton", "sewersDoor"), "sewersDoorWithOneButton");
+        eobGlobalData.wallConversion.put(Arrays.asList("sewersDoorPortcullisWithButton", "sewersDoorPortcullisThrowableThrough"), "sewersDoorPortcullisWithOneButton");
+        eobGlobalData.wallConversion.put(Arrays.asList("ruinsDoorWithButton", "ruinsDoor"), "ruinsDoorWithOneButton");
+        eobGlobalData.wallConversion.put(Arrays.asList("drowDoorWithButton", "drowDoor"), "drowDoorWithOneButton");
+        eobGlobalData.wallConversion.put(Arrays.asList("hiveDoorWithButton", "hiveDoor"), "hiveDoorWithOneButton");
+        eobGlobalData.wallConversion.put(Arrays.asList("sanctumDoorWithButton", "sanctumDoor"), "sanctumDoorWithOneButton");
+
+
         // All levels
         eobGlobalData.createWall("empty", 0L, WallType.Empty, Arrays.asList(GameSupportType.Eob1));
         eobGlobalData.createWall("wall1", 1L, WallType.SolidPart, Arrays.asList(GameSupportType.Eob1));

@@ -20,6 +20,8 @@ public enum InSquarePositionType {
     NE(-1, 1, -1, Arrays.asList("northeast", "ne")),
     SW(-1, 2, -1, Arrays.asList("southwest", "sw")),
     SE(-1, 3, -1, Arrays.asList("southeast", "se")),
+    EW(-1, -1, -1, Arrays.asList("eastwest", "ew")),
+    NS(-1, -1, -1, Arrays.asList("northsouth", "ns")),
     Center(-1, -1, 4, Arrays.asList("center", "c")),
     Alcove(-1, 8, -1, Arrays.asList("alcove", "a"));
 
@@ -66,6 +68,38 @@ public enum InSquarePositionType {
         }
 
         EobLogger.println("[ERROR]: Unsupported type of position: " + value);
+        return Unknown;
+    }
+
+    public InSquarePositionType oppositePosition() {
+        switch (this) {
+            case Unknown:
+                return Unknown;
+            case North:
+                return South;
+            case East:
+                return West;
+            case South:
+                return North;
+            case West:
+                return East;
+            case NW:
+                return SE;
+            case NE:
+                return SW;
+            case SW:
+                return NE;
+            case SE:
+                return NW;
+            case EW:
+                return EW;
+            case NS:
+                return NS;
+            case Center:
+                return Center;
+            case Alcove:
+                return Alcove;
+        }
         return Unknown;
     }
 }

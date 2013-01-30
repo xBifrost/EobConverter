@@ -1,9 +1,7 @@
 package org.eob;
 
-import org.eob.file.dat.ItemTypeDatFile;
 import org.eob.model.ItemName;
 import org.eob.model.ItemObject;
-import org.eob.model.ItemType;
 
 import java.util.*;
 
@@ -17,18 +15,18 @@ import java.util.*;
  */
 public class ItemParser {
     private final byte[] itemsData;
-    private EobGlobalData eobGlobalData;
-    private final boolean debug;
+    private final EobGlobalData eobGlobalData;
+    private final Settings settings;
 
     private Map<Integer, ItemObject> items = new LinkedHashMap<Integer, ItemObject>();
 
-    public ItemParser(byte[] itemsData, EobGlobalData eobGlobalData, boolean debug) {
+    public ItemParser(byte[] itemsData, EobGlobalData eobGlobalData, Settings settings) {
         this.itemsData = itemsData;
         this.eobGlobalData = eobGlobalData;
-        this.debug = debug;
+        this.settings = settings;
     }
 
-    public void parseFile(String debugShowOnlyItemName) {
+    public void parseFile() {
         EobLogger.println("Parsing item data");
 
         int itemsNum = ByteArrayUtility.getWord(itemsData, 0); // first two bytes specifies number of records
@@ -63,8 +61,8 @@ public class ItemParser {
         EobLogger.println("Found " + items.size() + " items with unique " +
                 ItemName.itemNames.size() + " names");
 
-        if (debug) {
-            printItems(debugShowOnlyItemName);
+        if (settings.showItems) {
+            printItems(settings.showOnlyItemName);
         }
     }
 

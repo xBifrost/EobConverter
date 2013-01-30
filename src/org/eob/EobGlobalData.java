@@ -2,6 +2,7 @@ package org.eob;
 
 import org.eob.enums.GameSupportType;
 import org.eob.enums.WallType;
+import org.eob.external.ExternalChangeCommand;
 import org.eob.file.dat.ItemTypeDatFile;
 import org.eob.model.*;
 
@@ -16,10 +17,19 @@ public class EobGlobalData {
     public ItemTypeDatFile itemTypeDatFile = null;
     public ItemParser itemParser = null;
 
+    public List<ExternalChangeCommand> externalChangeCommands = null;
+    public Map<String, String> assetNamesMap = new HashMap<String, String>();
+    public Map<String, Set<String>> assetReverseNamesMap = new LinkedHashMap<String, Set<String>>();
+
     public final List<Item> registeredItems = new ArrayList<Item>();
     private final Map<ItemType, Map<Long, SubItemType>> registeredSubItems = new HashMap<ItemType, Map<Long, SubItemType>>();
     private final Map<Monster, String> registeredMonsters = new LinkedHashMap<Monster, String>();
     private final List<Wall> registeredWalls = new ArrayList<Wall>();
+
+    // Conversion map to convert different eob walls (internal names) into one (internal name)
+    // First side of the wall is primary (For example: Door contain button)
+    public final Map<List<String>, String> wallConversion = new HashMap<List<String>, String>();
+
 
     public SubItemType addSubItem(SubItemType subItemType) {
         if (subItemType.itemType == null) {

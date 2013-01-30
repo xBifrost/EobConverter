@@ -7,5 +7,5 @@ package org.eob.enums;
  */
 public enum GameSupportType {
     Eob1,
-    Grimrock
+    Assets
 }
