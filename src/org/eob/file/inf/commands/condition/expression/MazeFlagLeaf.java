@@ -19,7 +19,7 @@ public class MazeFlagLeaf extends ExpressionLeaf {
     }
 
     private MazeFlagLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 2, "byte <- maze.flag(byte)");
+        super(originalCommands, pos, 2, "boolean <- maze.flag(byte)", LeafType.Boolean);
         flagId = ByteArrayUtility.getByte(originalCommands, pos + 1);
     }
 

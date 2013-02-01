@@ -21,7 +21,7 @@ public class MiscRollDiceLeaf extends ExpressionLeaf {
     }
 
     private MiscRollDiceLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 4, "int <- rollDice(rolls T sides + base)");
+        super(originalCommands, pos, 4, "int <- rollDice(rolls T sides + base)", LeafType.Number);
         rolls = ByteArrayUtility.getByte(originalCommands, pos + 1);
         sides = ByteArrayUtility.getByte(originalCommands, pos + 2);
         base = ByteArrayUtility.getByte(originalCommands, pos + 3);

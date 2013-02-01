@@ -17,7 +17,7 @@ public class PartyDirectionLeaf extends ExpressionLeaf {
     }
 
     private PartyDirectionLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 1, "byte <- party.direction");
+        super(originalCommands, pos, 1, "byte <- party.direction", LeafType.Direction);
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {

@@ -26,7 +26,7 @@ public class MonsterCountLeaf extends ExpressionLeaf {
 
     private MonsterCountLeaf(byte[] levelInfData, int originalPos, int commandSize) {
         super(levelInfData, originalPos, commandSize, commandSize == 4 ?
-                "byte <- monster.countAt(x, y)" : "byte <- monster.countByType(type)");
+                "byte <- monster.countAt(x, y)" : "byte <- monster.countByType(type)", LeafType.Number);
 
         if (commandSize == 4) {
             monsterTypeId = ByteArrayUtility.getByte(levelInfData, originalPos + 1);

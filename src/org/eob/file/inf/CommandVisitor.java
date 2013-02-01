@@ -81,11 +81,7 @@ public interface CommandVisitor {
 
     void visit(MazeWallSideLeaf mazeWallSideLeaf);
 
-    void visit(MazeWallNumberLeaf mazeWallNumberLeaf);
-
-    void visit(MiscFalseLeaf miscFalseLeaf);
-
-    void visit(MiscTrueLeaf miscTrueLeaf);
+    void visit(MazeWallTypeLeaf mazeWallTypeLeaf);
 
     void visit(PartyContainsAlignmentLeaf partyContainsAlignmentLeaf);
 
@@ -93,7 +89,7 @@ public interface CommandVisitor {
 
     void visit(PartyItemTypeLeaf partyItemTypeLeaf);
 
-    void visit(PartyItemValueLeaf partyItemValueLeaf);
+    void visit(PartyItemSubTypeLeaf partyItemSubTypeLeaf);
 
     void visit(PartyItemNameIdLeaf partyItemNameIdLeaf);
 
@@ -103,7 +99,7 @@ public interface CommandVisitor {
 
     void visit(MiscRollDiceLeaf miscRollDiceLeaf);
 
-    void visit(PartyItemLeaf partyItemLeaf);
+    void visit(MouseItemTypeLeaf mouseItemTypeLeaf);
 
     void visit(PartyDirectionLeaf partyDirectionLeaf);
 

@@ -25,9 +25,7 @@ public class Eob1Settings {
         // --- Items ---
         //--------------
         // Add any item type
-        ItemType anyItem = new ItemType(0xFF);
-        anyItem.elementType = "any";
-        anyItem.description = "AnyItem";
+        ItemType anyItem = new ItemType(0xFF, "any", "AnyItem");
         eobGlobalData.itemTypeDatFile.itemTypeList.put(0xFFL, anyItem);
 
         ItemType Axe = eobGlobalData.itemTypeDatFile.itemTypeList.get(0x00L).setExternalData("axe", "Axe");
@@ -201,6 +199,7 @@ public class Eob1Settings {
         eobGlobalData.addSubItem(new SubItemType(5, Stone, "medallion", "", ""));
         eobGlobalData.addSubItem(new SubItemType(6, Stone, "scepter", "", ""));
         eobGlobalData.addSubItem(new SubItemType(7, Stone, "ring", "", ""));
+        eobGlobalData.addSubItem(new SubItemType(8, Stone, "gem", "", ""));
 
         // Dagger
         eobGlobalData.addSubItem(new SubItemType(3, Dagger, "backstabber", "+3", ""));
@@ -309,17 +308,17 @@ public class Eob1Settings {
         eobGlobalData.createMonster("skelwar", 8, "eob_skelwar");
         eobGlobalData.createMonster("drowelf", 12, "eob_drowelf");
         // Level 8
-        eobGlobalData.createMonster("drider", 20, "eob_drider"); // 20
-        eobGlobalData.createMonster("hellhnd", 15, "eob_hellhnd"); // 15
+        eobGlobalData.createMonster("drider", 15, "eob_drider");
+        eobGlobalData.createMonster("hellhnd", 20, "eob_hellhnd");
         // Level 9
-        eobGlobalData.createMonster("rust", 9, "eob_rust"); // 9?
-        eobGlobalData.createMonster("disbeast", 18, "eob_disbeast"); // 18?
+        eobGlobalData.createMonster("rust", 18, "eob_rust");
+        eobGlobalData.createMonster("disbeast", 9, "eob_disbeast");
         // Level 10
         eobGlobalData.createMonster("shindia", 14, "eob_shindia");
         eobGlobalData.createMonster("mantis", 10, "eob_mantis");
         // Level 11
-        eobGlobalData.createMonster("xorn", 19, "eob_xorn"); // 19?
-        eobGlobalData.createMonster("mflayer", 17, "eob_mflayer"); // 17?
+        eobGlobalData.createMonster("xorn", 19, "eob_xorn");
+        eobGlobalData.createMonster("mflayer", 17, "eob_mflayer");
         // Level 12
         eobGlobalData.createMonster("xanath", 21, "eob_xanath");
         eobGlobalData.createMonster("golem", 13, "eob_golem");
@@ -362,11 +361,17 @@ public class Eob1Settings {
         eobGlobalData.createWall("sewersDoorStacked", 30L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersDoorPortcullisStacked", 31L, WallType.DoorPart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersWallWithEyeKeyHole", 32L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        eobGlobalData.createWall("sewersWallWithEyeKeyHoleWithGem", 33L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        eobGlobalData.createWall("sewersWallWithPurpleEyeKeyHoleWithGem", 34L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersWallWithJewelKeyHole", 35L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        eobGlobalData.createWall("sewersWallWithJewelKeyHoleWithGem", 36L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersWallWithSecretButtonLarge", 39L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Brick
         eobGlobalData.createWall("sewersWallWithKeyHoleButton", 41L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Key hole -> button
         eobGlobalData.createWall("sewersWallWithDrainage", 43L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersWallWithDrainageBent1", 44L, WallType.SolidPart, false, Wall.levels(1, 2, 3)); // Is it the same as 62???
+        eobGlobalData.createWall("sewersWallWithBlueButton", 45L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        eobGlobalData.createWall("sewersWallWithRedButton", 48L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
+        eobGlobalData.createWall("sewersCaveIn", 49L, WallType.SquarePart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersWallWithButtonSmall", 50L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersWallWithText", 51L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
         eobGlobalData.createWall("sewersWallWithSilverKeyHole", 53L, WallType.SolidPart, false, Wall.levels(1, 2, 3));
@@ -416,6 +421,7 @@ public class Eob1Settings {
         // Drow levels
         eobGlobalData.createWall("drowDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(7, 8, 9));
         eobGlobalData.createWall("drowDoor", 8L, WallType.DoorPart, false, Wall.levels(7, 8, 9));
+        eobGlobalData.createWall("drowDoorOpened", 12L, WallType.DoorPart, false, Wall.levels(7, 8, 9));
         eobGlobalData.createWall("drowLevelUp", 23L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
         eobGlobalData.createWall("drowLevelDown", 24L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
         eobGlobalData.createWall("drowEmptyCeilingShaft", 26L, WallType.SquarePart, false, Wall.levels(7, 8, 9));
@@ -425,6 +431,7 @@ public class Eob1Settings {
         eobGlobalData.createWall("drowWallWithFiringMechanismFireball2", 32L, WallType.SolidPart, false, Wall.levels(7, 8, 9)); // Level 7: Fireball
         eobGlobalData.createWall("drowWallWithText2", 33L, WallType.SolidPart, false, Wall.levels(7, 8, 9)); // It is written, the key lies on the other side.
         eobGlobalData.createWall("drowWallWithGemKeyHole", 36L, WallType.SolidPart, false, Wall.levels(7, 8, 9)); // Gem is used as key
+        eobGlobalData.createWall("drowWallWithGemKeyHoleWithGem", 37L, WallType.SolidPart, false, Wall.levels(7, 8, 9)); // Gem is used as key
         eobGlobalData.createWall("drowWallWithSecretButtonTiny", 39L, WallType.SolidPart, false, Wall.levels(7, 8, 9));
         eobGlobalData.createWall("drowWallPortalLevelCross", 40L, WallType.SolidPart, false, Wall.levels(7)); // Level 7 - missing Stone Cross
         eobGlobalData.createWall("drowWallPortalLevelNecklace", 41L, WallType.SolidPart, false, Wall.levels(7)); // Level 7 - missing Stone Necklace
@@ -475,7 +482,7 @@ public class Eob1Settings {
         // Sanctum levels
         eobGlobalData.createWall("sanctumDoorWithButton", 3L, WallType.DoorPart, false, Wall.levels(12));
         eobGlobalData.createWall("sanctumDoor", 8L, WallType.DoorPart, false, Wall.levels(12));
-        eobGlobalData.createWall("sanctumPedestal", 22L, WallType.SquarePart, false, Wall.levels(12));
+        eobGlobalData.createWall("sanctumPedestal", 22L, WallType.SquarePart, true, Wall.levels(12));
         eobGlobalData.createWall("sanctumPedestalWithEye", 26L, WallType.SquarePart, false, Wall.levels(12));
         eobGlobalData.createWall("sanctumPedestalWithEyeDetector", 27L, WallType.SquarePart, false, Wall.levels(12));
         eobGlobalData.createWall("sanctumPressurePlate", 28L, WallType.SquarePart, false, Wall.levels(12));
@@ -490,6 +497,7 @@ public class Eob1Settings {
         eobGlobalData.createWall("sanctumWallWithKeyHole", 42L, WallType.SolidPart, false, Wall.levels(12));
         eobGlobalData.createWall("sanctumWallWithLampSmoke", 43L, WallType.SolidPart, false, Wall.levels(12));
         eobGlobalData.createWall("sanctumWallWithButton", 45L, WallType.SolidPart, false, Wall.levels(12));
+        eobGlobalData.createWall("sanctumWallWithButtonPressed", 46L, WallType.SolidPart, false, Wall.levels(12));
         eobGlobalData.createWall("sanctumWallWithButton2", 60L, WallType.SolidPart, false, Wall.levels(12));
     }
 }

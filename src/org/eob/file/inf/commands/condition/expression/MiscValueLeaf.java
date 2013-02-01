@@ -10,6 +10,7 @@ import org.eob.file.inf.CommandVisitor;
  * Time: 11:54 PM
  */
 public class MiscValueLeaf extends ExpressionLeaf {
+    public Integer parentValue = null;
     public int value;
     /**
      * Constructor of the prototype;
@@ -18,12 +19,12 @@ public class MiscValueLeaf extends ExpressionLeaf {
     }
 
     protected MiscValueLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 1, "byte <- value");
+        super(originalCommands, pos, 1, "byte <- value", LeafType.UndefinedYet);
         value = ByteArrayUtility.getByte(originalCommands, pos);
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
-        if (ByteArrayUtility.getByte(levelInfData, pos) > 0x01 && ByteArrayUtility.getByte(levelInfData, pos) < 0x80) {
+        if (ByteArrayUtility.getByte(levelInfData, pos) >= 0x00 && ByteArrayUtility.getByte(levelInfData, pos) < 0x80) {
             return new MiscValueLeaf(levelInfData, pos);
         }
         return null;

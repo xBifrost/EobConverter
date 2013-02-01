@@ -48,7 +48,7 @@ public class ChangeWallCommand extends EobCommand {
                 len = 7;
                 break;
             }
-            case OpenDoor: {
+            case Door: {
                 int position = ByteArrayUtility.getWord(levelInfData, pos + 2);
                 x = (position) & 0x1f;
                 y = (position >> 5) & 0x1f;

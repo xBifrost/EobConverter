@@ -54,7 +54,7 @@ public class Square {
             usedWalls.add(east);
             usedWalls.add(west);
             if (east.equals(west)) {
-                assets.add(new Asset(east.internalName, x, y, InSquarePositionType.EW, DirectionType.East, eobGlobalData));
+                assets.add(new Asset(east.internalName, x, y, InSquarePositionType.EW, DirectionType.East, east.containCompartment, eobGlobalData));
             } else {
                 @SuppressWarnings("unchecked")
                 final List<Couple<Wall, InSquarePositionType>> walls = Arrays.asList(
@@ -65,9 +65,9 @@ public class Square {
                     if (settings.debugWalls) {
                         EobLogger.println("Door haven't conversion of different wall types! [x:" + x + ", y:" + y + ", E:" + east.internalName + ", W:" + west.internalName + "] ");
                     }
-                    assets.add(new Asset(east.internalName, x, y, InSquarePositionType.EW, DirectionType.East, eobGlobalData));
+                    assets.add(new Asset(east.internalName, x, y, InSquarePositionType.EW, DirectionType.East, east.containCompartment, eobGlobalData));
                 } else {
-                    assets.add(new Asset(assetNameDir.first, x, y, InSquarePositionType.EW, LevelUtility.getDirection(assetNameDir.second), eobGlobalData));
+                    assets.add(new Asset(assetNameDir.first, x, y, InSquarePositionType.EW, LevelUtility.getDirection(assetNameDir.second), east.containCompartment, eobGlobalData));
                 }
             }
 
@@ -78,7 +78,7 @@ public class Square {
             usedWalls.add(north);
             usedWalls.add(south);
             if (north.equals(south)) {
-                assets.add(new Asset(north.internalName, x, y, InSquarePositionType.EW, DirectionType.North, eobGlobalData));
+                assets.add(new Asset(north.internalName, x, y, InSquarePositionType.EW, DirectionType.North, north.containCompartment, eobGlobalData));
             } else {
                 @SuppressWarnings("unchecked")
                 final List<Couple<Wall, InSquarePositionType>> walls = Arrays.asList(
@@ -89,9 +89,9 @@ public class Square {
                     if (settings.debugWalls) {
                         EobLogger.println("Door haven't conversion of different wall types! [x:" + x + ", y:" + y + ", N:" + north.internalName + ", S:" + south.internalName + "] ");
                     }
-                    assets.add(new Asset(north.internalName, x, y, InSquarePositionType.EW, DirectionType.North, eobGlobalData));
+                    assets.add(new Asset(north.internalName, x, y, InSquarePositionType.EW, DirectionType.North, north.containCompartment, eobGlobalData));
                 } else {
-                    assets.add(new Asset(assetNameDir.first, x, y, InSquarePositionType.EW, LevelUtility.getDirection(assetNameDir.second), eobGlobalData));
+                    assets.add(new Asset(assetNameDir.first, x, y, InSquarePositionType.EW, LevelUtility.getDirection(assetNameDir.second), north.containCompartment, eobGlobalData));
                 }
             }
         }
@@ -100,7 +100,7 @@ public class Square {
         Wall inSquare = getInSquare(usedWalls);
         if (inSquare != null) {
             assets.add(new Asset(inSquare.internalName, x, y, InSquarePositionType.Center,
-                    LevelUtility.findDirectionOfEmptyAdjacentSquare(level, this).turnBack(), eobGlobalData));
+                    LevelUtility.findDirectionOfEmptyAdjacentSquare(level, this).turnBack(), inSquare.containCompartment, eobGlobalData));
         }
 
         // Unused walls -> Asset
@@ -122,10 +122,10 @@ public class Square {
                 }
             }
             if (wall.wallType.equals(WallType.SquarePart)) {
-                assets.add(new Asset(wall.internalName, x, y, wallEntry.getKey(), LevelUtility.getDirection(wallEntry.getKey()), eobGlobalData));
+                assets.add(new Asset(wall.internalName, x, y, wallEntry.getKey(), LevelUtility.getDirection(wallEntry.getKey()).turnBack(), wall.containCompartment,eobGlobalData));
             } else {
-                adjacentSquare.assets.add(new Asset(wall.internalName, adjacentSquare.x, adjacentSquare.y,
-                        wallEntry.getKey().oppositePosition(), LevelUtility.getDirection(wallEntry.getKey()).turnBack(), eobGlobalData));
+                adjacentSquare.assets.add(new Asset(wall.internalName, adjacentSquare.x, adjacentSquare.y, x, y,
+                        wallEntry.getKey().oppositePosition(), LevelUtility.getDirection(wallEntry.getKey()).turnBack(), wall.containCompartment, eobGlobalData));
             }
         }
     }
@@ -193,7 +193,7 @@ public class Square {
             } else if (changeCommand instanceof AddAssetCommand) {
                 AddAssetCommand addAssetCommand = (AddAssetCommand) changeCommand;
                 assets.add(new Asset(addAssetCommand.internalName, addAssetCommand.x, addAssetCommand.y,
-                        addAssetCommand.inSquarePositionType, addAssetCommand.directionType, eobGlobalData));
+                        addAssetCommand.inSquarePositionType, addAssetCommand.directionType, false, eobGlobalData));
                 unusedCommand = false;
 
             } else {

@@ -7,6 +7,7 @@ import org.eob.file.inf.CommandVisitor;
 import org.eob.file.inf.commands.condition.*;
 import org.eob.file.inf.commands.condition.expression.*;
 import org.eob.file.inf.EobCommand;
+import org.eob.model.Couple;
 
 import java.util.*;
 
@@ -22,9 +23,7 @@ public class ConditionCommand extends EobCommand {
     public final ConditionNode condition;
 
     static {
-        register(new MiscFalseLeaf()); // 0x00
-        register(new MiscTrueLeaf()); // 0x01
-        register(new MiscValueLeaf()); // 0x02 - 0x7F
+        register(new MiscValueLeaf()); // 0x00 - 0x7F
         register(new PartyVisibleLeaf()); // 0xDA
         register(new MiscRollDiceLeaf()); // 0xDB
         register(new PartyContainsClassLeaf()); // 0xDC
@@ -33,8 +32,8 @@ public class ConditionCommand extends EobCommand {
         register(new PartyItemNameIdLeaf()); // 0xE7, 0xCF
         register(new PartyItemUniqueNameIdLeaf()); // 0xE7, 0xD0
         register(new PartyItemTypeLeaf()); // 0xE7, 0xE1
-        register(new PartyItemLeaf()); // 0xE7, 0xF5
-        register(new PartyItemValueLeaf()); // 0xE7, 0xF6
+        register(new MouseItemTypeLeaf()); // 0xE7, 0xF5
+        register(new PartyItemSubTypeLeaf()); // 0xE7, 0xF6
         register(new MazeWallSideLeaf()); // 0xE9
         register(new PartyDirectionLeaf()); // 0xED
         register(new MazeFlagLeaf()); // 0xEF
@@ -43,7 +42,7 @@ public class ConditionCommand extends EobCommand {
         register(new PartyPositionCheckLeaf()); // 0xF1,!0xF5
         register(new MonsterCountLeaf()); // 0xF3
         register(new MazeItemCountLeaf()); // 0xF5
-        register(new MazeWallNumberLeaf()); // 0xF7
+        register(new MazeWallTypeLeaf()); // 0xF7
 //        register(new PartyContainsAlignmentLeaf());
     }
 
@@ -71,6 +70,18 @@ public class ConditionCommand extends EobCommand {
                     TermLeaf parse = termLeafPrototype.parse(levelInfData, pos + subPosition, eobGlobalData);
                     parse.nodeRight = nodes.pop();
                     parse.nodeLeft = nodes.pop();
+                    if (parse.nodeLeft instanceof ExpressionLeaf && parse.nodeRight instanceof ExpressionLeaf) {
+                        ExpressionLeaf left = (ExpressionLeaf) parse.nodeLeft;
+                        ExpressionLeaf right = (ExpressionLeaf) parse.nodeRight;
+                        if (left.leafType.equals(LeafType.UndefinedYet)) {
+                            if (right.leafType.equals(LeafType.UndefinedYet)) {
+                                right.leafType = LeafType.Number;
+                            }
+                            left.leafType = right.leafType;
+                        } else if (right.leafType.equals(LeafType.UndefinedYet)) {
+                            right.leafType = left.leafType;
+                        }
+                    }
                     nodes.push(parse);
                     commandParsed = true;
                     subPosition += parse.originalCommandSize();
@@ -126,6 +137,61 @@ public class ConditionCommand extends EobCommand {
         }
         condition = nodes.get(0);
         originalCommands = Arrays.copyOfRange(levelInfData, pos, pos + subPosition);
+
+        // Find info for subtype
+        Couple<MiscValueLeaf, Integer> result = prepareSubTypeInfo(nodes.get(0));
+        if (result.first != null) {
+            EobLogger.print(String.format("ItemType for subtype %d was not found", result.first.value));
+        }
+    }
+
+    private Couple<MiscValueLeaf, Integer> prepareSubTypeInfo(ConditionNode node) {
+        if (node instanceof TermLeaf) {
+            TermLeaf leaf = (TermLeaf) node;
+            if (leaf.nodeLeft instanceof MiscValueLeaf) {
+                MiscValueLeaf valueLeaf = (MiscValueLeaf) leaf.nodeLeft;
+                if (valueLeaf.leafType.equals(LeafType.ItemSubType)) {
+                    return new Couple<MiscValueLeaf, Integer>(valueLeaf, null);
+                } else if (valueLeaf.leafType.equals(LeafType.ItemType)) {
+                    return new Couple<MiscValueLeaf, Integer>(null, valueLeaf.value);
+                }
+            }
+            if (leaf.nodeRight instanceof MiscValueLeaf) {
+                MiscValueLeaf valueLeaf = (MiscValueLeaf) leaf.nodeRight;
+                if (valueLeaf.leafType.equals(LeafType.ItemSubType)) {
+                    return new Couple<MiscValueLeaf, Integer>(valueLeaf, null);
+                } else if (valueLeaf.leafType.equals(LeafType.ItemType)) {
+                    return new Couple<MiscValueLeaf, Integer>(null, valueLeaf.value);
+                }
+            }
+            return new Couple<MiscValueLeaf, Integer>(null, null);
+        } else if (node instanceof TermNode) {
+            TermNode termNode = (TermNode) node;
+            Couple<MiscValueLeaf, Integer> left = prepareSubTypeInfo(termNode.termLeft);
+            Couple<MiscValueLeaf, Integer> right = prepareSubTypeInfo(termNode.termRight);
+            if (left.first == null && left.second == null) {
+                return right;
+            }
+            if (right.first == null && right.second == null) {
+                return left;
+            }
+            if (left.second != null && right.second != null) {
+                if (left.second.equals(right.second)) {
+                    return left;
+                }
+                // Values are ignored
+                return new Couple<MiscValueLeaf, Integer>(null, null);
+            }
+            if (left.first != null && right.first != null) {
+                EobLogger.print(String.format("ItemType for subtype %d and %d was not found", left.first.value, right.first.value));
+                return new Couple<MiscValueLeaf, Integer>(null, null);
+            }
+            MiscValueLeaf subItemTypeValueLeaf = left.first != null ? left.first : right.first;
+            subItemTypeValueLeaf.parentValue = left.second != null ? left.second : right.second;
+
+            return new Couple<MiscValueLeaf, Integer>(null, null);
+        }
+        return new Couple<MiscValueLeaf, Integer>(null, null);
     }
 
     public static ConditionCommand parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {

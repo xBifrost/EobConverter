@@ -21,7 +21,7 @@ public class PartyInventoryCountLeaf extends ExpressionLeaf {
     }
 
     private PartyInventoryCountLeaf(byte[] originalCommands, int pos, EobGlobalData eobGlobalData) {
-        super(originalCommands, pos, 5, "int <- party.inventory.count(type, flags)");
+        super(originalCommands, pos, 5, "int <- party.inventory.count(type, flags)", LeafType.Number);
         itemType = eobGlobalData.itemTypeDatFile.getById(ByteArrayUtility.getWord(originalCommands, pos + 2));
         flags = ByteArrayUtility.getWord(originalCommands, pos + 4);
     }

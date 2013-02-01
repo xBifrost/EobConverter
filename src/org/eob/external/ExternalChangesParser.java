@@ -1,6 +1,7 @@
 package org.eob.external;
 
 import org.eob.EobLogger;
+import org.eob.Settings;
 
 import java.io.InputStream;
 import java.util.*;
@@ -26,8 +27,10 @@ public class ExternalChangesParser {
     }
 
 
-    public List<ExternalChangeCommand> parseFile(InputStream inputStream) {
-        EobLogger.println("Parsing external data");
+    public List<ExternalChangeCommand> parseFile(InputStream inputStream, Settings settings) {
+        if (settings.debug) {
+            EobLogger.println("Parsing external data...");
+        }
 
         final List<ExternalChangeCommand> result = new ArrayList<ExternalChangeCommand>();
         try {
@@ -63,7 +66,9 @@ public class ExternalChangesParser {
             EobLogger.println("[Error] " + e.getMessage());
         }
 
-        EobLogger.println("External changes count: " + result.size());
+        if (settings.debug) {
+            EobLogger.println("External changes count: " + result.size());
+        }
         return result;
     }
 

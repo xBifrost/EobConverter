@@ -58,9 +58,9 @@ public class GrimrockExport {
             new GrimrockLevelSettings(7L, "Upper Reaches of The Drow", "prison", "assets/samples/music/prison_ambient.ogg"),
             new GrimrockLevelSettings(8L, "Drow Outcasts", "prison", "assets/samples/music/prison_ambient.ogg"),
             new GrimrockLevelSettings(9L, "Lower Reaches of The Drow", "prison", "assets/samples/music/prison_ambient.ogg"),
-            new GrimrockLevelSettings(10L, "Xanthar's Outer Sanctum, Mantis Hive", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
-            new GrimrockLevelSettings(11L, "Xanthar's Outer Sanctum, Lower Reaches", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
-            new GrimrockLevelSettings(12L, "Xanthar's Inner Sanctum", "temple", "assets/samples/music/temple_ambient.ogg")
+            new GrimrockLevelSettings(10L, "Xanathar's Outer Sanctum, Mantis Hive", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
+            new GrimrockLevelSettings(11L, "Xanathar's Outer Sanctum, Lower Reaches", "dungeon", "assets/samples/music/dungeon_ambient.ogg"),
+            new GrimrockLevelSettings(12L, "Xanathar's Inner Sanctum", "temple", "assets/samples/music/temple_ambient.ogg")
     );
 
     Map<String, String> defaultMonsters = new LinkedHashMap<String, String>(); // Eob monsters by Grimrock monsters
@@ -386,6 +386,7 @@ public class GrimrockExport {
                 e.printStackTrace();
             }
         }
+        EobLogger.println("");
     }
 
     private void prepareExternalChanges(List<ExternalChangeCommand> externalChangesList) {
@@ -518,13 +519,16 @@ public class GrimrockExport {
         out.println("");
     }
 
-    private void spawnPossibleItemsIntoAlcove(PrintWriter out, Boolean containCompartment, int level, int x, int y) {
+    private void spawnPossibleItemsIntoAlcove(PrintWriter out, Boolean containCompartment, int level, int x, int y, Set<ItemObject> usedItems) {
         if (!containCompartment) {
             return;
         }
         for (ItemObject itemObject : eobGlobalData.itemParser.getItemSet()) {
-            if (itemObject.level == level && itemObject.x == x && itemObject.y == y && itemObject.inSquarePosition.equals(InSquarePositionType.Alcove)) {
-                spawnItemInAlcove(itemObject, out);
+            if (itemObject.level == level) {
+                if (itemObject.level == level && itemObject.x == x && itemObject.y == y && itemObject.inSquarePosition.equals(InSquarePositionType.Alcove)) {
+                    usedItems.add(itemObject);
+                    spawnItemInAlcove(itemObject, out);
+                }
             }
         }
     }
@@ -877,18 +881,20 @@ public class GrimrockExport {
         out.println("]])");
 
         // Write assets
+        Set<ItemObject> usedItems = new HashSet<ItemObject>();
         for (int y = 0; y < levelParser.height; y++) {
             for (int x = 0; x < levelParser.width; x++) {
                 Square square = levelParser.level[x][y];
                 for (Asset asset : square.assets) {
                     spawnAsset(out, asset);
+                    spawnPossibleItemsIntoAlcove(out, asset.containCompartment, levelParser.levelId, asset.originalX, asset.originalY, usedItems);
                 }
             }
         }
 
         // Write items
         for (ItemObject itemObject : eobGlobalData.itemParser.getItemSet()) {
-            if (itemObject.level == levelParser.levelId && !itemObject.inSquarePosition.equals(InSquarePositionType.Alcove)) {
+            if (itemObject.level == levelParser.levelId && !usedItems.contains(itemObject)) {
                 spawnItemOnFloor(itemObject, out);
             }
         }
@@ -921,7 +927,7 @@ public class GrimrockExport {
         }
 
         // Export eob scripts
-        VisitorGlobalData visitorGlobalData = new VisitorGlobalData(positionMap, scriptFunctionMap, eobGlobalData);
+        VisitorGlobalData visitorGlobalData = new VisitorGlobalData(levelParser.levelId, positionMap, scriptFunctionMap, eobGlobalData);
         if (settings.exportEobScripts) {
             PrintWriter output = null;
             try {

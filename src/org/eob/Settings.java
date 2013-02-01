@@ -14,6 +14,7 @@ public class Settings {
     public boolean showItemTypes = false;
     public boolean showItems = false;
     public String showOnlyItemName = "";
+    public boolean showLevelInfo = false;
     public boolean debug = false;
     public boolean scriptDebug = false;
     public boolean debugWalls = true;

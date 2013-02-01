@@ -10,11 +10,13 @@ import java.util.Map;
  * Time: 22:51
  */
 public class VisitorGlobalData {
-    Map<Integer, Integer> positionMap;
-    Map<Integer, EobScriptFunction> scriptFunctionMap;
-    EobGlobalData eobGlobalData;
+    public final int levelId;
+    public final Map<Integer, Integer> positionMap;
+    public final Map<Integer, EobScriptFunction> scriptFunctionMap;
+    public final EobGlobalData eobGlobalData;
 
-    public VisitorGlobalData(Map<Integer, Integer> positionMap, Map<Integer, EobScriptFunction> scriptFunctionMap, EobGlobalData eobGlobalData) {
+    public VisitorGlobalData(int levelId, Map<Integer, Integer> positionMap, Map<Integer, EobScriptFunction> scriptFunctionMap, EobGlobalData eobGlobalData) {
+        this.levelId = levelId;
         this.positionMap = positionMap;
         this.scriptFunctionMap = scriptFunctionMap;
         this.eobGlobalData = eobGlobalData;

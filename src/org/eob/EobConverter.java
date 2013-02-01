@@ -19,7 +19,7 @@ import java.io.InputStream;
  * Time: 3:16 PM
  */
 public class EobConverter {
-    public final static String CONVERTER_VERSION = "0.9.8";
+    public final static String CONVERTER_VERSION = "0.9.9";
     private final static String ITEMS_FILE = "ITEM.DAT";
     private final static String ITEM_TYPE_FILE = "ITEMTYPE.DAT";
     private final static String LEVEL_MAZ_FILE = "LEVEL%d.MAZ";
@@ -40,7 +40,7 @@ public class EobConverter {
                     if (name.equals("--help")) {
                         EobLogger.println("usage: EobConverter.jar [-l|--levels=<from>;<to>] [-sp|--src-path=<value>] [-dp|--dst-path=<value>] [-ep|--ext-path=<value>]");
                         EobLogger.println("                        [-c|--console] [-d|--debug] [-ds|debug-script] [-dt|--debug-show-item-type]");
-                        EobLogger.println("                        [-di|--debug-show-item] [-din|--debug-item-name=<value>]");
+                        EobLogger.println("                        [-di|--debug-show-item] [-din|--debug-item-name=<value>] [-dl|--debug-show-level]");
                         EobLogger.println("                        [-l1|--file-per-level] [-gs|--generate-default-structures] [-sw|--skip-wall-errors]");
                         EobLogger.println("                        [-inf|--write_unpacked-inf] [-es|--export-scripts] [-as|--add-scripts]");
                         EobLogger.println("");
@@ -53,6 +53,7 @@ public class EobConverter {
                         EobLogger.println("   debug-show-item-type        Show item types.");
                         EobLogger.println("   debug-show-item             Show items");
                         EobLogger.println("   debug-item-name             Show debug info only for items contains <value> string. (default=\"\")");
+                        EobLogger.println("   debug-show-level            Show level information");
                         EobLogger.println("   skip-wall-errors            Skip showing wall errors (default=show)");
                         EobLogger.println("   levels                      Convert all levels in range: <from,to>. (default=1;99)");
                         EobLogger.println("   file-per-level              Store each level in separate file.");
@@ -86,6 +87,8 @@ public class EobConverter {
                     } else if (name.equals("--debug-item-name") || name.equals("-din")) {
                         settings.showItems = true;
                         settings.showOnlyItemName = value;
+                    } else if (name.equals("--debug-show-level") || name.equals("-dl")) {
+                        settings.showLevelInfo = true;
                     } else if (name.equals("--file-per-level") || name.equals("-l1")) {
                         settings.createFilePerLevel = true;
                     } else if (name.equals("--generate-default-structures") || name.equals("-gs")) {
@@ -120,9 +123,9 @@ public class EobConverter {
             EobLogger.println("File '" + settings.extChangesPath + "'was not found!");
         }
 
-        eobGlobalData.externalChangeCommands = externalChangesParser.parseFile(eob1RepairStream);
+        eobGlobalData.externalChangeCommands = externalChangesParser.parseFile(eob1RepairStream, settings);
         if (externalChangesStream != null) {
-            eobGlobalData.externalChangeCommands.addAll(externalChangesParser.parseFile(externalChangesStream));
+            eobGlobalData.externalChangeCommands.addAll(externalChangesParser.parseFile(externalChangesStream, settings));
         }
         EobFiles eobFiles = new EobFiles(settings.srcPath);
         eobGlobalData.itemTypeDatFile = new ItemTypeDatFile(eobFiles.getFile(ITEM_TYPE_FILE));
@@ -147,16 +150,22 @@ public class EobConverter {
 
             byte[] levelInfFile = eobFiles.getFile(String.format(LEVEL_INF_FILE, levelId));
             if (levelInfFile != null) {
-                InfFile infFile = new InfFile(levelId, levelInfFile, eobGlobalData, settings.writeUnpackedInf);
+                InfFile infFile = new InfFile(levelId, levelInfFile, eobGlobalData, settings);
+                infFile.showLevelInformation();
                 grimrockExport.addLevelInfo(infFile);
             }
+
         }
+        EobLogger.println("");
 
         grimrockExport.exportIntoGrimrock(settings.createFilePerLevel);
 
-        EobLogger.println("Summary:");
-        EobLogger.println("Exported " + eobGlobalData.itemParser.getItemsCount() + " items of " +
-                eobGlobalData.itemTypeDatFile.itemTypeList.size() + " different types (" + eobGlobalData.itemTypeDatFile.getUnknownItemsCount() + " are unknown)");
+        if (settings.debug) {
+            EobLogger.println("Summary:");
+            EobLogger.println("Exported " + eobGlobalData.itemParser.getItemsCount() + " items of " +
+                    eobGlobalData.itemTypeDatFile.itemTypeList.size() + " different types (" + eobGlobalData.itemTypeDatFile.getUnknownItemsCount() + " are unknown)");
+        }
+        EobLogger.println("Conversion finished.");
     }
 
     private void execute() {
@@ -184,6 +193,7 @@ public class EobConverter {
             eobConverterForm.getAddEobScriptIntoLuaCheckBox().setSelected(settings.addEobScriptIntoLua);
             eobConverterForm.getPrintItemTypesCheckBox().setSelected(settings.showItemTypes);
             eobConverterForm.getPrintItemsCheckBox().setSelected(settings.showItems);
+            eobConverterForm.getPrintLevelInfoCheckBox().setSelected(settings.showLevelInfo);
             eobConverterForm.getConvertButton().addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -258,6 +268,7 @@ public class EobConverter {
         settings.addEobScriptIntoLua = eobConverterForm.getAddEobScriptIntoLuaCheckBox().isSelected();
         settings.showItemTypes = eobConverterForm.getPrintItemTypesCheckBox().isSelected();
         settings.showItems = eobConverterForm.getPrintItemsCheckBox().isSelected();
+        settings.showLevelInfo = eobConverterForm.getPrintLevelInfoCheckBox().isSelected();
     }
 
     public static void main(String[] args) {

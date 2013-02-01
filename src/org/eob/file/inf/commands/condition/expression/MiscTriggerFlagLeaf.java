@@ -17,7 +17,7 @@ public class MiscTriggerFlagLeaf extends ExpressionLeaf {
     }
 
     private MiscTriggerFlagLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 1, "byte <- trigger.flag");
+        super(originalCommands, pos, 1, "byte <- trigger.flag", LeafType.Number);
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {

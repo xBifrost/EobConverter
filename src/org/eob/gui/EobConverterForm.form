@@ -35,7 +35,7 @@
           </component>
           <component id="891d6" class="javax.swing.JCheckBox" binding="debugWallCheckBox">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -45,7 +45,7 @@
           </component>
           <component id="909f5" class="javax.swing.JCheckBox" binding="addEobScriptIntoLuaCheckBox">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -86,6 +86,15 @@
             </constraints>
             <properties>
               <text value="Script debug mode"/>
+            </properties>
+          </component>
+          <component id="a9b4c" class="javax.swing.JCheckBox" binding="printLevelInfoCheckBox" default-binding="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Print level info"/>
             </properties>
           </component>
         </children>

@@ -32,12 +32,13 @@ public class ByteArrayUtility {
         from = Math.max(0, from);
         size = Math.min(bytes.length - from, size);
         final char[] hexArray = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-        char[] hexChars = new char[2 * size];
+        char[] hexChars = new char[3 * size];
         int v;
         for (int j = 0; j < size; j++) {
             v = bytes[from + j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+            hexChars[j * 3] = hexArray[v >>> 4];
+            hexChars[j * 3 + 1] = hexArray[v & 0x0F];
+            hexChars[j * 3 + 2] = ' ';
         }
         return new String(hexChars);
     }

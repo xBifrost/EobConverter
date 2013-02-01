@@ -24,7 +24,7 @@ public class MazeItemCountLeaf extends ExpressionLeaf {
     }
 
     private MazeItemCountLeaf(byte[] originalCommands, int pos, EobGlobalData eobGlobalData) {
-        super(originalCommands, pos, 4, "byte <- maze.itemCount(x, y, itemId)");
+        super(originalCommands, pos, 4, "byte <- maze.itemCount(x, y, itemId)", LeafType.Number);
         int itemTypeId = ByteArrayUtility.getByte(originalCommands, pos + 1);
         itemType = eobGlobalData.itemTypeDatFile.getById(itemTypeId);
         int position = ByteArrayUtility.getWord(originalCommands, pos + 2);

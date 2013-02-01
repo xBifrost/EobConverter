@@ -8,7 +8,7 @@ package org.eob.file.inf.commands;
 public enum ChangeWallType {
     CompleteBlock(0xF7),
     OneWall(0xE9),
-    OpenDoor(0xEA),
+    Door(0xEA),
     PartyFacing(0xED);
 
     private int wallTypeId;

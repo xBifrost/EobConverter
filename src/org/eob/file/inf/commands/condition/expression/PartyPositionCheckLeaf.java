@@ -20,7 +20,7 @@ public class PartyPositionCheckLeaf extends ExpressionLeaf {
     }
 
     private PartyPositionCheckLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 3, "boolean <- party.position == [x, y])");
+        super(originalCommands, pos, 3, "boolean <- party.atPosition(x, y)", LeafType.Boolean);
         int position = ByteArrayUtility.getWord(originalCommands, pos + 1);
         x = (position) & 0x1f;
         y = (position >> 5) & 0x1f;

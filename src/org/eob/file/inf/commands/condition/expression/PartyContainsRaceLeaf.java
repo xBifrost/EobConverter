@@ -20,7 +20,7 @@ public class PartyContainsRaceLeaf extends ExpressionLeaf {
     }
 
     private PartyContainsRaceLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 2, "boolean <- party.containsRace(byte)");
+        super(originalCommands, pos, 2, "boolean <- party.containsRace(byte)", LeafType.Boolean);
         race = RaceType.getRaceById(ByteArrayUtility.getByte(originalCommands, pos + 1));
     }
 

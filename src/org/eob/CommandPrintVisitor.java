@@ -1,5 +1,6 @@
 package org.eob;
 
+import org.eob.enums.DirectionType;
 import org.eob.file.inf.*;
 import org.eob.file.inf.commands.*;
 import org.eob.file.inf.commands.condition.ConditionalOperator;
@@ -7,6 +8,8 @@ import org.eob.file.inf.commands.condition.RelationOperator;
 import org.eob.file.inf.commands.condition.TermLeaf;
 import org.eob.file.inf.commands.condition.TermNode;
 import org.eob.file.inf.commands.condition.expression.*;
+import org.eob.model.ItemType;
+import org.eob.model.SubItemType;
 
 import java.io.*;
 import java.util.List;
@@ -316,8 +319,8 @@ public class CommandPrintVisitor implements CommandVisitor {
                         changeWallCommand.fromWall.internalName, changeWallCommand.toWall.internalName,
                         scriptDebug ? " (formWallId: " + changeWallCommand.fromWall.wallId + ", toWallId: " + changeWallCommand.toWall.wallId + ")" : ""));
                 break;
-            case OpenDoor:
-                writeToOutput(String.format("door.open(%d, %d)" + endOfLine, changeWallCommand.x, changeWallCommand.y));
+            case Door:
+                writeToOutput(String.format("door.changeOpenStatus(%d, %d) // open-close door" + endOfLine, changeWallCommand.x, changeWallCommand.y));
                 break;
             default:
                 writeToOutput("??? unknown command" + endOfLine);
@@ -464,7 +467,51 @@ public class CommandPrintVisitor implements CommandVisitor {
 
     @Override
     public void visit(MiscValueLeaf miscValueLeaf) {
-        outputStack.push(((Integer) miscValueLeaf.value).toString());
+        switch (miscValueLeaf.leafType) {
+            case UndefinedYet:
+            case String:
+            case Number:
+                outputStack.push(((Integer) miscValueLeaf.value).toString());
+                break;
+            case Boolean:
+                outputStack.push(miscValueLeaf.value == 0 ? "false" : "true");
+                break;
+            case WallType:
+                outputStack.push(String.format("Wall.%s%s", visitorGlobalData.eobGlobalData.getWallById((long) miscValueLeaf.value, visitorGlobalData.levelId).internalName,
+                        scriptDebug ? "/*id: " + miscValueLeaf.value + "*/" : ""));
+                break;
+            case Direction:
+                outputStack.push(String.format("Direction.%s%s", DirectionType.getDirectionById(miscValueLeaf.value).name(),
+                        scriptDebug ? "/*id: " + miscValueLeaf.value + "*/" : ""));
+                break;
+            case MouseItemType:
+                outputStack.push(String.format("MouseItemType.%s%s", miscValueLeaf.value == 0 ? "empty" : "unknown",
+                        scriptDebug ? "/*id: " + miscValueLeaf.value + "*/" : ""));
+                break;
+            case ItemType:
+                outputStack.push(String.format("ItemType.%s%s", visitorGlobalData.eobGlobalData.getItemTypeById(miscValueLeaf.value).elementType,
+                        scriptDebug ? "/*id: " + miscValueLeaf.value + "*/" : ""));
+                break;
+            case ItemSubType: {
+                if (miscValueLeaf.parentValue != null) {
+                    ItemType itemType = visitorGlobalData.eobGlobalData.getItemTypeById(miscValueLeaf.parentValue);
+                    SubItemType subItemType = visitorGlobalData.eobGlobalData.getSubItemById(itemType, miscValueLeaf.value);
+                    outputStack.push(String.format("SubItemType.%s.%s%s", itemType.elementType, subItemType.elementType,
+                            scriptDebug ? "/*id: " + miscValueLeaf.value + "*/" : ""));
+                } else {
+                    outputStack.push(((Integer) miscValueLeaf.value).toString());
+                }
+                break;
+            }
+            case ItemName:
+                EobLogger.print("Value translate of the ItemName is not supported yet!");
+                outputStack.push(((Integer) miscValueLeaf.value).toString());
+                break;
+            case ItemUniqueName:
+                EobLogger.print("Value translate of the UniqueItemName is not supported yet!");
+                outputStack.push(((Integer) miscValueLeaf.value).toString());
+                break;
+        }
     }
 
     @Override
@@ -512,18 +559,8 @@ public class CommandPrintVisitor implements CommandVisitor {
     }
 
     @Override
-    public void visit(MazeWallNumberLeaf mazeWallNumberLeaf) {
-        outputStack.push(String.format("maze.wallNumber(%d, %d)", mazeWallNumberLeaf.x, mazeWallNumberLeaf.y));
-    }
-
-    @Override
-    public void visit(MiscFalseLeaf miscFalseLeaf) {
-        outputStack.push("0");
-    }
-
-    @Override
-    public void visit(MiscTrueLeaf miscTrueLeaf) {
-        outputStack.push("1");
+    public void visit(MazeWallTypeLeaf mazeWallTypeLeaf) {
+        outputStack.push(String.format("maze.wallType(%d, %d)", mazeWallTypeLeaf.x, mazeWallTypeLeaf.y));
     }
 
     @Override
@@ -542,8 +579,8 @@ public class CommandPrintVisitor implements CommandVisitor {
     }
 
     @Override
-    public void visit(PartyItemValueLeaf partyItemValueLeaf) {
-        outputStack.push(String.format("party.item.value"));
+    public void visit(PartyItemSubTypeLeaf partyItemSubTypeLeaf) {
+        outputStack.push(String.format("party.item.subType"));
     }
 
     @Override
@@ -567,8 +604,8 @@ public class CommandPrintVisitor implements CommandVisitor {
     }
 
     @Override
-    public void visit(PartyItemLeaf partyItemLeaf) {
-        outputStack.push("party.item");
+    public void visit(MouseItemTypeLeaf mouseItemTypeLeaf) {
+        outputStack.push("mouse.item.type");
     }
 
     @Override
@@ -648,7 +685,7 @@ public class CommandPrintVisitor implements CommandVisitor {
             case OnPickUp:
                 return "PickUpItem";
             case OnEnterOrPickUp:
-                return "Attack";
+                return "Enter, PickUpItem"; // Attack?
             case OnPutOrPickUpItem:
                 return "PutItem, PickUpItem";
             case OnEnterLeavePutPickUp:

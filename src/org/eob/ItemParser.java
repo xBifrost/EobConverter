@@ -27,16 +27,22 @@ public class ItemParser {
     }
 
     public void parseFile() {
-        EobLogger.println("Parsing item data");
+        if (settings.debug) {
+            EobLogger.println("Parsing item data");
+        }
 
         int itemsNum = ByteArrayUtility.getWord(itemsData, 0); // first two bytes specifies number of records
-        EobLogger.println("Found " + itemsNum + " items entries.");
+        if (settings.debug) {
+            EobLogger.println("Found " + itemsNum + " items entries.");
+        }
 
         // Get item names
         int offset = 14 * itemsNum + 2;
         int namesNum = ByteArrayUtility.getWord(itemsData, offset);
         offset += 2;
-        EobLogger.println("Found " + namesNum + " item names.");
+        if (settings.debug) {
+            EobLogger.println("Found " + namesNum + " item names.");
+        }
         for (int i = 0; i < namesNum; i++) {
             byte[] nameBytes = Arrays.copyOfRange(itemsData, offset, offset + 34);
             String name = new String(nameBytes);
@@ -58,8 +64,9 @@ public class ItemParser {
             items.put(itemIndex, itemObject);
         }
 
-        EobLogger.println("Found " + items.size() + " items with unique " +
-                ItemName.itemNames.size() + " names");
+        if (settings.debug) {
+            EobLogger.println("Found " + items.size() + " items with unique " + ItemName.itemNames.size() + " names");
+        }
 
         if (settings.showItems) {
             printItems(settings.showOnlyItemName);
@@ -87,7 +94,7 @@ public class ItemParser {
     }
 
     public Set<ItemObject> getItemSet() {
-        return new HashSet<ItemObject>(items.values());
+        return new LinkedHashSet<ItemObject>(items.values());
     }
 
     public ItemObject getItemByIndex(int itemIndex) {

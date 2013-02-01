@@ -19,7 +19,7 @@ public class PartyItemUniqueNameIdLeaf extends ExpressionLeaf {
     }
 
     private PartyItemUniqueNameIdLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 3, "boolean <- party.item.uniqueNameId == byte");
+        super(originalCommands, pos, 3, "boolean <- party.item.uniqueNameId == byte", LeafType.ItemUniqueName);
         nameId = ByteArrayUtility.getByte(originalCommands, pos+2);
     }
 

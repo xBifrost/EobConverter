@@ -9,20 +9,20 @@ import org.eob.file.inf.CommandVisitor;
  * Date: 12/16/12
  * Time: 11:54 PM
  */
-public class MiscFalseLeaf extends ExpressionLeaf {
+public class MouseItemTypeLeaf extends ExpressionLeaf {
     /**
      * Constructor of the prototype;
      */
-    public MiscFalseLeaf() {
+    public MouseItemTypeLeaf() {
     }
 
-    private MiscFalseLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 1, "boolean/byte <- FALSE/0");
+    private MouseItemTypeLeaf(byte[] originalCommands, int pos) {
+        super(originalCommands, pos, 2, "object <- mouse.item.type", LeafType.MouseItemType);
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
-        if (ByteArrayUtility.getByte(levelInfData, pos) == 0x00) {
-            return new MiscFalseLeaf(levelInfData, pos);
+        if (ByteArrayUtility.getWord(levelInfData, pos) == 0xF5E7) {
+            return new MouseItemTypeLeaf(levelInfData, pos);
         }
         return null;
     }

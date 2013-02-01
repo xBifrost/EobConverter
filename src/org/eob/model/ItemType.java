@@ -42,6 +42,20 @@ public class ItemType {
         this.unknown3 = 0;
     }
 
+    public ItemType(long itemTypeId, String elementType, String description) {
+        this.unknownType = false;
+        this.itemTypeId = itemTypeId;
+        this.elementType = elementType;
+        this.description = description;
+        this.addArmorClass = 0;
+        this.handCount = 0;
+        this.damageVsSmall = null;
+        this.damageVsBig = null;
+        this.unknown1 = 0;
+        this.unknown2 = 0;
+        this.unknown3 = 0;
+    }
+
     public ItemType(long itemTypeId, Set<ItemSlotType> itemSlotSupported, Set<ItemSlotType> itemSlotActivate, int addArmorClass, Set<ClassType> professionAllowed, int handCount, Dice damageVsSmall, Dice damageVsBig, int unknown1, int unknown2, int unknown3) {
         this.unknownType = false;
         this.itemTypeId = itemTypeId;

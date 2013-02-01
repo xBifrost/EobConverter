@@ -3,6 +3,8 @@ package org.eob.file.inf.commands.condition;
 import org.eob.ByteArrayUtility;
 import org.eob.EobGlobalData;
 import org.eob.file.inf.CommandVisitor;
+import org.eob.file.inf.commands.condition.expression.ExpressionLeaf;
+import org.eob.file.inf.commands.condition.expression.LeafType;
 
 import java.util.Arrays;
 

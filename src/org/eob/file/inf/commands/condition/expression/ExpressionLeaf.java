@@ -17,6 +17,7 @@ public abstract class ExpressionLeaf implements ConditionNode {
 
     public int expressionId;
     public String description;
+    public LeafType leafType;
 
     /**
      * Constructor of the prototype;
@@ -24,11 +25,12 @@ public abstract class ExpressionLeaf implements ConditionNode {
     public ExpressionLeaf() {
     }
 
-    public ExpressionLeaf(byte[] levelInfData, int originalPos, int commandSize, String description) {
+    public ExpressionLeaf(byte[] levelInfData, int originalPos, int commandSize, String description, LeafType leafType) {
         this.originalPos = originalPos;
         this.originalCommands = Arrays.copyOfRange(levelInfData, originalPos, originalPos + commandSize);
         this.expressionId = ByteArrayUtility.getByte(levelInfData, originalPos + 1);
         this.description = description;
+        this.leafType = leafType;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class MiscFlagLeaf extends ExpressionLeaf {
     }
 
     private MiscFlagLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 2, "byte <- misc.flag(Global, flagId)");
+        super(originalCommands, pos, 2, "byte <- misc.flag(Global, flagId)", LeafType.Boolean);
         flagId = ByteArrayUtility.getByte(originalCommands, pos+1);
     }
 

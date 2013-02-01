@@ -22,7 +22,7 @@ public class MazeWallSideLeaf extends ExpressionLeaf {
     }
 
     private MazeWallSideLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 4, "byte <- maze.wallSide(side, x, y)");
+        super(originalCommands, pos, 4, "byte <- maze.wallSide(side, x, y)", LeafType.WallType);
         side = DirectionType.getDirectionById(ByteArrayUtility.getByte(originalCommands, pos + 1));
         int position = ByteArrayUtility.getWord(originalCommands, pos + 2);
         x = (position) & 0x1f;

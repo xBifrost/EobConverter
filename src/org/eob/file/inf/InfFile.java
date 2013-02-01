@@ -32,13 +32,15 @@ import java.util.*;
  */
 public class InfFile {
     public final int levelId;
+    private Settings settings;
     private final byte[] levelInfData;
 
     public final int triggersOffset;
     public final String mazeName;
     public final String vmpVcnName;
     public final String paletteName;
-    public final byte unknown[]; // Array size: 9
+    public final byte unknown[]; // Array size: 7
+    public final int countOfStepsToSpawn; // Count of steps to call trigger at position [0,0]
     public final int monster1ImageCompressionMethod;
     public final String monster1Name;
     public final int monster2ImageCompressionMethod;
@@ -50,11 +52,12 @@ public class InfFile {
     public final List<EobTrigger> triggers = new ArrayList<EobTrigger>();
     public final List<EobScriptFunction> scriptFunctions = new ArrayList<EobScriptFunction>();
 
-    public InfFile(int levelId, byte[] levelInfDataPacked, EobGlobalData eobGlobalData, boolean writeUnpacked) {
+    public InfFile(int levelId, byte[] levelInfDataPacked, EobGlobalData eobGlobalData, Settings settings) {
         this.levelId = levelId;
+        this.settings = settings;
         this.levelInfData = new CpsFile(levelInfDataPacked).getData();
 
-        if (writeUnpacked) {
+        if (settings.writeUnpackedInf) {
             FileUtility.writeFile(String.format(EobConverter.LEVEL_INF_UNPACKED, levelId), levelInfData, false);
         }
 
@@ -67,8 +70,10 @@ public class InfFile {
         pos += 12;
         paletteName = ByteArrayUtility.getString(levelInfData, pos, 12);
         pos += 12;
-        unknown = Arrays.copyOfRange(levelInfData, pos, pos + 9);
-        pos += 9;
+        unknown = Arrays.copyOfRange(levelInfData, pos, pos + 7);
+        pos += 7;
+        countOfStepsToSpawn = ByteArrayUtility.getWord(levelInfData, pos);
+        pos += 2;
         monster1ImageCompressionMethod = ByteArrayUtility.getByte(levelInfData, pos);
         pos++;
         monster1Name = ByteArrayUtility.getString(levelInfData, pos, 12);
@@ -92,7 +97,9 @@ public class InfFile {
         int commandsCount = ByteArrayUtility.getWord(levelInfData, pos);
         pos += 2;
         ParseCommand parseCommand = new ParseCommand();
-        EobLogger.println(String.format("Command count: %d", commandsCount));
+        if (settings.debug) {
+            EobLogger.println(String.format("Command count: %d", commandsCount));
+        }
         for (int commandIdx = 0; commandIdx < commandsCount; commandIdx++) {
             EobCommand command = parseCommand.parse(levelInfData, pos);
             if (command == null) {
@@ -103,7 +110,9 @@ public class InfFile {
             commands.add(command);
         }
 
-        EobLogger.println("script parsing...");
+        if (settings.debug) {
+            EobLogger.println("script parsing...");
+        }
         int commandIdx = 0;
         while (pos < triggersOffset) {
             EobCommand command = parseCommand.parseScript(levelId, levelInfData, pos, eobGlobalData);
@@ -115,7 +124,9 @@ public class InfFile {
             commandIdx++;
             script.add(command);
         }
-        EobLogger.println(String.format("Script command count: %d", commandIdx));
+        if (settings.debug) {
+            EobLogger.println(String.format("Script command count: %d", commandIdx));
+        }
 
         // prepare commandMap
         Map<Integer, Integer> commandMap = new HashMap<Integer, Integer>();
@@ -126,7 +137,9 @@ public class InfFile {
         }
 
         pos = triggersOffset;
-        EobLogger.println("triggers parsing...");
+        if (settings.debug) {
+            EobLogger.println("triggers parsing...");
+        }
         int triggersCount = ByteArrayUtility.getWord(levelInfData, pos);
         pos += 2;
         for (int triggerIdx = 0; triggerIdx < triggersCount; triggerIdx++) {
@@ -155,10 +168,14 @@ public class InfFile {
                 }
             }
         }
-        EobLogger.println(String.format("Script triggers count: %d", triggersCount));
-        EobLogger.println("");
+        if (settings.debug) {
+            EobLogger.println(String.format("Script triggers count: %d", triggersCount));
+            EobLogger.println("");
+        }
 
-        EobLogger.println("script function finding...");
+        if (settings.debug) {
+            EobLogger.println("script function finding...");
+        }
         TreeMap<Integer, Integer> parsedFunctions = new TreeMap<Integer, Integer>();
         for (EobCommand command : script) {
             if (command instanceof CallCommand) {
@@ -181,8 +198,10 @@ public class InfFile {
             functionPos++;
         }
 
-        EobLogger.println(String.format("Functions count: %d", parsedFunctions.size()));
-        EobLogger.println("");
+        if (settings.debug) {
+            EobLogger.println(String.format("Functions count: %d", parsedFunctions.size()));
+            EobLogger.println("");
+        }
 
         // Check script
         for (EobTrigger trigger : triggers) {
@@ -238,5 +257,20 @@ public class InfFile {
 
     public byte[] getLevelInfData() {
         return levelInfData;
+    }
+
+    public void showLevelInformation() {
+        if (settings.showLevelInfo) {
+            EobLogger.println(String.format("Level: %d", levelId));
+            EobLogger.println(String.format("Maze name: %s", mazeName));
+            EobLogger.println(String.format("Wall name: %s", vmpVcnName));
+            EobLogger.println(String.format("Palette name: %s", paletteName));
+            EobLogger.println(String.format("Count of steps to call spawn trigger: %d", countOfStepsToSpawn));
+            EobLogger.println(String.format("Monsters name: %s, %s", monster1Name, monster2Name));
+            EobLogger.println(String.format("Initial monster count: %d (max: 30)", monsterObjects.size()));
+            EobLogger.println(String.format("Unknown data: %s", ByteArrayUtility.bytesToHex(unknown, 0, 7)));
+            EobLogger.println(String.format("Unknown data2: %s", ByteArrayUtility.bytesToHex(unknown2, 0, 5)));
+            EobLogger.println("");
+        }
     }
 }

@@ -89,6 +89,10 @@ public class EobGlobalData {
         return createMonster("unknown", monsterId, "");
     }
 
+    public ItemType getItemTypeById(int itemTypeId) {
+        return itemTypeDatFile.itemTypeList.get((long) itemTypeId);
+    }
+
     public Wall createWall(String internalName, Long wallId, WallType wallType, boolean containCompartment, Set<Long> level) {
         Wall key = new Wall(wallId, internalName, wallType, containCompartment, Arrays.asList(GameSupportType.values()), level);
         registeredWalls.add(key);

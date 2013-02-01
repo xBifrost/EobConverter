@@ -17,7 +17,7 @@ public class PartyItemTypeLeaf extends ExpressionLeaf {
     }
 
     private PartyItemTypeLeaf(byte[] originalCommands, int pos) {
-        super(originalCommands, pos, 2, "typeId <- party.item.type");
+        super(originalCommands, pos, 2, "typeId <- party.item.type", LeafType.ItemType);
     }
 
     public ExpressionLeaf parse(byte[] levelInfData, int pos, EobGlobalData eobGlobalData) {
